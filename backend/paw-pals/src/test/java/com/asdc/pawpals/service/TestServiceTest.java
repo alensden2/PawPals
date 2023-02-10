@@ -1,4 +1,4 @@
-package com.asdc.petpaws.service;
+package com.asdc.pawpals.service;
 
 public class TestServiceTest {
     

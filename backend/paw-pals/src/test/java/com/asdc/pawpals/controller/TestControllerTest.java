@@ -1,4 +1,4 @@
-package com.asdc.petpaws.controller;
+package com.asdc.pawpals.controller;
 
 public class TestControllerTest {
     

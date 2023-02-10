@@ -1,4 +1,4 @@
-package com.asdc.petpaws.utils;
+package com.asdc.pawpals.utils;
 
 public class TestUtilsTest {
     

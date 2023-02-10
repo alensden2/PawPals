@@ -1,4 +1,4 @@
-package com.asdc.petpaws.model;
+package com.asdc.pawpals.model;
 
 public class TestModelTest {
     
