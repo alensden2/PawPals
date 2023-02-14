@@ -13,6 +13,7 @@ public class Vet {
 
     @Id
     private Long id;
+    private String name;
     private String licenseNumber;
     private String clinicAddress;
     private Integer experience;
