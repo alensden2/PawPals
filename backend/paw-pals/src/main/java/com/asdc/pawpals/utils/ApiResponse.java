@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Setter
 @Getter
-@AllArgsConstructor
 public class ApiResponse {
     private String message;
     private boolean error;
