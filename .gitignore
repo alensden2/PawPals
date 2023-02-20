@@ -76,3 +76,4 @@ target
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+backend/paw-pals/src/main/resources/application.properties
