@@ -1,11 +1,15 @@
 package com.asdc.pawpals.service.implementation;
 
+import com.asdc.pawpals.dto.MedicalHistoryDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.MedicalHistory;
 import com.asdc.pawpals.repository.MedicalRecordRepository;
 import com.asdc.pawpals.service.MedicalRecordService;
+import com.asdc.pawpals.utils.Transformations;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,16 +26,14 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     MedicalRecordRepository medicalRecordRepository;
 
     @Override
-    public Object retrieveMedicalRecord(Long animalId){
+    public List<MedicalHistoryDto> retrieveMedicalRecord(Long animalId){
         List<MedicalHistory> medicalRecords = medicalRecordRepository != null ? medicalRecordRepository.findByAnimalId(animalId) : null;
         logger.debug("MedicalRecordService :: retrieveMedicalRecord :: medicalRecords are : {}", medicalRecords);
+        List<MedicalHistoryDto> medicalHistoryDto = null;
         if(medicalRecords != null && !medicalRecords.isEmpty()){
-            
+            medicalHistoryDto = medicalRecords.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::medicalHistory).toList();
         }
-        // String output = "";
-        return medicalRecords.stream().map(MedicalHistory::getAnimal).map(Animal::getName).reduce("", (prev, current)->{
-            return prev.concat(" "+current);
-        });
+        return medicalHistoryDto;
     }
 
 }
