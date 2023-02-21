@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AnimalController {
-
-    @Autowired()
-    AnimalService animalService;
-
-
+  @Autowired
+  AnimalService animalService;
 }
