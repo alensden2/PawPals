@@ -1,6 +1,8 @@
 package com.asdc.pawpals.controller;
 
 import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.MedicalHistory;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminReadService;
 import com.asdc.pawpals.service.implementation.AdminReadServiceImpl;
@@ -31,6 +33,27 @@ public class AdminReadController {
     return adminReadService.getAllAnimalRecords();
   }
 
+  /**
+   * Gets all the pet owner records
+   * @return
+   */
+
+  @GetMapping("/allPetOwner")
+  public List<PetOwner> getAllPetOwnerRecords() {
+    if (adminReadService.getAllPetOwnerRecords() == null) {
+      List<PetOwner> emptyEntries = null;
+      return emptyEntries;
+    }
+    return adminReadService.getAllPetOwnerRecords();
+  }
+
+  @GetMapping("/allMedicalHistory")
+  public List<MedicalHistory> getAllMedicalHistoryRecords(){
+    if (adminReadService.getAllMedicalHistoryRecords()== null){
+      List<MedicalHistory> emptyEntries = null;
+      return emptyEntries;
+    }
+  }
   /**
    * Gets all the vet records
    * @return

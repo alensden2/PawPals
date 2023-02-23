@@ -1,9 +1,13 @@
 package com.asdc.pawpals.service.implementation;
-
+import com.asdc.pawpals.dto.*;
 import ch.qos.logback.classic.Logger;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.MedicalHistory;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.repository.AdminReadAllMedicalHistoryRepository;
+import com.asdc.pawpals.repository.AdminReadAllPetOwnersRepository;
 import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
 import com.asdc.pawpals.repository.AdminReadRepository;
 import com.asdc.pawpals.service.AdminReadService;
@@ -21,7 +25,13 @@ public class AdminReadServiceImpl implements AdminReadService {
   AdminReadRepository adminReadRepository;
 
   @Autowired
+  AdminReadAllPetOwnersRepository adminReadAllPetOwnersRepository;
+
+  @Autowired
   AdminReadAllVetsRepository adminReadAllVetsRepository;
+
+  @Autowired
+  AdminReadAllMedicalHistoryRepository adminReadAllMedicalHistoryRepository;
 
   /**
    * fetches all the animal records
@@ -32,6 +42,15 @@ public class AdminReadServiceImpl implements AdminReadService {
 
     return animalRecords;
   }
+  public List<PetOwner> getAllPetOwnerRecords(){
+    List<PetOwner> petownerRecords = adminReadAllPetOwnersRepository.findAll();
+    return petownerRecords;
+  }
+
+  public List<MedicalHistory> getAllMedicalHistoryRecords() {
+    List<MedicalHistory> medicalHistory = adminReadAllMedicalHistoryRepository.findAll();
+    return medicalHistory;
+  }
 
   /**
    * fetches all the vet records
@@ -40,4 +59,7 @@ public class AdminReadServiceImpl implements AdminReadService {
     List<Vet> vets = adminReadAllVetsRepository.findAll();
     return vets;
   }
+ 
+
+ 
 }
