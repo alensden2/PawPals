@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 public class UserDto implements UserDetails {
     private String userName;
     private String password;
+    private String firstName;
+    private String lastName;
 
     private String email;
     private List<GrantedAuthority> authorities;
