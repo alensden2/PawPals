@@ -1,6 +1,7 @@
 package com.asdc.pawpals.controller;
 
 import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminReadService;
 import com.asdc.pawpals.service.implementation.AdminReadServiceImpl;
@@ -42,5 +43,18 @@ public class AdminReadController {
       return emptyEntries;
     }
     return adminReadService.getAllVetRecords();
+  }
+
+  /**
+   * Gets all the user records
+   * @return
+   */
+  @GetMapping("/allUser")
+  public List<User> getAllUserRecords() {
+    if (adminReadService.getAllVetRecords() == null) {
+      List<User> emptyEntries = null;
+      return emptyEntries;
+    }
+    return adminReadService.getAllUserRecords();
   }
 }

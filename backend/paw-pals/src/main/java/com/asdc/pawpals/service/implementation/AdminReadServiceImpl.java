@@ -3,7 +3,9 @@ package com.asdc.pawpals.service.implementation;
 import ch.qos.logback.classic.Logger;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.repository.AdminReadAllUserRepository;
 import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
 import com.asdc.pawpals.repository.AdminReadRepository;
 import com.asdc.pawpals.service.AdminReadService;
@@ -23,6 +25,9 @@ public class AdminReadServiceImpl implements AdminReadService {
   @Autowired
   AdminReadAllVetsRepository adminReadAllVetsRepository;
 
+  @Autowired
+  AdminReadAllUserRepository adminReadAllUserRepository;
+
   /**
    * fetches all the animal records
    */
@@ -39,5 +44,13 @@ public class AdminReadServiceImpl implements AdminReadService {
   public List<Vet> getAllVetRecords() {
     List<Vet> vets = adminReadAllVetsRepository.findAll();
     return vets;
+  }
+
+  /**
+   * fetches all the user records
+   */
+  public List<User> getAllUserRecords() {
+    List<User> users = adminReadAllUserRepository.findAll();
+    return users;
   }
 }
