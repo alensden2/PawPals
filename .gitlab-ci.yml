@@ -26,10 +26,14 @@ build-backend-job:       # This job runs in the build stage, which runs first.
   script:
     - cd group12/backend/paw-pals
     - mvn clean
+  tags:
+    - ugrad
 
 build-ui-job:       # This job runs in the build stage, which runs first.
   stage: ui
   script:
     - cd group12/frontend
     - npm install
-    - npm run build 
+    - npm run build
+  tags:
+    - ugrad
