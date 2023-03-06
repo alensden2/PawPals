@@ -3,6 +3,9 @@ package com.asdc.pawpals.utils;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.MedicalHistory;
 import com.asdc.pawpals.model.Vet;
+
+import java.util.stream.Collectors;
+
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.MedicalHistoryDto;
 import com.asdc.pawpals.dto.VetDto;
@@ -22,7 +25,7 @@ public class Transformations {
                         animalDto.setMedicalHistory(
                             animal.getMedicalHistories().stream().map(
                                 MODEL_TO_DTO_CONVERTER::medicalHistory
-                            ).toList()
+                            ).collect(Collectors.toList())
                         );
                 }
             }

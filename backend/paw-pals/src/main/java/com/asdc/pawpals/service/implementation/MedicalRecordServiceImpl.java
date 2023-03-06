@@ -31,7 +31,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         logger.debug("MedicalRecordService :: retrieveMedicalRecord :: medicalRecords are : {}", medicalRecords);
         List<MedicalHistoryDto> medicalHistoryDto = null;
         if(medicalRecords != null && !medicalRecords.isEmpty()){
-            medicalHistoryDto = medicalRecords.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::medicalHistory).toList();
+            medicalHistoryDto = medicalRecords.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::medicalHistory).collect(Collectors.toList());
         }
         return medicalHistoryDto;
     }
