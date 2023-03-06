@@ -22,6 +22,7 @@ stages:          # List of stages for jobs, and their order of execution
 
 build-backend-job:       # This job runs in the build stage, which runs first.
   stage: backend
+  image: maven:3-jdk-17
   script:
     - cd group12/backend/paw-pals
     - mvn clean
