@@ -58,7 +58,17 @@ public class Transformations {
     }
 
     public class DTO_TO_MODEL_CONVERTER{
-
+        public static Vet vet(VetDto vetDto){
+            Vet vet = new Vet();
+            if(vetDto != null){
+                vet.setName(vetDto.getName());
+                vet.setLicenseNumber(vetDto.getLicenseNumber());
+                vet.setExperience(vetDto.getExperience());
+                vet.setQualification(vetDto.getQualification());
+                vet.setClinicAddress(vetDto.getClinicAddress());
+            }
+            return vet;
+        }
     }
 
 }
