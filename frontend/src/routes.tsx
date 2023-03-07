@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import App from './App';
-import { Landing, AboutMe } from './pages';
+import { Landing, SignIn, SignUp } from './pages';
 
 const RoutesComp = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="landing" element={<Landing />} />
-          <Route path="aboutme" element={<AboutMe />} />
+        <Route>
+          <Route path="/" element={<Landing />} />
+          <Route path="signin" element={<SignIn />} />
+          <Route path="signup" element={<SignUp />} />
         </Route>
       </Routes>
     </BrowserRouter>
