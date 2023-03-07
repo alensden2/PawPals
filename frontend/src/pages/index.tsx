@@ -1,4 +1,5 @@
-import AboutMe from './AboutMe/AboutMe';
 import Landing from './Landing/Landing';
+import SignUp from './SignUp/SignUp';
+import SignIn from './SignIn/SignIn';
 
-export { AboutMe, Landing };
+export { Landing, SignUp, SignIn };
