@@ -1,13 +1,13 @@
 # Define the stages that jobs will be assigned to
 stages:
-  - code_quality
+  - code-quality
   - build
   - test
   - deploy
 
 # Job to detect code smells in the codebase
-code-smell:
-  stage: code_quality
+code-smell-backend:
+  stage: code-quality
   only:
     - dev  # Only run this job in the 'dev' branch
   script:
