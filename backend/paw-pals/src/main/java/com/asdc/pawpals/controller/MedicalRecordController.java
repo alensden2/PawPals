@@ -1,6 +1,9 @@
 package com.asdc.pawpals.controller;
 
+import com.asdc.pawpals.dto.MedicalHistoryDto;
 import com.asdc.pawpals.service.MedicalRecordService;
+
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,10 +26,10 @@ public class MedicalRecordController {
     // public ResponseEntity<Object> get
 
     @GetMapping("/animals/{animal_id}")
-    public ResponseEntity<Object> getMedicalHistory(
+    public ResponseEntity<List<MedicalHistoryDto>> getMedicalHistory(
         @PathVariable(value = "animal_id") Long animalId
     ){
-        Object medicalRecords = null;
+        List<MedicalHistoryDto> medicalRecords = null;
         if(medicalRecordService != null && animalId != null){
             medicalRecords = medicalRecordService.retrieveMedicalRecord(animalId);
         }

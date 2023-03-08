@@ -1,5 +1,9 @@
 package com.asdc.pawpals.dto;
 
+import java.util.List;
+
+import com.asdc.pawpals.model.MedicalHistory;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,4 +20,5 @@ public class AnimalDto {
     private String gender;
     private PetOwnerDto owner;
     private String photoUrl;
+    List<MedicalHistoryDto> medicalHistory;
 }

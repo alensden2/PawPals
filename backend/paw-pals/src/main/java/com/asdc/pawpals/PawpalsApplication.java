@@ -9,9 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PawpalsApplication {
 
-	// private static final Logger logger = LogManager.getLogger(PawpalsApplication.class);
 	public static void main(String[] args) {
-		// logger.info("PawPalsApplication :: Main :: starting the spring boot application");
 		SpringApplication.run(PawpalsApplication.class, args);
 	}
 

@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+.DS_Store
+
 ### STS ###
 .apt_generated
 .classpath
@@ -14,7 +16,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+*.idea*
 *.iws
 *.iml
 *.ipr
@@ -67,6 +69,7 @@ build.log
 dependency-reduced-pom.xml
 dump.rdb
 interpolated*.xml
+lib/
 manifest.yml
 out
 overridedb.*
@@ -75,5 +78,3 @@ target
 secrets.yml
 .gradletasknamecache
 .sts4-cache
-backend/paw-pals/src/main/resources/application.properties
-backend/paw-pals/pom.xml/*
