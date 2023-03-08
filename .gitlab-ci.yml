@@ -1,7 +1,7 @@
 # Define the stages that jobs will be assigned to
 stages:
-  - code-quality
   - build
+  - code-quality
   - test
   - deploy
 
