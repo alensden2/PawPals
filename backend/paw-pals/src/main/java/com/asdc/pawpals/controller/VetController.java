@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,15 +33,19 @@ public class VetController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Boolean> registerVet(@RequestBody Object requestBody){
+    public ResponseEntity<String> registerVet(@RequestBody Object requestBody){
         logger.info("Recieved request as :", requestBody.toString());
         Boolean vetRegistered = false;
-        
-        if(CommonUtils.isStrictTypeOf(requestBody, VetDto.class)){
-            VetDto vet = ObjectMapperWrapper.getInstance().convertValue(requestBody, VetDto.class);
-            vetRegistered = vetService.registerVet(vet);
+        try{
+            VetDto vet = null;
+            if(CommonUtils.isStrictTypeOf(requestBody, VetDto.class)){
+                vet = ObjectMapperWrapper.getInstance().convertValue(requestBody, VetDto.class);
+                vetRegistered = vetService.registerVet(vet);
+            }
+            return ResponseEntity.ok(vetRegistered && vet != null ? vet.getUsername() : "");
+        } catch(UsernameNotFoundException e){
+            return ResponseEntity.badRequest().body("User name provided is invalid");
         }
-        return ResponseEntity.ok(vetRegistered);
     }
 
 
