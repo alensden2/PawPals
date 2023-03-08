@@ -48,6 +48,7 @@ public class AdminReadServiceImpl implements AdminReadService {
 
   /**
    * fetches all the user records
+   *
    */
   public List<User> getAllUserRecords() {
     List<User> users = adminReadAllUserRepository.findAll();
