@@ -24,8 +24,7 @@ build-backend-job:       # This job runs in the build stage, which runs first.
   stage: backend
   image: maven:3-jdk-17
   only:
-    refs:
-      - dev
+    - dev
   script:
     - cd backend/paw-pals
     - mvn clean
@@ -35,8 +34,7 @@ build-backend-job:       # This job runs in the build stage, which runs first.
 build-ui-job:       # This job runs in the build stage, which runs first.
   stage: ui
   only:
-    refs:
-      - dev
+    - dev
   script:
     - cd frontend
     - npm install
