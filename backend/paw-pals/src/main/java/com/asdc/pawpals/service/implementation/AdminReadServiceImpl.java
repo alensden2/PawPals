@@ -11,6 +11,8 @@ import com.asdc.pawpals.repository.AdminReadRepository;
 import com.asdc.pawpals.service.AdminReadService;
 import java.util.List;
 import java.util.logging.LogManager;
+
+import com.asdc.pawpals.utils.Transformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,14 @@ public class AdminReadServiceImpl implements AdminReadService {
   public List<User> getAllUserRecords() {
     List<User> users = adminReadAllUserRepository.findAll();
     return users;
+  }
+
+  @Override
+  public Boolean addAnimal(AnimalDto animalDto){
+//    Boolean animalAdded = false;
+//    if(animal !=null ){
+//      AnimalDto animal = Transformations.DTO_TO_MODEL_CONVERTER.
+//    }
+    return false;
   }
 }

@@ -1,5 +1,6 @@
 package com.asdc.pawpals.controller;
 
+import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
@@ -9,6 +10,7 @@ import com.asdc.pawpals.service.AdminReadService;
 import java.util.List;
 
 import com.asdc.pawpals.utils.CommonUtils;
+import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,4 +77,16 @@ public class AdminController {
 //    }
 //    return ResponseEntity.ok(vetAdded);
 //  }
+
+  @PostMapping("/post-animal")
+  public ResponseEntity<Boolean> postAnimal(@RequestBody Object requestBody){
+    logger.info("Recieved request as :", requestBody.toString());
+    Boolean animalAdd = false;
+    if(CommonUtils.isStrictTypeOf(requestBody, Animal.class)){
+      AnimalDto animal = ObjectMapperWrapper.getInstance().convertValue(requestBody, AnimalDto.class);
+      animalAdd = adminReadService.addAnimal(animal);
+    }
+    return null;
+  }
+  
 }
