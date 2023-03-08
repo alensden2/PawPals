@@ -1,20 +1,26 @@
 package com.asdc.pawpals.controller;
 
+import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminReadService;
-import com.asdc.pawpals.service.implementation.AdminReadServiceImpl;
+
 import java.util.List;
+
+import com.asdc.pawpals.utils.CommonUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminReadController {
-  // private static final Logger logger = LogManager.getLogger(AdminReadController.class);
+public class AdminController {
+  // private static final Logger logger = LogManager.getLogger(AdminController.class);
+  private static final Logger logger = LogManager.getLogger(VetController.class);
+
 
   @Autowired
   AdminReadService adminReadService;
@@ -23,7 +29,7 @@ public class AdminReadController {
    * Gets all the animal records
    * @return
    */
-  @GetMapping("/allAnimal")
+  @GetMapping("/all-animals")
   public List<Animal> getAllAnimalRecords() {
     if (adminReadService.getAllAnimalRecords() == null) {
       List<Animal> emptyEntries = null;
@@ -36,7 +42,7 @@ public class AdminReadController {
    * Gets all the vet records
    * @return
    */
-  @GetMapping("/allVet")
+  @GetMapping("/all-vets")
   public List<Vet> getAllVetRecords() {
     if (adminReadService.getAllVetRecords() == null) {
       List<Vet> emptyEntries = null;
@@ -49,7 +55,7 @@ public class AdminReadController {
    * Gets all the user records
    * @return
    */
-  @GetMapping("/allUser")
+  @GetMapping("/all-users")
   public List<User> getAllUserRecords() {
     if (adminReadService.getAllVetRecords() == null) {
       List<User> emptyEntries = null;
@@ -57,4 +63,16 @@ public class AdminReadController {
     }
     return adminReadService.getAllUserRecords();
   }
+
+//  @PostMapping("/add-vet")
+//  public ResponseEntity<Boolean> addVet(@ResponseBody Object requestBody){
+//    logger.info("Recieved request as :", requestBody.toString());
+//    /** add edge case if wrong data sent */
+//    boolean vetAdded = false;
+//
+//    if(CommonUtils.isStrictTypeOf(requestBody, VetDto.class)){
+//      VetDto vetDto = Objec
+//    }
+//    return ResponseEntity.ok(vetAdded);
+//  }
 }
