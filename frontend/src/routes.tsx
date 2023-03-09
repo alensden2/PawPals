@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Landing, SignIn, SignUp } from './pages';
+import { Landing, SignIn, SignUp } from '@src/pages';
 
 const RoutesComp = () => {
   return (
