@@ -6,17 +6,16 @@ import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.repository.AdminReadAllAnimalsRepository;
 import com.asdc.pawpals.repository.AdminReadAllUserRepository;
 import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
 import com.asdc.pawpals.repository.AdminReadRepository;
 import com.asdc.pawpals.service.AdminReadService;
+import com.asdc.pawpals.utils.Transformations;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.asdc.pawpals.utils.Transformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminReadServiceImpl implements AdminReadService {
   Logger logger = LogManager.getLogger(AdminReadServiceImpl.class);
+
   @Autowired
   AdminReadRepository adminReadRepository;
 
@@ -33,15 +33,28 @@ public class AdminReadServiceImpl implements AdminReadService {
   @Autowired
   AdminReadAllUserRepository adminReadAllUserRepository;
 
+  @Autowired
+  AdminReadAllAnimalsRepository adminReadAllAnimalsRepository;
+
   /**
    * fetches all the animal records
    */
   @Override
-  public List<Animal> getAllAnimalRecords() {
-    List<Animal> animalRecords = adminReadRepository.findAll();
-    //logger.debug("allAnimalRecords :: retrieveAnimalRecord :: AnimalRecords are : {}", animalRecords);
-
-    return animalRecords;
+  public List<AnimalDto> getAllAnimalRecords() {
+    List<Animal> animals = adminReadAllAnimalsRepository.findAll();
+    logger.debug(
+      "AdminReadService :: getAllVets :: userRecordsAre are : {}",
+      animals
+    );
+    List<AnimalDto> animalsDto = null;
+    if (animals != null && !animals.isEmpty()) {
+      animalsDto =
+        animals
+          .stream()
+          .map(Transformations.MODEL_TO_DTO_CONVERTER::animal)
+          .collect(Collectors.toList());
+    }
+    return animalsDto;
   }
 
   /**
@@ -49,10 +62,17 @@ public class AdminReadServiceImpl implements AdminReadService {
    */
   public List<VetDto> getAllVetRecords() {
     List<Vet> vets = adminReadAllVetsRepository.findAll();
-    logger.debug("AdminReadService :: getAllVets :: userRecordsAre are : {}", vets);
+    logger.debug(
+      "AdminReadService :: getAllVets :: userRecordsAre are : {}",
+      vets
+    );
     List<VetDto> vetsDto = null;
-    if(vets != null && !vets.isEmpty()){
-      vetsDto = vets.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vet).collect(Collectors.toList());
+    if (vets != null && !vets.isEmpty()) {
+      vetsDto =
+        vets
+          .stream()
+          .map(Transformations.MODEL_TO_DTO_CONVERTER::vet)
+          .collect(Collectors.toList());
     }
     return vetsDto;
   }
@@ -63,20 +83,27 @@ public class AdminReadServiceImpl implements AdminReadService {
    */
   public List<UserDto> getAllUserRecords() {
     List<User> userRecords = adminReadAllUserRepository.findAll();
-    logger.debug("AdminReadService :: getAllUsers :: userRecordsAre are : {}", userRecords);
+    logger.debug(
+      "AdminReadService :: getAllUsers :: userRecordsAre are : {}",
+      userRecords
+    );
     List<UserDto> userRecordsDto = null;
-    if(userRecords != null && !userRecords.isEmpty()){
-      userRecordsDto = userRecords.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::user).collect(Collectors.toList());
+    if (userRecords != null && !userRecords.isEmpty()) {
+      userRecordsDto =
+        userRecords
+          .stream()
+          .map(Transformations.MODEL_TO_DTO_CONVERTER::user)
+          .collect(Collectors.toList());
     }
     return userRecordsDto;
   }
 
   @Override
-  public Boolean addAnimal(AnimalDto animalDto){
-//    Boolean animalAdded = false;
-//    if(animal !=null ){
-//      AnimalDto animal = Transformations.DTO_TO_MODEL_CONVERTER.
-//    }
+  public Boolean addAnimal(AnimalDto animalDto) {
+    //    Boolean animalAdded = false;
+    //    if(animal !=null ){
+    //      AnimalDto animal = Transformations.DTO_TO_MODEL_CONVERTER.
+    //    }
     return false;
   }
 }
