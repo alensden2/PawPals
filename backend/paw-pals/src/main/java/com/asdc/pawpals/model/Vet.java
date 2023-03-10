@@ -1,11 +1,16 @@
 package com.asdc.pawpals.model;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
@@ -21,7 +26,12 @@ public class Vet {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
     private List<MedicalHistory> medicalHistories;
 
-   
     @OneToOne(cascade = CascadeType.ALL)
     private User user;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
+    List<Appointment> appointment;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
+    List<VetAvailability> availability;
 }

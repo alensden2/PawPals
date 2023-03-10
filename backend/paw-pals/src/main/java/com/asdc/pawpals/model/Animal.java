@@ -18,6 +18,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor
 public class Animal {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
     private String type;
@@ -31,5 +32,7 @@ public class Animal {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "animal")
     private List<MedicalHistory> medicalHistories;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
+    List<Appointment> appointment;
 
 }

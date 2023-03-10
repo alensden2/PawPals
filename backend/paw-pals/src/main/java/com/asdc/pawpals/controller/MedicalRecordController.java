@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/medical-history-management")
+@RequestMapping("unauth/medical-history-management")
 public class MedicalRecordController {
     Logger logger = LogManager.getLogger(MedicalRecordController.class);
 
