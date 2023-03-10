@@ -1,9 +1,18 @@
 package com.asdc.pawpals.utils;
 
+import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.MedicalHistoryDto;
+import com.asdc.pawpals.dto.PetOwnerDto;
+import com.asdc.pawpals.dto.UserDto;
+import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.MedicalHistory;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.MedicalHistory;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
+import java.util.stream.Collectors;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -116,8 +125,6 @@ public class Transformations {
             }
             return userDto;
         }
-
-
     }
 
     public class DTO_TO_MODEL_CONVERTER {
@@ -207,4 +214,4 @@ public class Transformations {
             return user;
         }
     }
-}
+  }
