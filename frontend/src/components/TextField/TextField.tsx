@@ -6,12 +6,14 @@ interface CustomTextFieldProps {
   type: string;
   value: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  fullWidth?: boolean;
 }
 
 const CustomTextField: React.FC<CustomTextFieldProps> = ({
   label,
   type,
   value,
+  fullWidth = false,
   onChange
 }) => {
   return (
@@ -21,7 +23,7 @@ const CustomTextField: React.FC<CustomTextFieldProps> = ({
       value={value}
       onChange={onChange}
       variant="outlined"
-      fullWidth
+      fullWidth={fullWidth}
       margin="normal"
     />
   );

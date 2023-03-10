@@ -9,6 +9,7 @@ interface CustomButtonProps {
   color?: 'inherit' | 'primary' | 'secondary' | 'default' | undefined;
   children?: React.ReactNode;
   variant?: 'text' | 'outlined' | 'contained' | undefined;
+  fullWidth?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -18,6 +19,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   color,
   children,
   type,
+  fullWidth = false,
   variant
 }) => {
   return (
@@ -26,7 +28,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       variant={variant}
       color={color}
       disabled={disabled}
-      fullWidth
+      fullWidth={fullWidth}
       className={className}
       onClick={onClick}
     >
