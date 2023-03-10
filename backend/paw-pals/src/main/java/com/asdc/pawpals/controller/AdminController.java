@@ -2,9 +2,6 @@ package com.asdc.pawpals.controller;
 
 import java.util.List;
 
-import com.asdc.pawpals.dto.UserDto;
-import com.asdc.pawpals.dto.VetDto;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.UserDto;
+import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.model.User;
-import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminReadService;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
@@ -53,15 +50,15 @@ public class AdminController {
      *
      * @return
      */
-//    @GetMapping("/all-vets")
+   @GetMapping("/all-vets")
 
-//    public ResponseEntity<List<VetDto>> getAllVetRecords() {
-//         List<VetDto> vetDetails = null;
-//         if(adminReadService != null){
-//             vetDetails = adminReadService.getAllVetRecords();
-//        }
-//        return ResponseEntity.ok().body(vetDetails);
-//    }
+   public ResponseEntity<List<VetDto>> getAllVetRecords() {
+        List<VetDto> vetDetails = null;
+        if(adminReadService != null){
+            vetDetails = adminReadService.getAllVetRecords();
+       }
+       return ResponseEntity.ok().body(vetDetails);
+   }
 
     /**
      * Gets all the user records

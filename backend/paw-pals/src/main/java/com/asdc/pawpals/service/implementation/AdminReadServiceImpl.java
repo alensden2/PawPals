@@ -2,6 +2,7 @@ package com.asdc.pawpals.service.implementation;
 
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.UserDto;
+import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
@@ -46,9 +47,14 @@ public class AdminReadServiceImpl implements AdminReadService {
   /**
    * fetches all the vet records
    */
-  public List<Vet> getAllVetRecords() {
+  public List<VetDto> getAllVetRecords() {
     List<Vet> vets = adminReadAllVetsRepository.findAll();
-    return vets;
+    logger.debug("AdminReadService :: getAllVets :: userRecordsAre are : {}", vets);
+    List<VetDto> vetsDto = null;
+    if(vets != null && !vets.isEmpty()){
+      vetsDto = vets.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vet).collect(Collectors.toList());
+    }
+    return vetsDto;
   }
 
   /**
