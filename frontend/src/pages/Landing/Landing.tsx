@@ -3,7 +3,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { useNavigate } from 'react-router-dom';
 import useStyles from './Landing.styles';
 
-const HOME_PAGE_IMAGE = '../../assets/images/homepage.jpg';
+import HOME_PAGE_IMAGE from '@src/assets/images/homepage.jpg';
 
 const Landing: React.FC = () => {
   const classes = useStyles();

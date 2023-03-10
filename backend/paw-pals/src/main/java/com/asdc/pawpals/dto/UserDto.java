@@ -23,6 +23,7 @@ public class UserDto implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
+    private String role;
 
     private String email;
     private List<GrantedAuthority> authorities;
