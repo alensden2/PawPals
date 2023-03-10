@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import {
   RegisterUserApiInput,
   RegisterUserApiResponse
@@ -7,12 +6,14 @@ import { axios } from '@src/lib';
 
 export const registerUser = async (
   user: RegisterUserApiInput
-): Promise<AxiosResponse<RegisterUserApiResponse>> => {
-  console.log('abc');
-  const response: AxiosResponse<RegisterUserApiResponse> = await axios.post(
-    '/unauth/user/register',
-    user
-  );
+): Promise<RegisterUserApiResponse> => {
+  let response: RegisterUserApiResponse;
+
+  try {
+    response = await axios.post('/unauth/user/register', user);
+  } catch (error: any) {
+    response = error.errorReponse;
+  }
 
   return response;
 };

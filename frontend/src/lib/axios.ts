@@ -13,6 +13,21 @@ class API {
         // Setting the Content-Type header to application/json specifies that the data being sent in the request body is in JSON format.
       }
     });
+
+    // By adding interceptors to the Axios instance, we can customize the behavior of our API calls globally, without having to modify each function individually
+    this.apiClient.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 400) {
+          // added response to errorReponse, otherwise axios was not giving response property for rejected promise
+          // Issue reference: https://github.com/axios/axios/issues/960
+          error.errorReponse = error.response;
+          return Promise.reject(error);
+        } else {
+          return Promise.reject(error);
+        }
+      }
+    );
   }
 
   public async get(endpoint: string, params?: object): Promise<AxiosResponse> {
