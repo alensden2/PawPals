@@ -8,10 +8,18 @@ stages:
 # Job to detect code smells in the codebase
 code-smell-backend:
   stage: code-quality
+  image: openjdk:11
   only:
     - dev  # Only run this job in the 'dev' branch
   script:
     - echo "Detecting code smells..."  # Output a message indicating the job is running
+    - mkdir $CI_PROJECT_DIR/backend/paw-pals/smells
+    - java -jar $CI_PROJECT_DIR/backend/paw-pals/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR/backend/paw-pals/src/main/java/com/asdc/pawpals -o $CI_PROJECT_DIR/backend/paw-pals/smells
+    - cd backend/paw-pals/smells
+    - ls -a
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/backend/paw-pals/smells
   when: manual  # Require manual intervention to run this job
   tags:
     - ugrad  # Run this job on a runner with the 'ugrad' tag
