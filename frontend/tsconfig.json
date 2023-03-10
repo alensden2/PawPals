@@ -7,6 +7,10 @@
       "DOM",
       "ESNext"
     ] /* Specify library files to be included in the compilation. */,
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"]
+    },
     "jsx": "react-jsx" /* Specify JSX code generation: 'preserve', 'react-native', 'react' or 'react-jsx'. */,
     "noEmit": true /* Do not emit outputs. */,
     "isolatedModules": true /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */,

@@ -1,39 +1,87 @@
-# This file is a template, and might need editing before it works on your project.
-# This is a sample GitLab CI/CD configuration file that should run without any modifications.
-# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
-# it uses echo commands to simulate the pipeline execution.
-#
-# A pipeline is composed of independent jobs that run scripts, grouped into stages.
-# Stages run in sequential order, but jobs within stages run in parallel.
-#
-# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
-#
-# You can copy and paste this template into a new `.gitlab-ci.yml` file.
-# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
-#
-# To contribute improvements to CI/CD templates, please follow the Development guide at:
-# https://docs.gitlab.com/ee/development/cicd/templates.html
-# This specific template is located at:
-# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+# Define the stages that jobs will be assigned to
+stages:
+  - build
+  - code-quality
+  - test
+  - deploy
 
-stages:          # List of stages for jobs, and their order of execution
-  - backend
-  - ui
-
-build-backend-job:       # This job runs in the build stage, which runs first.
-  stage: backend
-  image: maven:3-jdk-17
+# Job to detect code smells in the codebase
+code-smell-backend:
+  stage: code-quality
+  image: openjdk:11
+  only:
+    - dev  # Only run this job in the 'dev' branch
   script:
-    - cd backend/paw-pals
+    - echo "Detecting code smells..."  # Output a message indicating the job is running
+    - mkdir $CI_PROJECT_DIR/backend/paw-pals/smells
+    - java -jar $CI_PROJECT_DIR/backend/paw-pals/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR/backend/paw-pals/src/main/java/com/asdc/pawpals -o $CI_PROJECT_DIR/backend/paw-pals/smells
+    - cd backend/paw-pals/smells
+    - ls -a
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/backend/paw-pals/smells
+  when: manual  # Require manual intervention to run this job
+  tags:
+    - ugrad  # Run this job on a runner with the 'ugrad' tag
+
+# Job to build the backend code
+build-backend:
+  stage: build
+  image: maven:3-jdk-17  # Use the maven:3-jdk-17 Docker image for this job
+  only:
+    - dev
+  script:
+    - cd backend/paw-pals/
     - mvn clean
+  when: manual
   tags:
     - ugrad
 
-build-ui-job:       # This job runs in the build stage, which runs first.
-  stage: ui
+# Job to build the frontend code
+build-frontend:
+  stage: build
+  only:
+    - dev
   script:
-    - cd frontend
-    - npm install
-    - npm run build
+    - echo "Building frontend..."
+    - cd frontend  # Change to the 'frontend' directory
+    - npm install  # Install the required dependencies
+    - npm run build  # Build the frontend code
+  when: manual
+  tags:
+    - ugrad
+
+# Job to test the backend code
+test-backend:
+  stage: test
+  only:
+    - dev
+  script:
+    - echo "Testing backend..."
+    - cd backend/paw-pals
+    - mvn clean
+  when: manual
+  tags:
+    - ugrad
+
+# Job to deploy the backend code
+deploy-backend:
+  stage: deploy
+  only:
+    - dev
+  script:
+    - echo "Deploying backend..."
+  when: manual
+  tags:
+    - ugrad
+
+# Job to deploy the frontend code
+deploy-frontend:
+  stage: deploy
+  only:
+    - dev
+  script:
+    - echo "Deploying frontend..."
+  when: manual
   tags:
     - ugrad
