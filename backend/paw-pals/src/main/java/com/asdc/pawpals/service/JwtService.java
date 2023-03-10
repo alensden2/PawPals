@@ -1,13 +1,9 @@
 package com.asdc.pawpals.service;
 
-import com.asdc.pawpals.utils.AuthenticationResponse;
-import com.asdc.pawpals.utils.AuthenticationRequest;
-import io.jsonwebtoken.Claims;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.function.Function;
+import com.asdc.pawpals.utils.AuthenticationRequest;
+import com.asdc.pawpals.utils.AuthenticationResponse;
 
 @Service
 public interface JwtService {

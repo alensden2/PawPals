@@ -2,17 +2,27 @@ package com.asdc.pawpals.utils;
 
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.MedicalHistory;
+import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 
 import java.util.stream.Collectors;
 
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.MedicalHistoryDto;
+import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Transformations {
 
+
+    
     public class MODEL_TO_DTO_CONVERTER{
+
+
         public static AnimalDto animal(Animal animal){
             AnimalDto animalDto = new AnimalDto();
             if(animal != null){
@@ -55,10 +65,38 @@ public class Transformations {
             }
             return vetDto;
         }
+
+        public static UserDto user(User user){
+            UserDto userDto = new UserDto();
+            if(user != null){
+                userDto.setEmail(user.getEmail());
+                userDto.setUserName(user.getUserId());
+                userDto.setPassword(user.getPassword());
+                userDto.setRole(user.getRole());
+
+
+            }
+            return userDto;
+        }
+
+
     }
 
     public class DTO_TO_MODEL_CONVERTER{
 
+        public static User user(UserDto userDto){
+            User user = new User();
+            
+    
+            if(userDto != null){
+                PasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
+                user.setUserId(userDto.getUsername());
+                user.setEmail(userDto.getEmail());
+                user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+                user.setRole(userDto.getRole());
+            }
+            return user;
+        }
     }
 
 }
