@@ -7,14 +7,16 @@ export type RegisterUserApiInput = {
 
 export type RegisterUserApiResponse = {
   data: {
-    body: {
-      error?: boolean;
-      success: boolean;
-      message: string;
-      role: string;
-      password: string;
-      email: string;
-      username: string;
-    };
+    error: boolean;
+    success: boolean;
+    message: string;
+    body: string | RegisterUserApiResponseBodyObject;
   };
+};
+
+type RegisterUserApiResponseBodyObject = {
+  role: string;
+  password: string;
+  email: string;
+  username: string;
 };
