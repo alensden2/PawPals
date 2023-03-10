@@ -1,7 +1,7 @@
 package com.asdc.pawpals.service.implementation;
 
-import ch.qos.logback.classic.Logger;
 import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
@@ -10,7 +10,10 @@ import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
 import com.asdc.pawpals.repository.AdminReadRepository;
 import com.asdc.pawpals.service.AdminReadService;
 import java.util.List;
-import java.util.logging.LogManager;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.asdc.pawpals.utils.Transformations;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AdminReadServiceImpl implements AdminReadService {
-  //Logger logger = LogManager.getLogger(MedicalRecordServiceImpl.class);
-
+  Logger logger = LogManager.getLogger(AdminReadServiceImpl.class);
   @Autowired
   AdminReadRepository adminReadRepository;
 
@@ -33,6 +35,7 @@ public class AdminReadServiceImpl implements AdminReadService {
   /**
    * fetches all the animal records
    */
+  @Override
   public List<Animal> getAllAnimalRecords() {
     List<Animal> animalRecords = adminReadRepository.findAll();
     //logger.debug("allAnimalRecords :: retrieveAnimalRecord :: AnimalRecords are : {}", animalRecords);
@@ -52,9 +55,14 @@ public class AdminReadServiceImpl implements AdminReadService {
    * fetches all the user records
    *
    */
-  public List<User> getAllUserRecords() {
-    List<User> users = adminReadAllUserRepository.findAll();
-    return users;
+  public List<UserDto> getAllUserRecords() {
+    List<User> userRecords = adminReadAllUserRepository.findAll();
+    logger.debug("AdminReadService :: getAllUsers :: userRecordsAre are : {}", userRecords);
+    List<UserDto> userRecordsDto = null;
+    if(userRecords != null && !userRecords.isEmpty()){
+      userRecordsDto = userRecords.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::user).collect(Collectors.toList());
+    }
+    return userRecordsDto;
   }
 
   @Override
