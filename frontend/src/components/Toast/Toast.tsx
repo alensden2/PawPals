@@ -13,8 +13,8 @@ function ToastComponent(props: Props) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (message) setOpen(true);
-  }, [message]);
+    if (props.toast.message) setOpen(true);
+  }, [props.toast]);
 
   function handleClose() {
     setOpen(false);
