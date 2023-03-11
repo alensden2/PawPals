@@ -12,12 +12,18 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useStyles from './SignUp.styles';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { TextField, Button } from '@src/components';
+import { TextField, Button, Toast } from '@src/components';
 
-import { RegisterUserApiResponse } from '@src/interfaces/api';
+import { RegisterUserApiResponse, ToastMessage } from '@src/interfaces';
 import { registerUser } from '@src/api/auth';
+import { TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
 
 const SignUp: React.FC = () => {
+  const [toastMessage, setToastMessage] = useState<ToastMessage>({
+    type: 'success',
+    message: ''
+  });
+
   const classes = useStyles();
 
   const [userName, setUserName] = useState('');
@@ -37,12 +43,14 @@ const SignUp: React.FC = () => {
       email
     });
 
-    if (response?.data?.error) {
-      // TODO: Toast message of failure
-      console.log(response.data.error);
-      console.log(response.data.message);
+    const hasError = response?.data?.error;
+    if (hasError) {
+      setToastMessage({ type: 'error', message: response.data?.message });
     } else {
-      // TODO: Toast message of success
+      setToastMessage({
+        type: 'success',
+        message: TOAST_MESSAGE_SIGNUP_SUCCESS
+      });
     }
   };
 
@@ -118,6 +126,7 @@ const SignUp: React.FC = () => {
           </Link>
         </Typography>
       </Container>
+      <Toast toast={toastMessage} />
     </div>
   );
 };
