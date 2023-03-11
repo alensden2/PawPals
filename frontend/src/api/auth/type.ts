@@ -1,36 +1,41 @@
-export type RegisterUserApiInput = {
+export type RegisterUserApiInputType = {
   userName: string;
   password: string;
   email: string;
   role: string;
 };
 
-export type RegisterUserApiResponse = {
+export type RegisterUserApiResponseType = {
   data: {
     error: boolean;
     success: boolean;
     message: string;
-    body: string | RegisterUserApiResponseBodyObject;
+    body: string | RegisterUserApiResponseBodyType;
   };
 };
 
-type RegisterUserApiResponseBodyObject = {
+type RegisterUserApiResponseBodyType = {
   role: string;
   password: string;
   email: string;
   username: string;
 };
 
-export type AuthenticateUserApiInput = {
+export type AuthenticateUserApiInputType = {
   userName: string;
   password: string;
 };
 
-export type AuthenticateUserApiResponse = {
+export type AuthenticateUserApiResponseType = {
   data: {
     error: boolean;
     success: boolean;
     message: string;
     body: any;
   };
+};
+
+export type RegisterUserType = {
+  error: boolean;
+  errorMessage: string;
 };

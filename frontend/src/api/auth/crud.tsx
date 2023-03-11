@@ -1,29 +1,30 @@
 import {
-  RegisterUserApiInput,
-  AuthenticateUserApiInput,
-  RegisterUserApiResponse,
-  AuthenticateUserApiResponse
+  RegisterUserApiInputType,
+  AuthenticateUserApiInputType,
+  RegisterUserApiResponseType,
+  AuthenticateUserApiResponseType
 } from './type';
 import { axios } from '@src/lib';
 
-export const registerUser = async (
-  user: RegisterUserApiInput
-): Promise<RegisterUserApiResponse> => {
-  let response: RegisterUserApiResponse;
+export const registerUserApiCall = async (
+  user: RegisterUserApiInputType
+): Promise<RegisterUserApiResponseType> => {
+  let response: RegisterUserApiResponseType;
 
   try {
     response = await axios.post('/unauth/user/register', user);
   } catch (error: any) {
+    console.error(error);
     response = error.errorReponse;
   }
 
   return response;
 };
 
-export const authenticateUser = async (
-  user: AuthenticateUserApiInput
-): Promise<AuthenticateUserApiResponse> => {
-  let response: AuthenticateUserApiResponse;
+export const authenticateUserApiCall = async (
+  user: AuthenticateUserApiInputType
+): Promise<AuthenticateUserApiResponseType> => {
+  let response: AuthenticateUserApiResponseType;
 
   try {
     response = await axios.post('/unauth/user/authenticate', user);
