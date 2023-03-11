@@ -18,7 +18,7 @@ class API {
     this.apiClient.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response?.status === 400) {
+        if (error.response?.status === 400 || error.response?.status === 403) {
           // added response to errorReponse, otherwise axios was not giving response property for rejected promise
           // Issue reference: https://github.com/axios/axios/issues/960
           error.errorReponse = error.response;

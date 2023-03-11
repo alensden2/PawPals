@@ -2,19 +2,19 @@ import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 
 import React, { useState, useEffect } from 'react';
-import { ToastMessage } from '@src/interfaces';
+import { ToastInput } from '@src/interfaces';
 
 interface Props {
-  toast: ToastMessage;
+  toast: ToastInput;
 }
 
-function Toast(props: Props) {
+function ToastComponent(props: Props) {
   const { type, message } = props.toast;
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (message) setOpen(true);
-  }, [message]);
+    if (props.toast.message) setOpen(true);
+  }, [props.toast]);
 
   function handleClose() {
     setOpen(false);
@@ -29,4 +29,4 @@ function Toast(props: Props) {
   );
 }
 
-export default Toast;
+export default ToastComponent;

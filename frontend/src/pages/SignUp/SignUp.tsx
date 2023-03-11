@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+// react
+import React, { useState, useContext } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
+// material ui
 import {
   Container,
   Link,
@@ -8,49 +12,63 @@ import {
   InputLabel,
   MenuItem
 } from '@material-ui/core';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import useStyles from './SignUp.styles';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { TextField, Button, Toast } from '@src/components';
+// components
+import { TextField, Button } from '@src/components';
 
-import { RegisterUserApiResponse, ToastMessage } from '@src/interfaces';
-import { registerUser } from '@src/api/auth';
+// styles
+import useStyles from './SignUp.styles';
+
+// constants
 import { TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
 
-const SignUp: React.FC = () => {
-  const [toastMessage, setToastMessage] = useState<ToastMessage>({
-    type: 'success',
-    message: ''
-  });
+// context
+import { ToastContext } from '@src/context';
 
+// api
+import { RegisterUserType } from '@src/api/type';
+import { registerUser } from '@src/api/auth';
+
+const SignUp: React.FC = () => {
+  // styles
   const classes = useStyles();
 
+  // state
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
 
+  // context
+  const { setToast } = useContext(ToastContext);
+
+  // navigation
   const navigate = useNavigate();
 
+  // submit function
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const response: RegisterUserApiResponse = await registerUser({
+    const response: RegisterUserType = await registerUser({
       userName,
       password,
       role: selectedOption,
       email
     });
 
-    const hasError = response?.data?.error;
+    const hasError = response.error;
     if (hasError) {
-      setToastMessage({ type: 'error', message: response.data?.message });
+      // display error toast
+      setToast({ type: 'error', message: response.errorMessage });
     } else {
-      setToastMessage({
+      // display success toast and ask user to sign in
+      setToast({
         type: 'success',
         message: TOAST_MESSAGE_SIGNUP_SUCCESS
       });
+
+      navigate('/signin');
     }
   };
 
@@ -126,7 +144,6 @@ const SignUp: React.FC = () => {
           </Link>
         </Typography>
       </Container>
-      <Toast toast={toastMessage} />
     </div>
   );
 };
