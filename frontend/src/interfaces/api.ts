@@ -20,3 +20,17 @@ type RegisterUserApiResponseBodyObject = {
   email: string;
   username: string;
 };
+
+export type AuthenticateUserApiInput = {
+  userName: string;
+  password: string;
+};
+
+export type AuthenticateUserApiResponse = {
+  data: {
+    error: boolean;
+    success: boolean;
+    message: string;
+    body: any;
+  };
+};

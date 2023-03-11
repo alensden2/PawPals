@@ -1,7 +1,9 @@
 import {
   RegisterUserApiInput,
-  RegisterUserApiResponse
-} from '@src/interfaces/api';
+  AuthenticateUserApiInput,
+  RegisterUserApiResponse,
+  AuthenticateUserApiResponse
+} from '@src/interfaces';
 import { axios } from '@src/lib';
 
 export const registerUser = async (
@@ -11,6 +13,20 @@ export const registerUser = async (
 
   try {
     response = await axios.post('/unauth/user/register', user);
+  } catch (error: any) {
+    response = error.errorReponse;
+  }
+
+  return response;
+};
+
+export const authenticateUser = async (
+  user: AuthenticateUserApiInput
+): Promise<AuthenticateUserApiResponse> => {
+  let response: AuthenticateUserApiResponse;
+
+  try {
+    response = await axios.post('/unauth/user/authenticate', user);
   } catch (error: any) {
     response = error.errorReponse;
   }
