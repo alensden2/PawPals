@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Container,
   Link,
@@ -12,17 +12,15 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import useStyles from './SignUp.styles';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { TextField, Button, Toast } from '@src/components';
+import { TextField, Button } from '@src/components';
 
-import { RegisterUserApiResponse, ToastInput } from '@src/interfaces';
+import { RegisterUserApiResponse } from '@src/interfaces';
 import { registerUser } from '@src/api/auth';
 import { TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
+import { ToastContext } from '@src/context';
 
 const SignUp: React.FC = () => {
-  const [toast, setToast] = useState<ToastInput>({
-    type: 'success',
-    message: ''
-  });
+  const { setToast } = useContext(ToastContext);
 
   const classes = useStyles();
 
@@ -54,10 +52,7 @@ const SignUp: React.FC = () => {
         message: TOAST_MESSAGE_SIGNUP_SUCCESS
       });
 
-      setTimeout(() => {
-        navigate('/signin');
-      }, 2000);
-      // redirect to sign in page
+      navigate('/signin');
     }
   };
 
@@ -133,7 +128,6 @@ const SignUp: React.FC = () => {
           </Link>
         </Typography>
       </Container>
-      <Toast toast={toast} />
     </div>
   );
 };
