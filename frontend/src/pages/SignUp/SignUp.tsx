@@ -14,7 +14,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 import { TextField, Button } from '@src/components';
 
-import { RegisterUserApiResponse } from '@src/interfaces';
+import { RegisterUserApiResponse } from '@src/api/type';
 import { registerUser } from '@src/api/auth';
 import { TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
 import { ToastContext } from '@src/context';

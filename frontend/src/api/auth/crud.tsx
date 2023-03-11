@@ -3,7 +3,7 @@ import {
   AuthenticateUserApiInput,
   RegisterUserApiResponse,
   AuthenticateUserApiResponse
-} from '@src/interfaces';
+} from './type';
 import { axios } from '@src/lib';
 
 export const registerUser = async (
