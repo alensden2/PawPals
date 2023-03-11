@@ -1,3 +1,2 @@
-export interface User {
-  name: string;
-}
+export * from './api';
+export * from './common';
