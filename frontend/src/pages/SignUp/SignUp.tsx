@@ -14,12 +14,12 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 import { TextField, Button, Toast } from '@src/components';
 
-import { RegisterUserApiResponse, ToastMessage } from '@src/interfaces';
+import { RegisterUserApiResponse, ToastInput } from '@src/interfaces';
 import { registerUser } from '@src/api/auth';
 import { TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
 
 const SignUp: React.FC = () => {
-  const [toastMessage, setToastMessage] = useState<ToastMessage>({
+  const [toast, setToast] = useState<ToastInput>({
     type: 'success',
     message: ''
   });
@@ -45,12 +45,19 @@ const SignUp: React.FC = () => {
 
     const hasError = response?.data?.error;
     if (hasError) {
-      setToastMessage({ type: 'error', message: response.data?.message });
+      // display error toast
+      setToast({ type: 'error', message: response.data?.message });
     } else {
-      setToastMessage({
+      // display success toast and ask user to sign in
+      setToast({
         type: 'success',
         message: TOAST_MESSAGE_SIGNUP_SUCCESS
       });
+
+      setTimeout(() => {
+        navigate('/signin');
+      }, 2000);
+      // redirect to sign in page
     }
   };
 
@@ -126,7 +133,7 @@ const SignUp: React.FC = () => {
           </Link>
         </Typography>
       </Container>
-      <Toast toast={toastMessage} />
+      <Toast toast={toast} />
     </div>
   );
 };
