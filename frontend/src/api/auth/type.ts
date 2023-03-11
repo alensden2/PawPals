@@ -22,20 +22,37 @@ type RegisterUserApiResponseBodyType = {
 };
 
 export type AuthenticateUserApiInputType = {
-  userName: string;
+  username: string;
   password: string;
 };
 
+interface Authority {
+  authority: 'VET' | 'PET_OWNER' | 'ROLE_ADMIN';
+}
+
 export type AuthenticateUserApiResponseType = {
   data: {
-    error: boolean;
-    success: boolean;
-    message: string;
-    body: any;
+    token: string;
+    user: {
+      email: string;
+      firstName: string;
+      lastName: string;
+      username: string;
+      authorities: Authority[];
+    };
   };
 };
 
 export type RegisterUserType = {
+  error: boolean;
+  errorMessage: string;
+};
+
+export type AuthenticateUserType = {
+  email: string;
+  userName: string;
+  jwtToken: string;
+  role: 'VET' | 'PET_OWNER' | 'ROLE_ADMIN' | '';
   error: boolean;
   errorMessage: string;
 };
