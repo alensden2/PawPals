@@ -45,7 +45,6 @@ const SignIn: React.FC = () => {
       username: userName,
       password
     });
-    console.log(response, 'response');
 
     const hasError = response.error;
     if (hasError) {
