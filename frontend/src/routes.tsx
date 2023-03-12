@@ -15,6 +15,7 @@ import {
   Admin,
   AdminHome
 } from '@src/pages';
+import { Landing, SignIn, SignUp, PetOwnerRegistration } from '@src/pages';
 
 const RoutesComp = () => {
   return (
@@ -35,6 +36,7 @@ const RoutesComp = () => {
           <Route path="admin" element={<Admin />}>
             <Route path="home" element={<AdminHome />} />
           </Route>
+          <Route path="pet-owner-registration" element={<PetOwnerRegistration />} />
         </Route>
       </Routes>
     </BrowserRouter>
