@@ -6,13 +6,13 @@ const PetOwner: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate('registration');
+    navigate('home');
   }, []);
 
   return (
-    <div>
+    <>
       <Outlet />
-    </div>
+    </>
   );
 };
 
