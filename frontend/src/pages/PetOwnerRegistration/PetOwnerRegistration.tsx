@@ -1,38 +1,35 @@
-import React, { useState } from 'react';
-import { Container, Link, IconButton, Typography } from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Container, Link, Typography } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
 import { TextField, Button } from '@src/components';
 import useStyles from './PetOwnerRegistration.styles';
+import { HeaderContext } from '@src/context';
 
 const PetOwnerRegistration: React.FC = () => {
   const classes = useStyles();
+  const { setHeader } = useContext(HeaderContext);
+
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [photourl, setPhotourl] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
-  const onBackClick = () => {
-    navigate('/');
-  };
+  useEffect(() => {
+    setHeader({
+      shouldShowHeader: true,
+      title: 'Pet Owner Registration',
+      shouldShowLogoutButton: true,
+      shouldShowBackButton: true
+    });
+  }, []);
 
   return (
     <div>
-      <div onClick={onBackClick}>
-        <IconButton>
-          <ArrowBackIosIcon className="back-button-icon" />
-        </IconButton>
-        <Button color="inherit">Paw pals</Button>
-      </div>
       <Container maxWidth="xs" className={classes.root}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Pet Owner Registration
-        </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
             label="First Name"
@@ -56,7 +53,7 @@ const PetOwnerRegistration: React.FC = () => {
             onChange={(event) => setPhoneNumber(event.target.value)}
             fullWidth={true}
           />
-           <TextField
+          <TextField
             label="Photo URL"
             type="photourl"
             value={photourl}
