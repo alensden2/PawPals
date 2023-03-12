@@ -6,6 +6,7 @@ import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.repository.AdminPostAnimalRepository;
 import com.asdc.pawpals.repository.AdminReadAllAnimalsRepository;
 import com.asdc.pawpals.repository.AdminReadAllUserRepository;
 import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
@@ -35,6 +36,9 @@ public class AdminReadServiceImpl implements AdminReadService {
 
   @Autowired
   AdminReadAllAnimalsRepository adminReadAllAnimalsRepository;
+
+  @Autowired
+  AdminPostAnimalRepository adminPostAnimalRepository;
 
   /**
    * fetches all the animal records
@@ -99,11 +103,21 @@ public class AdminReadServiceImpl implements AdminReadService {
   }
 
   @Override
-  public Boolean addAnimal(AnimalDto animalDto) {
-    //    Boolean animalAdded = false;
-    //    if(animal !=null ){
-    //      AnimalDto animal = Transformations.DTO_TO_MODEL_CONVERTER.
-    //    }
-    return false;
+  public AnimalDto addAnimal(AnimalDto animalDto) {
+    AnimalDto returnedDto = null;
+    if (
+      animalDto != null &&
+      animalDto.getOwner() != null
+    ) {
+      Animal animal = Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto);
+      // if (adminPostAnimalRepository.existsById(null)) {
+      //   //throw new AnimalAlreadyExist("user exist in the system");
+      // }
+      animal = adminPostAnimalRepository.save(animal);
+      returnedDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
+    } else {
+      // incorrect user data exception
+    }
+    return returnedDto;
   }
 }

@@ -5,9 +5,12 @@ import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.service.AdminReadService;
+import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import java.util.List;
+import org.springframework.http.HttpStatus;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class AdminController {
   @Autowired
   AdminReadService adminReadService;
 
+  @Autowired
+  ApiResponse apiResponse;
+
   /**
    * Gets all the animal records
    *
@@ -39,7 +45,7 @@ public class AdminController {
   public ResponseEntity<List<AnimalDto>> getAllAnimalRecords() {
     List<AnimalDto> animalDetails = null;
     if (adminReadService != null) {
-        animalDetails = adminReadService.getAllAnimalRecords();
+      animalDetails = adminReadService.getAllAnimalRecords();
     }
     return ResponseEntity.ok().body(animalDetails);
   }
@@ -85,15 +91,19 @@ public class AdminController {
   //  }
 
   @PostMapping("/post-animal")
-  public ResponseEntity<Boolean> postAnimal(@RequestBody Object requestBody) {
+  public ResponseEntity<ApiResponse> addAnimal(@RequestBody Object requestBody) {
     logger.info("Recieved request as :", requestBody.toString());
-    Boolean animalAdd = false;
+    AnimalDto animalDto = null;
     if (CommonUtils.isStrictTypeOf(requestBody, Animal.class)) {
-      AnimalDto animal = ObjectMapperWrapper
-        .getInstance()
-        .convertValue(requestBody, AnimalDto.class);
-      animalAdd = adminReadService.addAnimal(animal);
+      animalDto =
+        ObjectMapperWrapper
+          .getInstance()
+          .convertValue(requestBody, AnimalDto.class);
+      apiResponse.setBody(adminReadService.addAnimal(animalDto));
+      apiResponse.setMessage("successfully inserted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
     }
-    return null;
+    return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
   }
 }

@@ -13,5 +13,5 @@ public interface AdminReadService {
 
   public List<UserDto> getAllUserRecords();
 
-  public Boolean addAnimal(AnimalDto animal);
+  public AnimalDto addAnimal(AnimalDto animal);
 }
