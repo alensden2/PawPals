@@ -1,6 +1,6 @@
 // react
 import React, { useState, useContext } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 // material ui
 import { Container, Link, IconButton, Typography } from '@material-ui/core';
@@ -25,6 +25,9 @@ import {
 
 // context
 import { ToastContext } from '@src/context';
+
+// hooks
+import { useNavigate } from '@src/hooks';
 
 const SignIn: React.FC = () => {
   // styles
