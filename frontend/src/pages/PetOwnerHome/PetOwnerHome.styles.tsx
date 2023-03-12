@@ -52,6 +52,14 @@ const useStyles = makeStyles((theme) => ({
       background: '#f1f1f1'
     }
   },
+  icon: {
+    color: '#333'
+  },
+  cardContent: {
+    display: 'flex',
+    gap: 10,
+    alignItems: 'center'
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',

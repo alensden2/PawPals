@@ -3,6 +3,7 @@ import React, { useContext, useEffect } from 'react';
 import { Grid, Paper, Card, CardContent, Typography } from '@material-ui/core';
 import { HeaderContext } from '@src/context';
 import useStyles from './PetOwnerHome.styles';
+import { Pets, History, Book, Info, ContactSupport } from '@material-ui/icons';
 
 interface CardProps {
   title: string;
@@ -12,9 +13,27 @@ interface CardProps {
 function CustomCard({ title, color }: CardProps) {
   const classes = useStyles();
 
+  const getIcon = () => {
+    switch (title) {
+      case 'Manage Pets':
+        return <Pets className={classes.icon} />;
+      case 'Medical History':
+        return <History className={classes.icon} />;
+      case 'Book appointment with Vet':
+        return <Book className={classes.icon} />;
+      case 'Learn about Pet health and diseases':
+        return <Info className={classes.icon} />;
+      case 'Support/ Contact Us':
+        return <ContactSupport className={classes.icon} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Card className={classes.card} style={{ background: color }}>
-      <CardContent>
+      <CardContent className={classes.cardContent}>
+        {getIcon()}
         <Typography className={classes.title}>{title}</Typography>
       </CardContent>
     </Card>
