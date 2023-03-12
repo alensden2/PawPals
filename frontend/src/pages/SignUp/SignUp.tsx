@@ -1,6 +1,6 @@
 // react
 import React, { useState, useContext } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
 // material ui
 import {
@@ -29,6 +29,9 @@ import { ToastContext } from '@src/context';
 // api
 import { RegisterUserType } from '@src/api/type';
 import { registerUser } from '@src/api/auth';
+
+// hooks
+import { useNavigate } from '@src/hooks';
 
 const SignUp: React.FC = () => {
   // styles

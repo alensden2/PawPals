@@ -2,8 +2,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    backgroundColor: '#fff',
-    color: '#333'
+    backgroundColor: '#0B032D',
+    color: '#fff'
   },
   logo: {
     marginRight: theme.spacing(1)

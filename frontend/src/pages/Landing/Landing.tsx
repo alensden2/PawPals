@@ -1,7 +1,8 @@
 import React from 'react';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { useNavigate } from 'react-router-dom';
 import useStyles from './Landing.styles';
+// hooks
+import { useNavigate } from '@src/hooks';
 
 import HOME_PAGE_IMAGE from '@src/assets/images/homepage.jpg';
 

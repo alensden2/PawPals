@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { Toast, Header } from '@src/components';
 import { ToastContext, HeaderContext } from '@src/context';
 import { Outlet } from 'react-router-dom';
+// styles
+import useStyles from './Root.styles';
 
 function Root() {
   const { toast } = useContext(ToastContext);
@@ -12,8 +14,10 @@ function Root() {
     shouldShowLogoutButton
   } = useContext(HeaderContext);
 
+  const classes = useStyles();
+
   return (
-    <div>
+    <div className={classes.root}>
       {shouldShowHeader ? (
         <Header
           title={title}

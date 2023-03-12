@@ -1,9 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Container, Link, Typography } from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
+import { Container } from '@material-ui/core';
 import { TextField, Button } from '@src/components';
 import useStyles from './PetOwnerRegistration.styles';
 import { HeaderContext } from '@src/context';
+
+// hooks
+import { useNavigate } from '@src/hooks';
 
 const PetOwnerRegistration: React.FC = () => {
   const classes = useStyles();
@@ -12,10 +14,13 @@ const PetOwnerRegistration: React.FC = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [photourl, setPhotourl] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    navigate('/pet-owner/home', { replace: true });
   };
 
   useEffect(() => {
@@ -53,13 +58,6 @@ const PetOwnerRegistration: React.FC = () => {
             onChange={(event) => setPhoneNumber(event.target.value)}
             fullWidth={true}
           />
-          <TextField
-            label="Photo URL"
-            type="photourl"
-            value={photourl}
-            onChange={(event) => setPhotourl(event.target.value)}
-            fullWidth={true}
-          />
           <Button
             type="submit"
             variant="contained"
@@ -68,15 +66,9 @@ const PetOwnerRegistration: React.FC = () => {
             fullWidth={true}
             className={classes.submitButton}
           >
-            Sign In
+            Register
           </Button>
         </form>
-        <Typography variant="body2" align="center">
-          {"Don't have an account? "}
-          <Link component={RouterLink} to="/signup">
-            Sign Up
-          </Link>
-        </Typography>
       </Container>
     </div>
   );
