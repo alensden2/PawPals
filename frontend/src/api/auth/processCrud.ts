@@ -39,7 +39,7 @@ export const authenticateUser = async (
       email: '',
       userName: '',
       jwtToken: '',
-      role: '',
+      role: 'NONE',
       error: true,
       errorMessage: 'Invalid credentials'
     };
