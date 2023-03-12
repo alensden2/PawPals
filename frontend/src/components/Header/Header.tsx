@@ -6,9 +6,9 @@ import PAW_LOGO from '@src/assets/images/paw-logo.png';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 type HeaderProps = {
-  title: string;
-  shouldShowBackButton: boolean;
-  shouldShowLogoutButton: boolean;
+  title?: string;
+  shouldShowBackButton?: boolean;
+  shouldShowLogoutButton?: boolean;
 };
 
 const Header: React.FC<HeaderProps> = ({
