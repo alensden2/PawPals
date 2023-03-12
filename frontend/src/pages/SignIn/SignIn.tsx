@@ -19,6 +19,7 @@ import { AuthenticateUserType } from '@src/api/type';
 // constants
 import {
   TOAST_MESSAGE_SIGNIN_SUCCESS,
+  ROLE_TO_ROUTE_MAPPING,
   TOAST_MESSAGE_SIGNIN_FAILURE
 } from '@src/constants';
 
@@ -51,11 +52,15 @@ const SignIn: React.FC = () => {
       // display error toast
       setToast({ type: 'error', message: TOAST_MESSAGE_SIGNIN_FAILURE });
     } else {
-      // display success toast and ask user to sign in
       setToast({
         type: 'success',
         message: TOAST_MESSAGE_SIGNIN_SUCCESS
       });
+
+      // TODO: Store data in local storage and pass in every request
+
+      // based on role redirect to respective home page
+      navigate(ROLE_TO_ROUTE_MAPPING[response.role], { replace: true });
     }
   };
 
