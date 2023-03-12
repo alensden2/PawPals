@@ -1,21 +1,40 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Landing, SignIn, SignUp } from '@src/pages';
-import { Toast } from '@src/components';
-import { ToastContext } from '@src/context';
+import {
+  Landing,
+  SignIn,
+  SignUp,
+  Root,
+  PetOwner,
+  PetOwnerHome,
+  PetOwnerRegistration,
+  Vet,
+  VetHome,
+  VetRegistration,
+  Admin,
+  AdminHome
+} from '@src/pages';
 
 const RoutesComp = () => {
-  const { toast } = useContext(ToastContext);
-
   return (
     <BrowserRouter>
-      <Toast toast={toast} />
       <Routes>
-        <Route>
+        <Route path="/" element={<Root />}>
           <Route path="/" element={<Landing />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="pet-owner" element={<PetOwner />}>
+            <Route path="home" element={<PetOwnerHome />} />
+            <Route path="registration" element={<PetOwnerRegistration />} />
+          </Route>
+          <Route path="vet" element={<Vet />}>
+            <Route path="home" element={<VetHome />} />
+            <Route path="registration" element={<VetRegistration />} />
+          </Route>
+          <Route path="admin" element={<Admin />}>
+            <Route path="home" element={<AdminHome />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

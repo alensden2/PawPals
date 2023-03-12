@@ -52,7 +52,7 @@ export type AuthenticateUserType = {
   email: string;
   userName: string;
   jwtToken: string;
-  role: 'VET' | 'PET_OWNER' | 'ROLE_ADMIN' | '';
+  role: 'VET' | 'PET_OWNER' | 'ROLE_ADMIN' | 'NONE';
   error: boolean;
   errorMessage: string;
 };
