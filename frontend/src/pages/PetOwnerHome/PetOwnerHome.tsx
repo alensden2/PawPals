@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useContext, useEffect } from 'react';
 import { Grid, Paper, Card, CardContent, Typography } from '@material-ui/core';
 import { HeaderContext } from '@src/context';
@@ -44,16 +45,17 @@ const PetOwnerHome: React.FC = () => {
               alt="Company Logo"
             />
             <Typography variant="body1" gutterBottom>
-              Our company is dedicated to making it easier for pet owners and
-              vets to connect and manage pet health. Our application allows pet
-              owners to manage their pets health through their phone or
-              computer, giving them easy access to important information such as
-              medical history and common symptoms. Additionally, pet owners can
-              book appointments with vets directly through the app, making the
-              process more convenient and streamlined. Our goal is to improve
-              the overall health and well-being of pets by providing a
-              user-friendly platform for pet owners and vets to collaborate and
-              communicate.
+              Paw pals aims to make it easier for you to connect with vets and
+              manage your pet's health. With our application, you can access
+              important information such as your pet's medical history and
+              common symptoms right from your device. We understand how
+              important it is to keep your pet healthy and happy, and that's why
+              we've made it convenient for you to book appointments with vets
+              directly through our app. Our platform is user-friendly and
+              designed to help you collaborate and communicate with vets. We
+              want to ensure that your pet's overall health and well-being are
+              improved, and we are committed to providing you with the best
+              service possible.
             </Typography>
           </Paper>
         </Grid>
