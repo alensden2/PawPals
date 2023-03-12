@@ -15,7 +15,7 @@ import {
   Admin,
   AdminHome
 } from '@src/pages';
-import { Landing, SignIn, SignUp, PetOwnerRegistration } from '@src/pages';
+
 
 const RoutesComp = () => {
   return (
