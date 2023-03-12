@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
 import { ExitToApp } from '@material-ui/icons';
 import useStyles from './Header.styles';
-import PAW_LOGO from '@src/assets/images/paw-logo.png';
+import PAW_LOGO from '@src/assets/images/paw-white.png';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 type HeaderProps = {
