@@ -94,7 +94,7 @@ const SignUp: React.FC = () => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
-            label="User name"
+            label="Username"
             type="text"
             value={userName}
             fullWidth={true}
