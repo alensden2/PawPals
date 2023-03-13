@@ -25,7 +25,7 @@ code-smell-backend:
     - ugrad  # Run this job on a runner with the 'ugrad' tag
 
 # Lint job to check the source code for potential errors, style violations, and other issues
-lint-frontend: 
+code-lint-frontend: 
   stage: code-quality
   only:
     - dev
@@ -33,6 +33,18 @@ lint-frontend:
     - cd $CI_PROJECT_DIR/frontend
     - npm install eslint --save-dev
     - npm run lint
+  tags:
+    - ugrad
+
+# Format to readability, consistency, debugging, and collaboration.
+code-format-frontend: 
+  stage: code-quality
+  only:
+    - dev
+  script:
+    - cd $CI_PROJECT_DIR/frontend
+    - npm install prettier --save-dev
+    - npm run format
   tags:
     - ugrad
 
