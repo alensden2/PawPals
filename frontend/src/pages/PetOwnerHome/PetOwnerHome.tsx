@@ -4,26 +4,31 @@ import { Grid, Paper, Card, CardContent, Typography } from '@material-ui/core';
 import { HeaderContext } from '@src/context';
 import useStyles from './PetOwnerHome.styles';
 import { Pets, History, Book, Info, ContactSupport } from '@material-ui/icons';
+import { PET_OWNER_HOME_PAGE_CARDS } from '@src/constants';
+import { useNavigate } from '@src/hooks';
 
 interface CardProps {
+  uid: string;
   title: string;
   color: string;
+  route: string;
+  onCardClick: (route: string) => void;
 }
 
-function CustomCard({ title, color }: CardProps) {
+function CustomCard({ title, color, uid, route, onCardClick }: CardProps) {
   const classes = useStyles();
 
   const getIcon = () => {
-    switch (title) {
-      case 'Manage Pets':
+    switch (uid) {
+      case 'MANAGE_PETS':
         return <Pets className={classes.icon} />;
-      case 'Medical History':
+      case 'MEDICAL_HISTORY':
         return <History className={classes.icon} />;
-      case 'Book appointment with Vet':
+      case 'BOOK_APPOINTMENT_WITH_VET':
         return <Book className={classes.icon} />;
-      case 'Learn about Pet health and diseases':
+      case 'HEALTH_AND_DISEASE':
         return <Info className={classes.icon} />;
-      case 'Support/ Contact Us':
+      case 'SUPPORT':
         return <ContactSupport className={classes.icon} />;
       default:
         return null;
@@ -31,7 +36,11 @@ function CustomCard({ title, color }: CardProps) {
   };
 
   return (
-    <Card className={classes.card} style={{ background: color }}>
+    <Card
+      className={classes.card}
+      style={{ background: color }}
+      onClick={() => onCardClick(route)}
+    >
       <CardContent className={classes.cardContent}>
         {getIcon()}
         <Typography className={classes.title}>{title}</Typography>
@@ -43,6 +52,7 @@ function CustomCard({ title, color }: CardProps) {
 const PetOwnerHome: React.FC = () => {
   const classes = useStyles();
   const { setHeader } = useContext(HeaderContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setHeader({
@@ -52,6 +62,10 @@ const PetOwnerHome: React.FC = () => {
       shouldShowBackButton: true
     });
   }, []);
+
+  const onCardClick = (route: string) => {
+    navigate(route, { replace: true });
+  };
 
   return (
     <div className={classes.root}>
@@ -79,14 +93,18 @@ const PetOwnerHome: React.FC = () => {
           </Paper>
         </Grid>
         <div className={classes.rightContainer}>
-          <CustomCard title="Manage Pets" color="#5F758E" />
-          <CustomCard title="Medical History" color="#4d7c8a" />
-          <CustomCard title="Book appointment with Vet" color="#7f9c96" />
-          <CustomCard
-            title="Learn about Pet health and diseases"
-            color="#8fad88"
-          />
-          <CustomCard title="Support/ Contact Us" color="#cbdf90" />
+          {PET_OWNER_HOME_PAGE_CARDS.map((card) => {
+            return (
+              <CustomCard
+                key={card.uid}
+                uid={card.uid}
+                title={card.title}
+                color={card.color}
+                route={card.route}
+                onCardClick={onCardClick}
+              />
+            );
+          })}
         </div>
       </Grid>
     </div>
