@@ -7,6 +7,7 @@
     "start": "webpack serve --config webpack.config.js --env env=development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "build": "webpack --mode production"
   },
   "author": "",
