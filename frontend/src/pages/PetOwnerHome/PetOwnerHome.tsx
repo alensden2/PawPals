@@ -61,6 +61,7 @@ const PetOwnerHome: React.FC = () => {
       shouldShowLogoutButton: true,
       shouldShowBackButton: true
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCardClick = (route: string) => {

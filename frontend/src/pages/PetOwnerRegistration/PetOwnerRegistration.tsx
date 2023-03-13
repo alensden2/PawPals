@@ -30,6 +30,7 @@ const PetOwnerRegistration: React.FC = () => {
       shouldShowLogoutButton: true,
       shouldShowBackButton: true
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

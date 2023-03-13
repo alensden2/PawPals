@@ -7,7 +7,7 @@ const PetOwner: React.FC = () => {
 
   useEffect(() => {
     navigate('home');
-  }, []);
+  }, [navigate]);
 
   return (
     <>
