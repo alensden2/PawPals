@@ -10,6 +10,7 @@ function Root() {
   const {
     shouldShowHeader,
     title,
+    backRoute,
     shouldShowBackButton,
     shouldShowLogoutButton
   } = useContext(HeaderContext);
@@ -21,6 +22,7 @@ function Root() {
       {shouldShowHeader ? (
         <Header
           title={title}
+          backRoute={backRoute}
           shouldShowBackButton={shouldShowBackButton}
           shouldShowLogoutButton={shouldShowLogoutButton}
         />

@@ -10,6 +10,10 @@ import VetHome from './VetHome/VetHome';
 import VetRegistration from './VetRegistration/VetRegistration';
 import Admin from './Admin/Admin';
 import AdminHome from './AdminHome/AdminHome';
+import PetHealthAndDiseaseInfo from './PetHealthAndDiseaseInfo/PetHealthAndDiseaseInfo';
+import PetMedicalHistory from './PetMedicalHistory/PetMedicalHistory';
+import PetOwnerAllVets from './PetOwnerAllVets/PetOwnerAllVets';
+import PetOwnerManagePets from './PetOwnerManagePets/PetOwnerManagePets';
 
 export {
   Landing,
@@ -23,5 +27,9 @@ export {
   VetHome,
   VetRegistration,
   Admin,
-  AdminHome
+  AdminHome,
+  PetHealthAndDiseaseInfo,
+  PetMedicalHistory,
+  PetOwnerAllVets,
+  PetOwnerManagePets
 };
