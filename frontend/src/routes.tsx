@@ -13,9 +13,12 @@ import {
   VetHome,
   VetRegistration,
   Admin,
-  AdminHome
+  AdminHome,
+  PetHealthAndDiseaseInfo,
+  PetMedicalHistory,
+  PetOwnerAllVets,
+  PetOwnerManagePets
 } from '@src/pages';
-
 
 const RoutesComp = () => {
   return (
@@ -28,6 +31,17 @@ const RoutesComp = () => {
           <Route path="pet-owner" element={<PetOwner />}>
             <Route path="home" element={<PetOwnerHome />} />
             <Route path="registration" element={<PetOwnerRegistration />} />
+            <Route path="manage-pets" element={<PetOwnerManagePets />} />
+            <Route path="medical-history" element={<PetMedicalHistory />} />
+            <Route path="all-vets" element={<PetOwnerAllVets />} />
+            <Route
+              path="all-vets/book-appointment/:vet_id"
+              element={<PetOwnerRegistration />}
+            />
+            <Route
+              path="pet-health-and-diseases"
+              element={<PetHealthAndDiseaseInfo />}
+            />
           </Route>
           <Route path="vet" element={<Vet />}>
             <Route path="home" element={<VetHome />} />
@@ -36,7 +50,6 @@ const RoutesComp = () => {
           <Route path="admin" element={<Admin />}>
             <Route path="home" element={<AdminHome />} />
           </Route>
-          <Route path="pet-owner-registration" element={<PetOwnerRegistration />} />
         </Route>
       </Routes>
     </BrowserRouter>
