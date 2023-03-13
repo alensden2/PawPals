@@ -12,6 +12,7 @@ export const HeaderContextProvider: React.FC<HeaderContextProviderProps> = ({
   const [headerState, setHeaderState] = useState<HeaderInput>({
     shouldShowHeader: false,
     shouldShowBackButton: false,
+    backRoute: '',
     title: '',
     shouldShowLogoutButton: false
   });
@@ -20,6 +21,7 @@ export const HeaderContextProvider: React.FC<HeaderContextProviderProps> = ({
     shouldShowHeader: headerState.shouldShowHeader,
     shouldShowBackButton: headerState.shouldShowBackButton,
     title: headerState.title,
+    backRoute: headerState.backRoute,
     shouldShowLogoutButton: headerState.shouldShowLogoutButton,
     setHeader: (newHeader: HeaderInput) => {
       setHeaderState((prevHeader) => ({ ...prevHeader, ...newHeader }));

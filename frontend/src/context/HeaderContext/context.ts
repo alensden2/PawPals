@@ -6,6 +6,7 @@ export const HeaderContext = createContext<HeaderContextType>({
   shouldShowBackButton: false,
   title: '',
   shouldShowLogoutButton: false,
+  backRoute: '',
   setHeader: () => {
     throw new Error('setHeader function must be overridden');
   }
