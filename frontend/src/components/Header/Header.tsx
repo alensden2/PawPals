@@ -4,19 +4,27 @@ import { ExitToApp } from '@material-ui/icons';
 import useStyles from './Header.styles';
 import PAW_LOGO from '@src/assets/images/paw-white.png';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { useNavigate } from '@src/hooks';
 
 type HeaderProps = {
   title?: string;
+  backRoute?: string;
   shouldShowBackButton?: boolean;
   shouldShowLogoutButton?: boolean;
 };
 
 const Header: React.FC<HeaderProps> = ({
   title,
+  backRoute = '',
   shouldShowBackButton,
   shouldShowLogoutButton
 }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(backRoute, { replace: true });
+  };
 
   return (
     <AppBar position="static" className={classes.appBar}>
@@ -27,6 +35,7 @@ const Header: React.FC<HeaderProps> = ({
             color="inherit"
             aria-label="back"
             className={classes.clickable}
+            onClick={handleBack}
           >
             <ArrowBackIosIcon className="back-button-icon" />
           </IconButton>
