@@ -87,6 +87,7 @@ public class Transformations {
                 dto.setDate(dao.getDate());
                 dto.setStartTime(dao.getStartTime());
                 dto.setEndTime(dao.getEndTime());
+                dto.setStatus(dao.getStatus());
                 if(dao.getVet() != null && dao.getVet().getUser() != null){
                     dto.setVetUserId(dao.getVet().getUser().getUserId());
                 }
@@ -150,7 +151,8 @@ public class Transformations {
                 dao.setDate(dto.getDate());
                 dao.setStartTime(dto.getStartTime());
                 dao.setEndTime(dto.getEndTime());
-
+                dao.setStatus(dto.getStatus());
+                
                 Vet vet = new Vet();
                 User user = new User();
                 user.setUserId(dto.getVetUserId());

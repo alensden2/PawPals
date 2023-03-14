@@ -1,6 +1,7 @@
 package com.asdc.pawpals.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,8 @@ public class Appointment {
     private String date;
     private String startTime;
     private String endTime;
+    @Column
+    private String status="PENDING"; //CONFIRMED, REJECTED, PENDING
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     Animal animal;

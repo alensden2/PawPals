@@ -12,8 +12,10 @@ import org.springframework.data.util.Pair;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.asdc.pawpals.Enums.AppointmentStatus;
 import com.asdc.pawpals.dto.VetAvailabilityDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.dto.VetScheduleDto;
 import com.asdc.pawpals.model.Appointment;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
@@ -98,6 +100,26 @@ public class VetServiceImpl implements VetService {
         return findVetAvailabilityOnSpecificDay(availability, appointments, date);
     }
 
+    @Override
+    public VetScheduleDto getVetScheduleOnSpecificDay(String userId, String date){
+        List<Appointment> appointments = appointmentRepository.findByVet_User_UserId(userId);
+        VetScheduleDto vetSchedule = new VetScheduleDto();
+        vetSchedule.setVetUserId(userId);
+        List<Pair<String, String>> slotsBooked = new ArrayList<>();
+        if(appointments != null){
+            appointments.stream().filter(Objects::nonNull)
+                        .filter(apt->apt.getDate() != null)
+                        .filter(apt->apt.getDate().equals(date))
+                        .filter(apt->apt.getStatus() != null)
+                        .filter(apt->apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
+                        .forEach(appointment->{
+                            slotsBooked.add(Pair.of(appointment.getStartTime(), appointment.getEndTime()));
+                        });
+            vetSchedule.setSlotsBooked(slotsBooked);
+        }
+        return vetSchedule;
+    }
+
     private VetAvailabilityDto findVetAvailabilityOnSpecificDay(List<VetAvailability> availability, List<Appointment> appointments, String date){
         VetAvailabilityDto availabilityDto = null;
         if(availability != null){
@@ -115,7 +137,10 @@ public class VetServiceImpl implements VetService {
                 while(!currentSlot.equals(effectiveLastSlot)){
                     final String fCurrSlot = currentSlot;
                     Boolean appointmentBooked = appointments.stream().filter(Objects::nonNull)
+                        .filter(apt->apt.getDate() != null)
                         .filter(apt->apt.getDate().equals(date))
+                        .filter(apt->apt.getStatus() != null)
+                        .filter(apt->apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
                         .anyMatch(apt->{
                             return apt.getStartTime().equals(fCurrSlot);
                         });

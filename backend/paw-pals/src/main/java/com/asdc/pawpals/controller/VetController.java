@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.asdc.pawpals.dto.VetAvailabilityDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.dto.VetScheduleDto;
 import com.asdc.pawpals.service.VetService;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
@@ -68,6 +69,18 @@ public class VetController {
                 availability = vetService.getVetAvailabilityOnSpecificDay(userId, date);
         }
         return ResponseEntity.ok(availability);
+    }
+
+    @PostMapping("/schedule/{id}")
+    public ResponseEntity<VetScheduleDto> getVetSchedule(@PathVariable(value = "id") String userId, @RequestBody Object requestBody){
+        VetScheduleDto vetScheduleDto = null;
+        if(CommonUtils.isStrictTypeOf(requestBody, new TypeReference<Map<String, String>>(){}) && 
+            userId != null && !userId.isEmpty()){
+                Map<String, String> request = ObjectMapperWrapper.getInstance().convertValue(requestBody,  new TypeReference<Map<String, String>>(){});
+                String date = request.get("date");
+                vetScheduleDto = vetService.getVetScheduleOnSpecificDay(userId, date);
+        }
+        return ResponseEntity.ok(vetScheduleDto);
     }
 
 }
