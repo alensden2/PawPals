@@ -1,6 +1,5 @@
 package com.asdc.pawpals.service.implementation;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +24,6 @@ import com.asdc.pawpals.repository.VetAvailabilityRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.VetService;
 import com.asdc.pawpals.utils.CommonUtils;
-import com.asdc.pawpals.utils.Constants;
 import com.asdc.pawpals.utils.Transformations;
 
 @Component
@@ -46,7 +44,7 @@ public class VetServiceImpl implements VetService {
 
 
     @Override
-    public Boolean registerVet(VetDto vetDto){
+    public Boolean registerVet(VetDto vetDto) throws UsernameNotFoundException {
         Boolean vetRegistered = false;
         if(vetDto != null){
             Vet vet = Transformations.DTO_TO_MODEL_CONVERTER.vet(vetDto);
@@ -90,6 +88,17 @@ public class VetServiceImpl implements VetService {
     public VetAvailabilityDto getVetAvailabilityOnSpecificDay(String userId, String date){
         List<VetAvailability> availability =  vetAvailabilityRepository.findByVet_User_UserId(userId);
         List<Appointment> appointments = appointmentRepository.findByVet_User_UserId(userId);
+        return findVetAvailabilityOnSpecificDay(availability, appointments, date);
+    }
+
+    @Override
+    public VetAvailabilityDto getVetAvailabilityOnSpecificDay(Long vetId, String date){
+        List<VetAvailability> availability =  vetAvailabilityRepository.findByVetId(vetId);
+        List<Appointment> appointments = appointmentRepository.findByVetId(vetId);
+        return findVetAvailabilityOnSpecificDay(availability, appointments, date);
+    }
+
+    private VetAvailabilityDto findVetAvailabilityOnSpecificDay(List<VetAvailability> availability, List<Appointment> appointments, String date){
         VetAvailabilityDto availabilityDto = null;
         if(availability != null){
             //get the original vet availability on the specific day mentioned (derived from date given)
@@ -118,22 +127,9 @@ public class VetServiceImpl implements VetService {
 
                 availabilityDto.setSlots(freeSlots);
 
-                // appointments.stream().filter(Objects::nonNull)
-                //     .filter(apt-> apt.getDate().equals(date)).forEach(appointment->{
-                //             //1. assuming that appointments were booked by checking no conflicts
-                //             //2. assuming that appointments are sorted in increasing order of start time
-                //             //3. assuming that each appointment is only 30 mins long
-                            
-                //     });
-
             }
         }
         return availabilityDto;
-    }
-
-    @Override
-    public VetAvailabilityDto getVetAvailabilityOnSpecificDay(Long vetId, String date){
-        return null;
     }
 
 }

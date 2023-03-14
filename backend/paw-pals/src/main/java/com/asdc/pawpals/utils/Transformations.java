@@ -1,23 +1,11 @@
 package com.asdc.pawpals.utils;
 
-import com.asdc.pawpals.dto.AnimalDto;
-import com.asdc.pawpals.dto.MedicalHistoryDto;
-import com.asdc.pawpals.dto.PetOwnerDto;
-import com.asdc.pawpals.dto.UserDto;
-import com.asdc.pawpals.dto.VetDto;
-import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.model.MedicalHistory;
-import com.asdc.pawpals.model.PetOwner;
-import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.model.MedicalHistory;
-import com.asdc.pawpals.model.User;
-import com.asdc.pawpals.model.Vet;
-import java.util.stream.Collectors;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.springframework.data.util.Pair;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.AppointmentDto;
@@ -31,10 +19,6 @@ import com.asdc.pawpals.model.MedicalHistory;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.model.VetAvailability;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class Transformations {
 
