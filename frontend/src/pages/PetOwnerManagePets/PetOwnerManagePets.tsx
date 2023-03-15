@@ -14,7 +14,8 @@ import PetCardList from './PetCardList';
 import AddEditPetModal from './AddEditPetModal';
 
 // Define types
-import { PetModalState, DeleteDialogState, PetsState, Pet } from './type';
+import { PetModalState, DeleteDialogState, PetsState } from './type';
+import { NullablePet } from '@src/types';
 
 // Define PetOwnerManagePets component
 const PetOwnerManagePets: React.FC = () => {
@@ -53,7 +54,7 @@ const PetOwnerManagePets: React.FC = () => {
   }, []);
 
   // Define toggle functions for modals and dialogs
-  const openEditModal = (pet: Pet) => {
+  const openEditModal = (pet: NullablePet) => {
     setPetModalState((prevState) => ({
       ...prevState,
       isOpen: true,
@@ -69,7 +70,7 @@ const PetOwnerManagePets: React.FC = () => {
       data: initialPetData
     }));
   };
-  const openDeleteDialog = (pet: Pet) => {
+  const openDeleteDialog = (pet: NullablePet) => {
     setDeleteDialogState((prevState) => ({
       ...prevState,
       isOpen: true,
