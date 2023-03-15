@@ -177,8 +177,9 @@ public class Transformations {
     public static Animal animal(AnimalDto animalDto) {
       Animal animal = new Animal();
       if (animalDto != null) {
-        Long id = new Random().nextLong();
-        animal.setId(id);
+        //change
+        //Long id = new Random().nextLong();
+        //animal.setId(id);
         animal.setAge(animalDto.getAge());
         animal.setName(animalDto.getName());
         animal.setType(animalDto.getName());
@@ -186,7 +187,7 @@ public class Transformations {
         animal.setGender(animalDto.getGender());
 
         PetOwnerDto petOwnerDtoToBeTransformed = animalDto.getOwner();
-        PetOwner petOwnerTransformed = new PetOwner();
+        PetOwner petOwnerTransformed = null;
         petOwnerTransformed =
           Transformations.DTO_TO_MODEL_CONVERTER.petOwner(
             petOwnerDtoToBeTransformed
@@ -194,6 +195,7 @@ public class Transformations {
 
         animal.setOwner(petOwnerTransformed);
         animal.setAppointment(null);
+        // to do recursively transform medical history.
         animal.setMedicalHistories(null);
       }
       return animal;
@@ -213,23 +215,26 @@ public class Transformations {
 
     public static PetOwner petOwner(PetOwnerDto petOwnerDto) {
       PetOwner petOwner = new PetOwner();
-      Long id = new Random().nextLong();//remove
+      Long id = new Random().nextLong(); //remove
       List<Animal> animalModel = new ArrayList<>();
-      List<AnimalDto> animalDtoList = petOwnerDto.getPets();
-      if (animalDtoList != null) {
-        for (AnimalDto animalDto : animalDtoList) {
-          animalModel.add(
-            Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto)
-          );
-        }
-      } else {
-        animalModel = null;
-      }
-
       if (petOwnerDto != null) {
+        List<AnimalDto> animalDtoList = petOwnerDto.getPets();
+        if (animalDtoList != null) {
+          for (AnimalDto animalDto : animalDtoList) {
+            animalModel.add(
+              Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto)
+            );
+          }
+        } else {
+          animalModel = null;
+        }
+
         petOwner.setAnimals(animalModel);
         petOwner.setId(id); // change to fetch and put owner id
-        petOwner.setUser(null); // set user
+        String userName = petOwnerDto.getUsername();
+        User user = new User();
+        user.setUserId(userName);
+        petOwner.setUser(user); // set user
         petOwner.setFirstName(petOwnerDto.getFirstName());
         petOwner.setLastName(petOwnerDto.getLastName());
         petOwner.setPhoneNo(petOwnerDto.getPhoneNo());

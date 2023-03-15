@@ -5,6 +5,8 @@ import java.util.List;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
+import com.asdc.pawpals.model.Animal;
 
 public interface AdminReadService {
   public List<AnimalDto> getAllAnimalRecords();
@@ -13,5 +15,5 @@ public interface AdminReadService {
 
   public List<UserDto> getAllUserRecords();
 
-  public AnimalDto addAnimal(AnimalDto animal);
+  public AnimalDto addAnimal(Animal animal) throws PetOwnerAlreadyDoesNotExists;
 }

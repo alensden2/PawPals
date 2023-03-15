@@ -1,6 +1,5 @@
 package com.asdc.pawpals.service.implementation;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +24,6 @@ import com.asdc.pawpals.repository.VetAvailabilityRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.VetService;
 import com.asdc.pawpals.utils.CommonUtils;
-import com.asdc.pawpals.utils.Constants;
 import com.asdc.pawpals.utils.Transformations;
 
 @Component

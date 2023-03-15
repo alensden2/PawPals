@@ -3,6 +3,7 @@ package com.asdc.pawpals.controller;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.service.AdminReadService;
 import com.asdc.pawpals.utils.ApiResponse;
@@ -91,15 +92,15 @@ public class AdminController {
   //  }
 
   @PostMapping("/post-animal")
-  public ResponseEntity<ApiResponse> addAnimal(@RequestBody Object requestBody) {
+  public ResponseEntity<ApiResponse> addAnimal(@RequestBody Object requestBody) throws PetOwnerAlreadyDoesNotExists {
     logger.info("Recieved request as :", requestBody.toString());
-    AnimalDto animalDto = null;
+    Animal animal = null;
     if (CommonUtils.isStrictTypeOf(requestBody, Animal.class)) {
-      animalDto =
+      animal =
         ObjectMapperWrapper
           .getInstance()
-          .convertValue(requestBody, AnimalDto.class);
-      apiResponse.setBody(adminReadService.addAnimal(animalDto));
+          .convertValue(requestBody, Animal.class);
+      apiResponse.setBody(adminReadService.addAnimal(animal));
       apiResponse.setMessage("successfully inserted object");
       apiResponse.setSuccess(true);
       apiResponse.setError(false);

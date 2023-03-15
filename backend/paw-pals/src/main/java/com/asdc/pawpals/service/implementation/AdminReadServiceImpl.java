@@ -3,6 +3,7 @@ package com.asdc.pawpals.service.implementation;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
@@ -11,14 +12,16 @@ import com.asdc.pawpals.repository.AdminReadAllAnimalsRepository;
 import com.asdc.pawpals.repository.AdminReadAllUserRepository;
 import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
 import com.asdc.pawpals.repository.AdminReadRepository;
+import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.service.AdminReadService;
+import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import com.asdc.pawpals.utils.Transformations;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties.Admin;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,6 +42,9 @@ public class AdminReadServiceImpl implements AdminReadService {
 
   @Autowired
   AdminPostAnimalRepository adminPostAnimalRepository;
+
+  @Autowired
+  UserRepository userRepository;
 
   /**
    * fetches all the animal records
@@ -103,21 +109,34 @@ public class AdminReadServiceImpl implements AdminReadService {
   }
 
   @Override
-  public AnimalDto addAnimal(AnimalDto animalDto) {
+  public AnimalDto addAnimal(Animal animal)
+    throws PetOwnerAlreadyDoesNotExists {
     AnimalDto returnedDto = null;
-    if (
-      animalDto != null &&
-      animalDto.getOwner() != null
-    ) {
-      Animal animal = Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto);
+    if (animal != null && animal.getOwner() != null) {
+      //Animal animal = Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto);
       // if (adminPostAnimalRepository.existsById(null)) {
       //   //throw new AnimalAlreadyExist("user exist in the system");
       // }
-      animal = adminPostAnimalRepository.save(animal);
-      returnedDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
-    } else {
-      // incorrect user data exception
+
+      // Check if user already exists if this pet owner exists
+      //animal.getOwner
+      Optional<User> user = userRepository.findById(
+        animal.getOwner().getUser().getUserId()
+      );
+
+      if (!user.isEmpty()) {
+        User userDetails = null;
+        userDetails = user.get();
+        animal.setId(userDetails.getOwner().getId());
+        animal = adminPostAnimalRepository.save(animal);
+        returnedDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
+      } else {
+        throw new PetOwnerAlreadyDoesNotExists(
+          "Pet Owner does not exist" + animal
+        );
+      }
     }
+
     return returnedDto;
   }
 }
