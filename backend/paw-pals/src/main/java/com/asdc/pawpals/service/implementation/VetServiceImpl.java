@@ -131,10 +131,9 @@ public class VetServiceImpl implements VetService {
                 List<Pair<String, String>> freeSlots = new ArrayList<>();
                 String starTime = availabilityDto.getSlots().get(0).getFirst();
                 String endTime = availabilityDto.getSlots().get(0).getSecond();
-                String effectiveLastSlot = CommonUtils.getPreviousSlotTime(endTime);
 
                 String currentSlot = starTime;
-                while(!currentSlot.equals(effectiveLastSlot)){
+                while(!currentSlot.equals(endTime)){
                     final String fCurrSlot = currentSlot;
                     Boolean appointmentBooked = appointments.stream().filter(Objects::nonNull)
                         .filter(apt->apt.getDate() != null)
