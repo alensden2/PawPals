@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import Button from '@material-ui/core/Button';
 
 interface CustomButtonProps {
@@ -10,6 +10,7 @@ interface CustomButtonProps {
   children?: React.ReactNode;
   variant?: 'text' | 'outlined' | 'contained' | undefined;
   fullWidth?: boolean;
+  startIcon?: ReactNode;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -20,7 +21,8 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   children,
   type,
   fullWidth = false,
-  variant
+  variant,
+  startIcon
 }) => {
   return (
     <Button
@@ -31,6 +33,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       fullWidth={fullWidth}
       className={className}
       onClick={onClick}
+      startIcon={startIcon}
     >
       {children}
     </Button>
