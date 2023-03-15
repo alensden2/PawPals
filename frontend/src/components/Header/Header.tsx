@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <AppBar position="static" className={classes.appBar}>
+    <AppBar position="fixed" className={classes.appBar}>
       <Toolbar>
         {shouldShowBackButton ? (
           <IconButton
