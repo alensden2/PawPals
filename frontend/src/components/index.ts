@@ -1,8 +1,8 @@
-import TextField from './TextField/TextField';
-import Button from './Button/Button';
-import Toast from './Toast/Toast';
-import Header from './Header/Header';
-import EmptyState from './EmptyState/EmptyState';
+import TextField from './TextField';
+import Button from './Button';
+import Toast from './Toast';
+import Header from './Header';
+import EmptyState from './EmptyState';
 import DeleteDialog from './DeleteDialog';
 
 export { TextField, Button, Toast, Header, EmptyState, DeleteDialog };
