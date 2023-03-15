@@ -84,7 +84,6 @@ test-backend:
     - echo "Testing backend..."
     - cd backend/paw-pals
     - mvn clean
-  when: manual
   tags:
     - ugrad
 
