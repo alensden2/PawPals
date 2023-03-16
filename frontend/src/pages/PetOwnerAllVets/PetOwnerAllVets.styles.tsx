@@ -4,7 +4,8 @@ const useStyles = makeStyles(() => ({
   root: {
     display: 'flex',
     paddingTop: '64px',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    height: '100%'
   },
   grid: {
     margin: '0px',
