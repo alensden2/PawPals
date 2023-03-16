@@ -13,6 +13,7 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    background: '#ECF0F1',
     padding: '16px'
   },
   actionButtons: {
