@@ -17,3 +17,23 @@ export type Pet = {
   photoUrl: string;
   type: string;
 };
+
+export type Vet = {
+  vetId: number;
+  name: string;
+  phoneNo: string;
+  email: string;
+  experience: number;
+  licenseNumber: string;
+  qualification: string;
+  clinicAddress: string;
+  clinicPhotoUrl: string;
+};
+
+export type VetList = {
+  vets: Vet[];
+};
+
+export type VetsState = {
+  vets: Vet[];
+};
