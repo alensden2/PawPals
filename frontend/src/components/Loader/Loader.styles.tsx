@@ -1,16 +1,15 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    paddingTop: '64px',
     flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: '100%'
   },
-  grid: {
-    margin: '0px',
-    paddingTop: '24px',
-    width: '100%'
+  loadingText: {
+    marginTop: theme.spacing(1)
   }
 }));
 
