@@ -8,9 +8,9 @@ import {
   Typography
 } from '@material-ui/core';
 import { Vet } from '@src/types';
+import { Button } from '@src/components';
 
 const VetCard: React.FC<Vet> = ({
-  vetId,
   name,
   phoneNo,
   email,
@@ -33,6 +33,14 @@ const VetCard: React.FC<Vet> = ({
         {/* Action Buttons */}
         <div className={classes.actionButtons}>
           {/* Book appointment button */}
+          <Button
+            type="submit"
+            variant="outlined"
+            color="inherit"
+            fullWidth={true}
+          >
+            Book Appointment
+          </Button>
         </div>
       </div>
 
