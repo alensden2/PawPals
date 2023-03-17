@@ -19,6 +19,6 @@ public class AnimalDto {
     private Integer age;
     private String gender;
     private PetOwnerDto owner;
-    private String photoUrl;
+    private Byte[] photoUrl;
     List<MedicalHistoryDto> medicalHistory;
 }

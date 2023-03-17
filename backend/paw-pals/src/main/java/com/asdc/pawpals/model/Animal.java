@@ -2,13 +2,7 @@ package com.asdc.pawpals.model;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +21,10 @@ public class Animal {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     private PetOwner owner;
-    private String photoUrl;
+
+    @Column(name = "photo_url", length = 10485760)
+    @Lob
+    private Byte[] photoUrl;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "animal")
     private List<MedicalHistory> medicalHistories;

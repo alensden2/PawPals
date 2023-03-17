@@ -12,7 +12,7 @@ public class AppointmentDto {
     private String date;
     private String startTime;
     private String endTime;
-    private String vetUserId;
+    private Long vetId;
     private Long animalId;
     private String status; //CONFIRMED, REJECTED, PENDING
 }

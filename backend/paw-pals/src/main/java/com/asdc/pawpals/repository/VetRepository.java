@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.asdc.pawpals.model.Vet;
 
 @Repository
-public interface VetRepository extends JpaRepository<Vet, String>{
+public interface VetRepository extends JpaRepository<Vet, Long>{
 }
