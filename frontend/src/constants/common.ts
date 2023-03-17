@@ -37,3 +37,8 @@ export const PET_OWNER_HOME_PAGE_CARDS = [
     route: '/pet-owner/pet-health-and-diseases'
   }
 ];
+
+export const PLACEHOLDER_PET_IMAGE =
+  'https://via.placeholder.com/150x150.png?text=Pet+Image';
+
+export const PET_NAME = 'PET_NAME';

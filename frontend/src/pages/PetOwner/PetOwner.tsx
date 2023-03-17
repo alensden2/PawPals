@@ -7,7 +7,8 @@ const PetOwner: React.FC = () => {
 
   useEffect(() => {
     navigate('home');
-  }, [navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

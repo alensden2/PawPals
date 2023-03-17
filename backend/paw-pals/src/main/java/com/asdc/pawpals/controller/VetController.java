@@ -41,16 +41,21 @@ public class VetController {
     public ResponseEntity<String> registerVet(@RequestBody Object requestBody){
         logger.info("Recieved request as :", requestBody.toString());
         Boolean vetRegistered = false;
+        ResponseEntity<String> response = null;
         try{
             VetDto vet = null;
             if(CommonUtils.isStrictTypeOf(requestBody, VetDto.class)){
                 vet = ObjectMapperWrapper.getInstance().convertValue(requestBody, VetDto.class);
                 vetRegistered = vetService.registerVet(vet);
+                response = vetRegistered ? ResponseEntity.ok(vet.getUsername()) : ResponseEntity.internalServerError().body("There was some error, please try again");
             }
-            return ResponseEntity.ok(vetRegistered && vet != null ? vet.getUsername() : "");
+            else{
+                response = ResponseEntity.badRequest().body("Invalid input provided");
+            }
         } catch(UsernameNotFoundException e){
-            return ResponseEntity.badRequest().body("User name provided is invalid");
+            response = ResponseEntity.badRequest().body("User name provided is invalid");
         }
+        return response;
     }
 
     /**
@@ -62,25 +67,35 @@ public class VetController {
     @PostMapping("/availability/{id}")
     public ResponseEntity<VetAvailabilityDto> getAvailability(@PathVariable(value = "id") String userId, @RequestBody Object requestBody){
         VetAvailabilityDto availability = null;
+        ResponseEntity<VetAvailabilityDto> response = null;
         if(CommonUtils.isStrictTypeOf(requestBody, new TypeReference<Map<String, String>>(){}) && 
             userId != null && !userId.isEmpty()){
                 Map<String, String> request = ObjectMapperWrapper.getInstance().convertValue(requestBody,  new TypeReference<Map<String, String>>(){});
                 String date = request.get("date");
                 availability = vetService.getVetAvailabilityOnSpecificDay(userId, date);
+                response = ResponseEntity.ok(availability);
         }
-        return ResponseEntity.ok(availability);
+        else{
+            response = ResponseEntity.badRequest().build();
+        }
+        return response;
     }
 
     @PostMapping("/schedule/{id}")
     public ResponseEntity<VetScheduleDto> getVetSchedule(@PathVariable(value = "id") String userId, @RequestBody Object requestBody){
         VetScheduleDto vetScheduleDto = null;
+        ResponseEntity<VetScheduleDto> response = null;
         if(CommonUtils.isStrictTypeOf(requestBody, new TypeReference<Map<String, String>>(){}) && 
             userId != null && !userId.isEmpty()){
                 Map<String, String> request = ObjectMapperWrapper.getInstance().convertValue(requestBody,  new TypeReference<Map<String, String>>(){});
                 String date = request.get("date");
                 vetScheduleDto = vetService.getVetScheduleOnSpecificDay(userId, date);
+                response = ResponseEntity.ok(vetScheduleDto);
         }
-        return ResponseEntity.ok(vetScheduleDto);
+        else{
+            response = ResponseEntity.badRequest().build();
+        }
+        return response;
     }
 
 }
