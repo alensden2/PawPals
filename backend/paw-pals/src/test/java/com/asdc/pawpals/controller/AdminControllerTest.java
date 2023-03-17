@@ -1,9 +1,17 @@
 package com.asdc.pawpals.controller;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminService;
@@ -148,4 +156,40 @@ public class AdminControllerTest {
     assertEquals("Object not found", apiResponse.getMessage());
     assertEquals(Collections.emptyList(), apiResponse.getBody());
   }
+
+  @Test
+  public void testDeleteAnimal() {
+    Long id = 1L;
+    AnimalDto animalDto = null;
+    when(adminService.deleteAnimal(id)).thenReturn(animalDto);
+
+    ResponseEntity<ApiResponse> responseEntity = adminController.deleteAnimal(id);
+
+    assertNotNull(responseEntity);
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertTrue(responseEntity.getBody().isSuccess());
+    assertFalse(responseEntity.getBody().isError());
+    assertEquals("successfully deleted object", responseEntity.getBody().getMessage());
+    verify(adminService, times(1)).deleteAnimal(id);
+  }
+
+  @Test
+  public void testDeleteAnimalWithInvalidId() {
+    Long id = 1L;
+
+    ResponseEntity<ApiResponse> responseEntity = adminController.deleteAnimal(id);
+
+    assertNotNull(responseEntity);
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertFalse(responseEntity.getBody().isSuccess());
+    assertTrue(responseEntity.getBody().isError());
+    assertNull(responseEntity.getBody().getBody());
+    assertEquals("Invalid type of id", responseEntity.getBody().getMessage());
+
+    verifyZeroInteractions(adminService);
+  }
+
+  private void verifyZeroInteractions(AdminService adminService2) {
+  }
 }
+

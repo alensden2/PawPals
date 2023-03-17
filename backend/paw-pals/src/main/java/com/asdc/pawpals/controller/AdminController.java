@@ -111,6 +111,22 @@ public class AdminController {
     return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
   }
 
+  @DeleteMapping("/delete-animal/{id}")
+  public ResponseEntity<ApiResponse> deleteAnimal(@PathVariable Long id) {
+    logger.info(
+      "Received delete request for Animal with id: {}",
+      id.toString()
+    );
+    if (CommonUtils.isStrictTypeOf(id, Long.class)) {
+      id = ObjectMapperWrapper.getInstance().convertValue(id, Long.class);
+      apiResponse.setBody(adminReadService.deleteAnimal(id));
+      apiResponse.setMessage("successfully deleted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+  }
+
   @PostMapping("/post-vet")
   public ResponseEntity<ApiResponse> addVet(@RequestBody Object requestBody) {
     logger.info("Recieved message as :", requestBody.toString());

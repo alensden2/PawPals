@@ -179,4 +179,18 @@ public class AdminServiceImpl implements AdminService {
     }
     return vetDto;
   }
+
+  @Override
+  public AnimalDto deleteAnimal(Long id) {
+    AnimalDto animalDto = null;
+    Optional<Animal> optionalAnimal = adminPostAnimalRepository.findById(id);
+    if (optionalAnimal.isPresent()) {
+      Animal animal = optionalAnimal.get();
+      adminPostAnimalRepository.delete(animal);
+      animalDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
+    } else {
+      //throw new EntityNotFoundException("Animal with id " + id + " not found");
+    }
+    return animalDto;
+  }
 }

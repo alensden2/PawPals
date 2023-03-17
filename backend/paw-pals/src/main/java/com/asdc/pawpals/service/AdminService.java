@@ -20,4 +20,6 @@ public interface AdminService {
   public VetDto addVet(Vet vet);
 
   public VetDto deleteVet(Long id);
+
+  public AnimalDto deleteAnimal(Long id);
 }
