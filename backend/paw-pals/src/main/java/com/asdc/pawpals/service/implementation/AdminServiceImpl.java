@@ -8,13 +8,14 @@ import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.AdminPostAnimalRepository;
+import com.asdc.pawpals.repository.AdminPostVetRepository;
 import com.asdc.pawpals.repository.AdminReadAllAnimalsRepository;
 import com.asdc.pawpals.repository.AdminReadAllUserRepository;
 import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
 import com.asdc.pawpals.repository.AdminReadRepository;
+import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
-import com.asdc.pawpals.service.AdminReadService;
-import com.asdc.pawpals.utils.ObjectMapperWrapper;
+import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.Transformations;
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminReadServiceImpl implements AdminReadService {
-  Logger logger = LogManager.getLogger(AdminReadServiceImpl.class);
+public class AdminServiceImpl implements AdminService {
+  Logger logger = LogManager.getLogger(AdminServiceImpl.class);
 
   @Autowired
   AdminReadRepository adminReadRepository;
@@ -45,6 +46,12 @@ public class AdminReadServiceImpl implements AdminReadService {
 
   @Autowired
   UserRepository userRepository;
+
+  @Autowired
+  AdminPostVetRepository adminPostVetRepository;
+
+  @Autowired
+  PetOwnerRepository petOwnerRepository;
 
   /**
    * fetches all the animal records
@@ -113,13 +120,8 @@ public class AdminReadServiceImpl implements AdminReadService {
     throws PetOwnerAlreadyDoesNotExists {
     AnimalDto returnedDto = null;
     if (animal != null && animal.getOwner() != null) {
-      //Animal animal = Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto);
-      // if (adminPostAnimalRepository.existsById(null)) {
-      //   //throw new AnimalAlreadyExist("user exist in the system");
-      // }
-
-      // Check if user already exists if this pet owner exists
-      //animal.getOwner
+      // add to check if user is already existing throw an exception
+      userRepository.save(animal.getOwner().getUser());
       Optional<User> user = userRepository.findById(
         animal.getOwner().getUser().getUserId()
       );
@@ -127,7 +129,9 @@ public class AdminReadServiceImpl implements AdminReadService {
       if (!user.isEmpty()) {
         User userDetails = null;
         userDetails = user.get();
-        animal.setId(userDetails.getOwner().getId());
+        Long countOfPetOwners = petOwnerRepository.count();
+        countOfPetOwners = countOfPetOwners + 1;
+        animal.setId(countOfPetOwners);
         animal = adminPostAnimalRepository.save(animal);
         returnedDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
       } else {
@@ -138,5 +142,27 @@ public class AdminReadServiceImpl implements AdminReadService {
     }
 
     return returnedDto;
+  }
+
+  @Override
+  public VetDto addVet(Vet vet) {
+    VetDto vetDto = null;
+    // adding user to user table
+    // add to check if user is already existing throw an exception
+    //add a user first
+    if (vet != null && vet.getUser().getUserId() != null) {
+      userRepository.save(vet.getUser());
+      Optional<User> user = userRepository.findById(vet.getUser().getUserId());
+      if (!user.isEmpty()) {
+        User userDetails = null;
+        userDetails = user.get();
+        vet.setUser(userDetails);
+        vet = adminPostVetRepository.save(vet);
+        vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
+      } else {
+        //custom user does not exit create}
+      }
+    }
+    return vetDto;
   }
 }

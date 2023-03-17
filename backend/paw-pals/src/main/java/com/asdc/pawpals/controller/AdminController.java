@@ -5,16 +5,16 @@ import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
 import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.service.AdminReadService;
+import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import java.util.List;
-import org.springframework.http.HttpStatus;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +31,7 @@ public class AdminController {
   );
 
   @Autowired
-  AdminReadService adminReadService;
+  AdminService adminReadService;
 
   @Autowired
   ApiResponse apiResponse;
@@ -92,7 +92,8 @@ public class AdminController {
   //  }
 
   @PostMapping("/post-animal")
-  public ResponseEntity<ApiResponse> addAnimal(@RequestBody Object requestBody) throws PetOwnerAlreadyDoesNotExists {
+  public ResponseEntity<ApiResponse> addAnimal(@RequestBody Object requestBody)
+    throws PetOwnerAlreadyDoesNotExists {
     logger.info("Recieved request as :", requestBody.toString());
     Animal animal = null;
     if (CommonUtils.isStrictTypeOf(requestBody, Animal.class)) {
@@ -101,6 +102,21 @@ public class AdminController {
           .getInstance()
           .convertValue(requestBody, Animal.class);
       apiResponse.setBody(adminReadService.addAnimal(animal));
+      apiResponse.setMessage("successfully inserted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+  }
+
+  @PostMapping("/post-vet")
+  public ResponseEntity<ApiResponse> addVet(@RequestBody Object requestBody) {
+    logger.info("Recieved message as :", requestBody.toString());
+    Vet vet = null;
+    if (CommonUtils.isStrictTypeOf(requestBody, Vet.class)) {
+      vet =
+        ObjectMapperWrapper.getInstance().convertValue(requestBody, Vet.class);
+      apiResponse.setBody(adminReadService.addVet(vet));
       apiResponse.setMessage("successfully inserted object");
       apiResponse.setSuccess(true);
       apiResponse.setError(false);

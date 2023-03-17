@@ -1,52 +1,101 @@
 package com.asdc.pawpals.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.service.AdminService;
+import com.asdc.pawpals.utils.ApiResponse;
+import java.util.Collections;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.asdc.pawpals.dto.AnimalDto;
-import com.asdc.pawpals.model.Vet;
-import com.asdc.pawpals.service.implementation.AdminReadServiceImpl;
-
-import net.bytebuddy.agent.VirtualMachine.ForHotSpot.Connection.Response;
-
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class AdminControllerTest {
-  @Autowired
-  AdminController adminController;
+  @InjectMocks
+  private AdminController adminController;
 
-  AdminReadServiceImpl adminReadServiceMock;
+  @Mock
+  private AdminService adminService;
 
-  @BeforeEach
-  public void setup() {
-    adminReadServiceMock = mock(AdminReadServiceImpl.class);
-    adminController.adminReadService = adminReadServiceMock;
+  private Vet validVet;
+  VetDto expectedVetDto = new VetDto();
+
+  @Before
+  public void setUp() {
+    validVet = new Vet();
+    validVet.setId(1L);
+    validVet.setName("Alen John");
   }
 
   @Test
-  public void objectCreated() {
-    assertNotNull(adminController);
+  public void addVet_ValidRequestBody_ReturnsCreatedStatus() {
+    VetDto expectedVetDto = new VetDto();
+    when(adminService.addVet(any(Vet.class))).thenReturn(expectedVetDto);
+
+    ResponseEntity<ApiResponse> response = adminController.addVet(validVet);
+
+    assertEquals(HttpStatus.CREATED, response.getStatusCode());
   }
 
   @Test
-  public void TestallAnimalRecords(){
-    assertEquals("hello 1", adminController.getAllAnimalRecords());
+  public void addVet_InvalidRequestBody_ReturnsBadRequestStatus() {
+    ResponseEntity<ApiResponse> response = adminController.addVet(new Object());
+
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
   }
 
-  @Test 
-  public void TestAddVet(){
-    Vet addVet = new Vet();
-    when(adminReadServiceMock.addVet(any(Pet.class))).thenReturn(true);
-    addVet.setVetUserId("john");
-    ResponseEntity<String> response = adminController.addVet(addVet);
+  @Test
+  public void addVet_NullRequestBody_ReturnsBadRequestStatus() {
+    ResponseEntity<ApiResponse> response = adminController.addVet(null);
 
-    assertEquals("Hello 1", response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+  }
+
+  @Test
+  public void addVet_ValidRequestBody_ReturnsSuccessResponse() {
+    VetDto expectedVetDto = new VetDto();
+
+    when(adminService.addVet(any(Vet.class))).thenReturn(expectedVetDto);
+
+    ResponseEntity<ApiResponse> response = adminController.addVet(validVet);
+
+    ApiResponse apiResponse = response.getBody();
+
+    assertEquals(true, apiResponse.isSuccess());
+    assertEquals(false, apiResponse.isError());
+    assertEquals("successfully inserted object", apiResponse.getMessage());
+    assertEquals(Collections.singletonList(validVet), apiResponse.getBody());
+  }
+
+  @Test
+  public void addVet_InvalidRequestBody_ReturnsErrorResponse() {
+    ResponseEntity<ApiResponse> response = adminController.addVet(new Object());
+
+    ApiResponse apiResponse = response.getBody();
+
+    assertEquals(false, apiResponse.isSuccess());
+    assertEquals(true, apiResponse.isError());
+    assertEquals("Invalid request body", apiResponse.getMessage());
+    assertEquals(Collections.emptyList(), apiResponse.getBody());
+  }
+
+  @Test
+  public void addVet_NullRequestBody_ReturnsErrorResponse() {
+    ResponseEntity<ApiResponse> response = adminController.addVet(null);
+
+    ApiResponse apiResponse = response.getBody();
+
+    assertEquals(false, apiResponse.isSuccess());
+    assertEquals(true, apiResponse.isError());
+    assertEquals("Request body cannot be null", apiResponse.getMessage());
+    assertEquals(Collections.emptyList(), apiResponse.getBody());
   }
 }
