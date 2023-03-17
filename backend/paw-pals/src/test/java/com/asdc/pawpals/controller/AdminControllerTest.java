@@ -8,9 +8,7 @@ import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.ApiResponse;
-
 import jakarta.persistence.EntityNotFoundException;
-
 import java.util.Collections;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -103,47 +101,51 @@ public class AdminControllerTest {
   }
 
   @Test
-public void deleteVet_ValidId_ReturnsSuccessResponse() {
-  Long validId = 1L;
-  VetDto expectedVetDto = new VetDto();
-  when(adminService.deleteVet(validId)).thenReturn(expectedVetDto);
+  public void deleteVet_ValidId_ReturnsSuccessResponse() {
+    Long validId = 1L;
+    VetDto expectedVetDto = new VetDto();
+    when(adminService.deleteVet(validId)).thenReturn(expectedVetDto);
 
-  ResponseEntity<ApiResponse> response = adminController.deleteVet(validId);
+    ResponseEntity<ApiResponse> response = adminController.deleteVet(validId);
 
-  ApiResponse apiResponse = response.getBody();
+    ApiResponse apiResponse = response.getBody();
 
-  assertEquals(true, apiResponse.isSuccess());
-  assertEquals(false, apiResponse.isError());
-  assertEquals("successfully deleted object", apiResponse.getMessage());
-  assertEquals(Collections.singletonList(expectedVetDto), apiResponse.getBody());
-}
+    assertEquals(true, apiResponse.isSuccess());
+    assertEquals(false, apiResponse.isError());
+    assertEquals("successfully deleted object", apiResponse.getMessage());
+    assertEquals(
+      Collections.singletonList(expectedVetDto),
+      apiResponse.getBody()
+    );
+  }
 
-@Test
-public void deleteVet_InvalidId_ReturnsErrorResponse() {
-  Long invalidId = null;
-  ResponseEntity<ApiResponse> response = adminController.deleteVet(invalidId);
+  @Test
+  public void deleteVet_InvalidId_ReturnsErrorResponse() {
+    Long invalidId = null;
+    ResponseEntity<ApiResponse> response = adminController.deleteVet(invalidId);
 
-  ApiResponse apiResponse = response.getBody();
+    ApiResponse apiResponse = response.getBody();
 
-  assertEquals(false, apiResponse.isSuccess());
-  assertEquals(true, apiResponse.isError());
-  assertEquals("Invalid request parameter", apiResponse.getMessage());
-  assertEquals(Collections.emptyList(), apiResponse.getBody());
-}
+    assertEquals(false, apiResponse.isSuccess());
+    assertEquals(true, apiResponse.isError());
+    assertEquals("Invalid request parameter", apiResponse.getMessage());
+    assertEquals(Collections.emptyList(), apiResponse.getBody());
+  }
 
-@Test
-public void deleteVet_IdNotFound_ReturnsErrorResponse() {
-  Long nonExistingId = 100L;
-  //when(adminService.addVet(nonExistingId)).thenThrow(EntityNotFoundException.class);
+  @Test
+  public void deleteVet_IdNotFound_ReturnsErrorResponse() {
+    Long nonExistingId = 100L;
+    //when(adminService.addVet(nonExistingId)).thenThrow(EntityNotFoundException.class);
 
-  ResponseEntity<ApiResponse> response = adminController.deleteVet(nonExistingId);
+    ResponseEntity<ApiResponse> response = adminController.deleteVet(
+      nonExistingId
+    );
 
-  ApiResponse apiResponse = response.getBody();
+    ApiResponse apiResponse = response.getBody();
 
-  assertEquals(false, apiResponse.isSuccess());
-  assertEquals(true, apiResponse.isError());
-  assertEquals("Object not found", apiResponse.getMessage());
-  assertEquals(Collections.emptyList(), apiResponse.getBody());
-}
-
+    assertEquals(false, apiResponse.isSuccess());
+    assertEquals(true, apiResponse.isError());
+    assertEquals("Object not found", apiResponse.getMessage());
+    assertEquals(Collections.emptyList(), apiResponse.getBody());
+  }
 }

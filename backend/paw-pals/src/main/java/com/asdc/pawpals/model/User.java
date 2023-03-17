@@ -8,20 +8,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class User {
+  @Id
+  private String userId;
 
-    @Id
-    private String userId;
-    private String role; //Pet Owner, Vet, admin
-    private String email;
-    private String password;
+  private String role; //Pet Owner, Vet, admin
+  private String email;
+  private String password;
 
-    
-    @OneToOne(mappedBy = "user")
-    private Vet vet;
+  @OneToOne(mappedBy = "user")
+  private Vet vet;
 
-    @OneToOne(mappedBy = "user")
-    private PetOwner owner;
-
+  @OneToOne(mappedBy = "user")
+  private PetOwner owner;
 }

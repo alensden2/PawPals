@@ -10,9 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VetDto extends UserDto {
-    private String name;
-    private String licenseNumber;
-    private String clinicAddress;
-    private Integer experience;
-    private String qualification;
+  private String name;
+  private String licenseNumber;
+  private String clinicAddress;
+  private Integer experience;
+  private String qualification;
 }
