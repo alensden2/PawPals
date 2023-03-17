@@ -2,10 +2,10 @@ package com.asdc.pawpals.model;
 
 import java.util.List;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
@@ -26,7 +26,8 @@ public class Vet {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
     private List<MedicalHistory> medicalHistories;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "user_userId")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
