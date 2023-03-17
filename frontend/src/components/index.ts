@@ -5,5 +5,6 @@ import Header from './Header';
 import EmptyState from './EmptyState';
 import DeleteDialog from './DeleteDialog';
 import Loader from './Loader';
+import Select from './Select';
 
-export { TextField, Button, Toast, Header, EmptyState, DeleteDialog, Loader };
+export { TextField, Button, Toast, Header, EmptyState, DeleteDialog, Loader, Select };

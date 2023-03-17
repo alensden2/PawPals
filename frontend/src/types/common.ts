@@ -19,15 +19,16 @@ export type Pet = {
 };
 
 export type Vet = {
-  vetId: number;
-  name: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
   phoneNo: string;
   email: string;
   experience: number;
   licenseNumber: string;
   qualification: string;
   clinicAddress: string;
-  clinicPhotoUrl: string;
+  clinicPhotoUrl?: string;
 };
 
 export type VetList = {
