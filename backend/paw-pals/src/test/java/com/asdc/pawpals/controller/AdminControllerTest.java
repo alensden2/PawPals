@@ -163,13 +163,18 @@ public class AdminControllerTest {
     AnimalDto animalDto = null;
     when(adminService.deleteAnimal(id)).thenReturn(animalDto);
 
-    ResponseEntity<ApiResponse> responseEntity = adminController.deleteAnimal(id);
+    ResponseEntity<ApiResponse> responseEntity = adminController.deleteAnimal(
+      id
+    );
 
     assertNotNull(responseEntity);
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertTrue(responseEntity.getBody().isSuccess());
     assertFalse(responseEntity.getBody().isError());
-    assertEquals("successfully deleted object", responseEntity.getBody().getMessage());
+    assertEquals(
+      "successfully deleted object",
+      responseEntity.getBody().getMessage()
+    );
     verify(adminService, times(1)).deleteAnimal(id);
   }
 
@@ -177,7 +182,9 @@ public class AdminControllerTest {
   public void testDeleteAnimalWithInvalidId() {
     Long id = 1L;
 
-    ResponseEntity<ApiResponse> responseEntity = adminController.deleteAnimal(id);
+    ResponseEntity<ApiResponse> responseEntity = adminController.deleteAnimal(
+      id
+    );
 
     assertNotNull(responseEntity);
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -189,7 +196,5 @@ public class AdminControllerTest {
     verifyZeroInteractions(adminService);
   }
 
-  private void verifyZeroInteractions(AdminService adminService2) {
-  }
+  private void verifyZeroInteractions(AdminService adminService2) {}
 }
-
