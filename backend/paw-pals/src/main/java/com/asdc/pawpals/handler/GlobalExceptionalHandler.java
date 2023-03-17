@@ -1,7 +1,7 @@
 package com.asdc.pawpals.handler;
 
-import com.asdc.pawpals.exception.InvalidUserDetails;
-import com.asdc.pawpals.exception.UserAlreadyExist;
+import com.asdc.pawpals.controller.PetOwnerController;
+import com.asdc.pawpals.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.asdc.pawpals.controller.UserController;
-import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.utils.ApiResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@RestControllerAdvice(assignableTypes = { UserController.class })
+import java.io.IOException;
+import java.io.InvalidObjectException;
+
+@RestControllerAdvice(assignableTypes = { UserController.class, PetOwnerController.class})
 public class GlobalExceptionalHandler {
 	
 Logger logger=LogManager.getLogger(GlobalExceptionalHandler.class);
@@ -62,5 +64,95 @@ ApiResponse apiResponse;
 
 	}
 
+	@ExceptionHandler(InvalidOwnerID.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForInvalidOwnerID(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("Invalid Owner Id");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+
+	}
+
+	@ExceptionHandler(NoPetRegisterUnderPetOwner.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForNoPetRegisterUnderPetOwner(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("No Pet register...");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiResponse);
+
+	}
+
+	@ExceptionHandler(IOException.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForIOException(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("IO Exception ");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+
+	}
+
+	@ExceptionHandler(InvalidImage.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForInValidImage(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("IO Exception ");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+
+	}
+
+	@ExceptionHandler(InvalidAnimalId.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForInvalidAnimalId(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("Invalid Animal Id entered ");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+
+	}
+
+	@ExceptionHandler(InvalidVetID.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForInvalidVetID(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("Invalid Vet Id entered");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+
+	}
+
+	@ExceptionHandler(InvalidObjectException.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForInvalidObjectException(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("Invalid object parameters");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+
+	}
 }
 
