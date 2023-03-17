@@ -16,7 +16,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,6 +120,19 @@ public class AdminController {
         ObjectMapperWrapper.getInstance().convertValue(requestBody, Vet.class);
       apiResponse.setBody(adminReadService.addVet(vet));
       apiResponse.setMessage("successfully inserted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+  }
+
+  @DeleteMapping("/delete-vet/{id}")
+  public ResponseEntity<ApiResponse> deleteVet(@PathVariable Long id) {
+    logger.info("Received delete request for Vet with id: {}", id.toString());
+    if (CommonUtils.isStrictTypeOf(id, Long.class)) {
+      id = ObjectMapperWrapper.getInstance().convertValue(id, Long.class);
+      apiResponse.setBody(adminReadService.deleteVet(id));
+      apiResponse.setMessage("successfully deleted object");
       apiResponse.setSuccess(true);
       apiResponse.setError(false);
     }

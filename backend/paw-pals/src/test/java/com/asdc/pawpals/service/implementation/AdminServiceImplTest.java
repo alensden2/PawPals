@@ -1,20 +1,24 @@
 package com.asdc.pawpals.service.implementation;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
+import org.aspectj.lang.annotation.Before;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import com.asdc.pawpals.controller.Test;
-import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.VetDto;
-import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
-import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.AdminPostAnimalRepository;
@@ -22,12 +26,6 @@ import com.asdc.pawpals.repository.AdminPostVetRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Optional;
-import org.aspectj.lang.annotation.Before;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminServiceImplTest {
@@ -73,6 +71,39 @@ public class AdminServiceImplTest {
 
     assertNotNull(vetDto);
   }
+  @Test
+  public void testDeleteVetSuccess() {
+    Long vetId = 1L;
+    Vet vet = new Vet();
+    vet.setId(vetId);
+  
+    when(adminPostVetRepository.findById(vetId)).thenReturn(Optional.of(vet));
+    doNothing().when(adminPostVetRepository).delete(vet);
+  
+    VetDto vetDto = adminServiceImpl.deleteVet(vetId);
+  
+    verify(adminPostVetRepository, times(1)).findById(vetId);
+    verify(adminPostVetRepository, times(1)).delete(vet);
+  
+    assertNotNull(vetDto);
+    //assertEquals(vetDto.getId(), vetId);
+  }
+  
+  @Test
+  public void testDeleteVetNotFound() {
+    Long vetId = 1L;
+  
+    when(adminPostVetRepository.findById(vetId)).thenReturn(Optional.empty());
+  
+    VetDto vetDto = adminServiceImpl.deleteVet(vetId);
+  
+    verify(adminPostVetRepository, times(1)).findById(vetId);
+    verify(adminPostVetRepository, never()).delete(any(Vet.class));
+  
+    assertNull(vetDto);
+  }
+  
+
   //   @Test
   //   public void testAddAnimalSuccess() throws PetOwnerAlreadyDoesNotExists {
   //     Animal animal = new Animal();

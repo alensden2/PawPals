@@ -165,4 +165,18 @@ public class AdminServiceImpl implements AdminService {
     }
     return vetDto;
   }
+
+  @Override
+  public VetDto deleteVet(Long id) {
+    VetDto vetDto = null;
+    Optional<Vet> optionalVet = adminPostVetRepository.findById(id);
+    if (optionalVet.isPresent()) {
+      Vet vet = optionalVet.get();
+      adminPostVetRepository.delete(vet);
+      vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
+    } else {
+      // throw exception user not found
+    }
+    return vetDto;
+  }
 }

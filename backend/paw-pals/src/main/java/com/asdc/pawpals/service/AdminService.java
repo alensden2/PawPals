@@ -18,4 +18,6 @@ public interface AdminService {
   public AnimalDto addAnimal(Animal animal) throws PetOwnerAlreadyDoesNotExists;
 
   public VetDto addVet(Vet vet);
+
+  public VetDto deleteVet(Long id);
 }
