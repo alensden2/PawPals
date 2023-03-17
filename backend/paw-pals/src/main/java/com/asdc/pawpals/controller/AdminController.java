@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -140,6 +141,25 @@ public class AdminController {
       apiResponse.setError(false);
     }
     return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+  }
+
+  @PutMapping("/update-vet/{id}")
+  public ResponseEntity<ApiResponse> updateVet(
+    @PathVariable Long id,
+    @RequestBody Object requestBody
+  ) {
+    logger.info("Received message as:", requestBody.toString());
+    Vet vet = null;
+    if (CommonUtils.isStrictTypeOf(requestBody, Vet.class)) {
+      vet =
+        ObjectMapperWrapper.getInstance().convertValue(requestBody, Vet.class);
+      vet.setId(id);
+      apiResponse.setBody(adminReadService.updateVet(id, vet));
+      apiResponse.setMessage("successfully updated object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
   }
 
   @DeleteMapping("/delete-vet/{id}")

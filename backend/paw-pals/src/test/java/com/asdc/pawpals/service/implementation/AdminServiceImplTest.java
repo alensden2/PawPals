@@ -1,5 +1,6 @@
 package com.asdc.pawpals.service.implementation;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -100,6 +101,41 @@ public class AdminServiceImplTest {
     verify(adminPostVetRepository, never()).delete(any(Vet.class));
 
     assertNull(vetDto);
+  }
+
+  @Test
+  public void testUpdateVetSuccess() {
+    Long vetId = 1L;
+    Vet existingVet = new Vet();
+    existingVet.setId(vetId);
+    existingVet.setName("Old Name");
+    existingVet.setLicenseNumber("123456");
+    existingVet.setClinicAddress("Old Address");
+    existingVet.setExperience(5);
+    existingVet.setQualification("Old Qualification");
+    existingVet.setUser(new User());
+
+    Vet updatedVet = new Vet();
+    updatedVet.setName("New Name");
+    updatedVet.setLicenseNumber("654321");
+    updatedVet.setClinicAddress("New Address");
+    updatedVet.setExperience(10);
+    updatedVet.setQualification("New Qualification");
+
+    when(adminPostVetRepository.findById(vetId))
+      .thenReturn(Optional.of(existingVet));
+    when(adminPostVetRepository.save(any(Vet.class))).thenReturn(updatedVet);
+
+    VetDto vetDto = adminServiceImpl.updateVet(vetId, updatedVet);
+
+    verify(adminPostVetRepository, times(1)).findById(vetId);
+    verify(adminPostVetRepository, times(1)).save(any(Vet.class));
+
+    assertNotNull(vetDto);
+    assertEquals(vetDto.getName(), "New Name");
+    assertEquals(vetDto.getLicenseNumber(), "654321");
+    assertEquals(vetDto.getClinicAddress(), "New Address");
+    assertEquals(vetDto.getQualification(), "New Qualification");
   }
   //   @Test
   //   public void testAddAnimalSuccess() throws PetOwnerAlreadyDoesNotExists {

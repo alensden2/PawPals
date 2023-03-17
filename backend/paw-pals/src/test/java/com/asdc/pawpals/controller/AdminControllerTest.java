@@ -18,6 +18,7 @@ import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Collections;
+import org.hibernate.service.spi.ServiceException;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -192,9 +193,54 @@ public class AdminControllerTest {
     assertTrue(responseEntity.getBody().isError());
     assertNull(responseEntity.getBody().getBody());
     assertEquals("Invalid type of id", responseEntity.getBody().getMessage());
-
-    verifyZeroInteractions(adminService);
   }
 
-  private void verifyZeroInteractions(AdminService adminService2) {}
+  @Test
+  public void addVet_ServiceException_ReturnsErrorResponse() {
+    when(adminService.addVet(any(Vet.class)))
+      .thenThrow(new ServiceException("Error adding Vet"));
+
+    ResponseEntity<ApiResponse> response = adminController.addVet(validVet);
+
+    ApiResponse apiResponse = response.getBody();
+
+    assertEquals(false, apiResponse.isSuccess());
+    assertEquals(true, apiResponse.isError());
+    assertEquals("Error adding Vet", apiResponse.getMessage());
+    assertEquals(Collections.emptyList(), apiResponse.getBody());
+  }
+
+  @Test
+  public void deleteVet_ServiceException_ReturnsErrorResponse() {
+    Long validId = 1L;
+    when(adminService.deleteVet(validId))
+      .thenThrow(new ServiceException("Error deleting Vet"));
+
+    ResponseEntity<ApiResponse> response = adminController.deleteVet(validId);
+
+    ApiResponse apiResponse = response.getBody();
+
+    assertEquals(false, apiResponse.isSuccess());
+    assertEquals(true, apiResponse.isError());
+    assertEquals("Error deleting Vet", apiResponse.getMessage());
+    assertEquals(Collections.emptyList(), apiResponse.getBody());
+  }
+
+  @Test
+  public void deleteAnimal_ServiceException_ReturnsErrorResponse() {
+    Long validId = 1L;
+    when(adminService.deleteAnimal(validId))
+      .thenThrow(new ServiceException("Error deleting Animal"));
+
+    ResponseEntity<ApiResponse> response = adminController.deleteAnimal(
+      validId
+    );
+
+    ApiResponse apiResponse = response.getBody();
+
+    assertEquals(false, apiResponse.isSuccess());
+    assertEquals(true, apiResponse.isError());
+    assertEquals("Error deleting Animal", apiResponse.getMessage());
+    assertEquals(Collections.emptyList(), apiResponse.getBody());
+  }
 }

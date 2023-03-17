@@ -167,6 +167,27 @@ public class AdminServiceImpl implements AdminService {
   }
 
   @Override
+  public VetDto updateVet(Long id, Vet updatedVet) {
+    VetDto vetDto = null;
+    Optional<Vet> optionalVet = adminPostVetRepository.findById(id);
+    if (optionalVet.isPresent()) {
+      // populating the vet
+      Vet vet = optionalVet.get();
+      vet.setName(updatedVet.getName());
+      vet.setLicenseNumber(updatedVet.getLicenseNumber());
+      vet.setClinicAddress(updatedVet.getClinicAddress());
+      vet.setExperience(updatedVet.getExperience());
+      vet.setQualification(updatedVet.getQualification());
+      vet.setUser(vet.getUser()); // user details remain the same
+      adminPostVetRepository.save(vet);
+      vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
+    } else {
+      //throw new EntityNotFoundException("Vet with id " + id + " not found");
+    }
+    return vetDto;
+  }
+
+  @Override
   public VetDto deleteVet(Long id) {
     VetDto vetDto = null;
     Optional<Vet> optionalVet = adminPostVetRepository.findById(id);
