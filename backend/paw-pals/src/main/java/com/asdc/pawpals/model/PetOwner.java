@@ -26,7 +26,8 @@ public class PetOwner {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "owner")
     private List<Animal> animals;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "user_userId")
     private User user;
 
 }

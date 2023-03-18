@@ -127,6 +127,11 @@ public class Transformations {
                 vet.setExperience(vetDto.getExperience());
                 vet.setQualification(vetDto.getQualification());
                 vet.setClinicAddress(vetDto.getClinicAddress());
+                if(vetDto.getUsername() != null){
+                    User user = new User();
+                    user.setUserId(vetDto.getUsername());
+                    vet.setUser(user);
+                }
             }
             return vet;
         }
