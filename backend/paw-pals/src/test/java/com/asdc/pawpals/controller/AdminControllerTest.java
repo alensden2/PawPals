@@ -6,17 +6,21 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.nullable;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
+import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.ApiResponse;
-import jakarta.persistence.EntityNotFoundException;
+import com.asdc.pawpals.utils.Transformations;
+import com.asdc.pawpals.utils.Transformations.MODEL_TO_DTO_CONVERTER;
 import java.util.Collections;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.Before;
@@ -242,5 +246,58 @@ public class AdminControllerTest {
     assertEquals(true, apiResponse.isError());
     assertEquals("Error deleting Animal", apiResponse.getMessage());
     assertEquals(Collections.emptyList(), apiResponse.getBody());
+  }
+
+  @Test
+  public void testUpdateAnimalSuccess() throws PetOwnerAlreadyDoesNotExists {
+    Long animalId = 1L;
+    Animal existingAnimal = new Animal();
+    existingAnimal.setId(animalId);
+    existingAnimal.setName("Old Name");
+    existingAnimal.setAge(5);
+    existingAnimal.setType("Old Breed");
+    existingAnimal.setGender("male");
+    existingAnimal.setOwner(new PetOwner());
+
+    Animal updatedAnimal = new Animal();
+    updatedAnimal.setName("New Name");
+    updatedAnimal.setAge(10);
+    updatedAnimal.setType("New Breed");
+    updatedAnimal.setGender("female");
+
+    AnimalDto updatedAnimalDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(
+      updatedAnimal
+    );
+    when(adminService.updateAnimal(animalId, updatedAnimal))
+      .thenReturn(updatedAnimalDto);
+
+    ResponseEntity<ApiResponse> apiResponse = adminController.updateAnimal(
+      animalId,
+      updatedAnimal
+    );
+
+    verify(adminService, times(1)).updateAnimal(animalId, updatedAnimal);
+
+    assertNotNull(apiResponse);
+
+    ApiResponse updatedAnimalFromResponse = apiResponse.getBody();
+    assertNotNull(updatedAnimalFromResponse);
+  }
+
+  @Test
+  public void testUpdateAnimalWrongRequestBodyType()
+    throws PetOwnerAlreadyDoesNotExists {
+    Long animalId = 1L;
+
+    Object requestBody = new Object();
+
+    ResponseEntity<ApiResponse> apiResponse = adminController.updateAnimal(
+      animalId,
+      requestBody
+    );
+
+    verify(adminService, never()).updateAnimal(any(), any());
+
+    assertNotNull(apiResponse);
   }
 }

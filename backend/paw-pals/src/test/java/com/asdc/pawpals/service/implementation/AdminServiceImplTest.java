@@ -11,7 +11,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.controller.Test;
+import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.AdminPostAnimalRepository;
@@ -42,6 +44,11 @@ public class AdminServiceImplTest {
 
   private ObjectMapper objectMapper;
 
+  @InjectMocks
+  private AdminServiceImpl animalService;
+
+  private Animal animal;
+
   @Before(value = "")
   public void setUp() {
     objectMapper = new ObjectMapper();
@@ -49,6 +56,15 @@ public class AdminServiceImplTest {
       DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
       false
     );
+  }
+
+  @Before(value = "")
+  public void setup() {
+    animal = new Animal();
+    animal.setName("Simba");
+    animal.setType("Lion");
+    animal.setAge(5);
+    animal.setGender("Male");
   }
 
   @Test
@@ -137,29 +153,31 @@ public class AdminServiceImplTest {
     assertEquals(vetDto.getClinicAddress(), "New Address");
     assertEquals(vetDto.getQualification(), "New Qualification");
   }
-  //   @Test
-  //   public void testAddAnimalSuccess() throws PetOwnerAlreadyDoesNotExists {
-  //     Animal animal = new Animal();
-  //     User user = new User();
-  //     user.setUserId(String.valueOf(1L));
-  //     PetOwner owner = new Owner();
-  //     owner.setUserId(user.getUserId());
-  //     owner.setFirstName("John");
-  //     owner.setLastName("Doe");
 
-  //     when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+  @Test
+  public void testUpdateAnimalSuccess() {
+    Long id = 1L;
 
-  //     when(adminPostAnimalRepository.save(any(Animal.class))).thenReturn(animal);
+    Animal updatedAnimal = new Animal();
+    updatedAnimal.setName("Mufasa");
+    updatedAnimal.setType("Lion");
+    updatedAnimal.setAge(10);
+    updatedAnimal.setGender("Male");
 
-  //     AnimalDto animalDto = adminServiceImpl.addAnimal(animal);
+    Optional<Animal> optionalAnimal = Optional.of(animal);
 
-  //     verify(userRepository, times(1)).findById(anyLong());
+    when(adminPostAnimalRepository.findById(id)).thenReturn(optionalAnimal);
+    when(adminPostAnimalRepository.save(any(Animal.class)))
+      .thenReturn(updatedAnimal);
 
-  //     verify(adminPostAnimalRepository, times(1)).save(any(Animal.class));
+    AnimalDto animalDto = animalService.updateAnimal(id, updatedAnimal);
 
-  //     assertNotNull(animalDto);
+    verify(adminPostAnimalRepository, times(1)).findById(id);
+    verify(adminPostAnimalRepository, times(1)).save(any(Animal.class));
 
-  //     assertEquals(animalDto.getOwner().getUserId(), owner.getUserId());
-  //     equals(animal);
-
+    assertNotNull(animalDto);
+    assertEquals(animalDto.getName(), "Mufasa");
+    assertEquals(animalDto.getType(), "Lion");
+    assertEquals(animalDto.getGender(), "Male");
+  }
 }

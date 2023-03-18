@@ -82,18 +82,6 @@ public class AdminController {
     return ResponseEntity.ok().body(userDetails);
   }
 
-  //  @PostMapping("/add-vet")
-  //  public ResponseEntity<Boolean> addVet(@ResponseBody Object requestBody){
-  //    logger.info("Recieved request as :", requestBody.toString());
-  //    /** add edge case if wrong data sent */
-  //    boolean vetAdded = false;
-  //
-  //    if(CommonUtils.isStrictTypeOf(requestBody, VetDto.class)){
-  //      VetDto vetDto = Objec
-  //    }
-  //    return ResponseEntity.ok(vetAdded);
-  //  }
-
   @PostMapping("/post-animal")
   public ResponseEntity<ApiResponse> addAnimal(@RequestBody Object requestBody)
     throws PetOwnerAlreadyDoesNotExists {
@@ -141,6 +129,28 @@ public class AdminController {
       apiResponse.setError(false);
     }
     return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+  }
+
+  @PutMapping("/update-animal/{id}")
+  public ResponseEntity<ApiResponse> updateAnimal(
+    @PathVariable("id") Long id,
+    @RequestBody Object requestBody
+  )
+    throws PetOwnerAlreadyDoesNotExists {
+    logger.info("Received request as: {}", requestBody.toString());
+    Animal animal = null;
+    if (CommonUtils.isStrictTypeOf(requestBody, Animal.class)) {
+      animal =
+        ObjectMapperWrapper
+          .getInstance()
+          .convertValue(requestBody, Animal.class);
+      animal.setId(id); // Set the ID of the updated animal
+      apiResponse.setBody(adminReadService.updateAnimal(id, animal));
+      apiResponse.setMessage("Successfully updated object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
   }
 
   @PutMapping("/update-vet/{id}")

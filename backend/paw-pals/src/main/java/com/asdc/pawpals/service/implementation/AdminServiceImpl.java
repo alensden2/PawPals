@@ -214,4 +214,22 @@ public class AdminServiceImpl implements AdminService {
     }
     return animalDto;
   }
+
+  @Override
+  public AnimalDto updateAnimal(Long id, Animal updatedAnimal) {
+    AnimalDto animalDto = null;
+    Optional<Animal> optionalAnimal = adminPostAnimalRepository.findById(id);
+    if (optionalAnimal.isPresent()) {
+      Animal animal = optionalAnimal.get();
+      animal.setName(updatedAnimal.getName());
+      animal.setType(updatedAnimal.getType());
+      animal.setAge(updatedAnimal.getAge());
+      animal.setGender(updatedAnimal.getGender());
+      adminPostAnimalRepository.save(animal);
+      animalDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
+    } else {
+      // throw new exception
+    }
+    return animalDto;
+  }
 }

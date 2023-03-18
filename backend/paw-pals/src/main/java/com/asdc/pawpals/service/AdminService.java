@@ -24,4 +24,6 @@ public interface AdminService {
   public AnimalDto deleteAnimal(Long id);
 
   public VetDto updateVet(Long id, Vet updatedVet);
+
+  public AnimalDto updateAnimal(Long id, Animal updatedAnimal);
 }
