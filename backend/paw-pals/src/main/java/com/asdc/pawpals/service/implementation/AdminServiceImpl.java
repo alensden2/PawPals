@@ -121,7 +121,7 @@ public class AdminServiceImpl implements AdminService {
     AnimalDto returnedDto = null;
     if (animal != null && animal.getOwner() != null) {
       // add to check if user is already existing throw an exception
-      userRepository.save(animal.getOwner().getUser());
+      // userRepository.save(animal.getOwner().getUser());
       Optional<User> user = userRepository.findById(
         animal.getOwner().getUser().getUserId()
       );
@@ -135,7 +135,7 @@ public class AdminServiceImpl implements AdminService {
         animal = adminPostAnimalRepository.save(animal);
         returnedDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
       } else {
-        throw new PetOwnerAlreadyDoesNotExists(
+        throw new PetOwnerAlreadyDoesNotExists( // change name of error
           "Pet Owner does not exist" + animal
         );
       }
