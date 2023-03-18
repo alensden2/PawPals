@@ -1,10 +1,13 @@
 package com.asdc.pawpals.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.List;
@@ -24,12 +27,17 @@ public class PetOwner {
   private String firstName;
   private String lastName;
   private String phoneNo;
-  private String photoUrl;
+
+  @Column(name = "photo_url", length = 10485760)
+  @Lob
+  private Byte[] photoUrl;
+
   private String address;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private List<Animal> animals;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne
+  @JoinColumn(name = "user_userId")
   private User user;
 }

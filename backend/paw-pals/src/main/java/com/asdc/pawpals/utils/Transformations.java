@@ -1,5 +1,6 @@
 package com.asdc.pawpals.utils;
 
+import com.asdc.pawpals.dto.*;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.AppointmentDto;
 import com.asdc.pawpals.dto.MedicalHistoryDto;
@@ -7,6 +8,7 @@ import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetAvailabilityDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.model.*;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.Appointment;
 import com.asdc.pawpals.model.MedicalHistory;
@@ -16,8 +18,10 @@ import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.model.VetAvailability;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.util.stream.Collectors;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,6 +38,8 @@ public class Transformations {
         dto.setType(dao.getType());
         dto.setAge(dao.getAge());
         dto.setGender(dao.getGender());
+        dto.setPhotoUrl(dao.getPhotoUrl());
+        dto.setOwnerId(dao.getOwner().getUser().getUserId());
         if (
           dao.getMedicalHistories() != null &&
           !dao.getMedicalHistories().isEmpty()
@@ -46,6 +52,28 @@ public class Transformations {
               .collect(Collectors.toList())
           );
         }
+      }
+      return dto;
+    }
+
+    public static PetOwnerDto petOwner(PetOwner dao) {
+      PetOwnerDto dto = new PetOwnerDto();
+      if (dao != null) {
+        dto.setFirstName(dao.getFirstName());
+        dto.setLastName(dao.getLastName());
+        dto.setPhoneNo(dao.getPhoneNo());
+        dto.setAddress(dao.getAddress());
+        dto.setPhotoUrl(dao.getPhotoUrl());
+        if (dao.getAnimals() != null && !dao.getAnimals().isEmpty()) {
+          dto.setPets(
+            dao
+              .getAnimals()
+              .stream()
+              .map(MODEL_TO_DTO_CONVERTER::animal)
+              .collect(Collectors.toList())
+          );
+        }
+        dto.setUserName(dao.getUser().getUserId());
       }
       return dto;
     }
@@ -98,8 +126,9 @@ public class Transformations {
         dto.setDate(dao.getDate());
         dto.setStartTime(dao.getStartTime());
         dto.setEndTime(dao.getEndTime());
-        if (dao.getVet() != null && dao.getVet().getUser() != null) {
-          dto.setVetUserId(dao.getVet().getUser().getUserId());
+        dto.setStatus(dao.getStatus());
+        if (dao.getVet() != null) {
+          dto.setVetId(dao.getVet().getId());
         }
         if (dao.getAnimal() != null) {
           dto.setAnimalId(dao.getAnimal().getId());
@@ -130,8 +159,38 @@ public class Transformations {
         vet.setExperience(vetDto.getExperience());
         vet.setQualification(vetDto.getQualification());
         vet.setClinicAddress(vetDto.getClinicAddress());
+        if (vetDto.getUsername() != null) {
+          User user = new User();
+          user.setUserId(vetDto.getUsername());
+          vet.setUser(user);
+        }
       }
       return vet;
+    }
+
+    public static PetOwner petOwner(PetOwnerDto petOwnerDto) {
+      PetOwner petOwner = new PetOwner();
+      if (petOwnerDto != null) {
+        //
+
+        petOwner.setPhotoUrl(petOwnerDto.getPhotoUrl());
+
+        petOwner.setFirstName(petOwnerDto.getFirstName());
+        petOwner.setAddress(petOwnerDto.getAddress());
+        petOwner.setPhoneNo(petOwnerDto.getPhoneNo());
+        petOwner.setLastName(petOwnerDto.getLastName());
+
+        if (petOwnerDto.getPets() != null && !petOwnerDto.getPets().isEmpty()) {
+          petOwner.setAnimals(
+            petOwnerDto
+              .getPets()
+              .stream()
+              .map(DTO_TO_MODEL_CONVERTER::animal)
+              .collect(Collectors.toList())
+          );
+        }
+      }
+      return petOwner;
     }
 
     public static VetAvailability vetAvailability(VetAvailabilityDto dto) {
@@ -160,16 +219,14 @@ public class Transformations {
         dao.setDate(dto.getDate());
         dao.setStartTime(dto.getStartTime());
         dao.setEndTime(dto.getEndTime());
-
-        Vet vet = new Vet();
-        User user = new User();
-        user.setUserId(dto.getVetUserId());
-        vet.setUser(user);
-        dao.setVet(vet);
-
-        Animal animal = new Animal();
-        animal.setId(dto.getAnimalId());
-        dao.setAnimal(animal);
+        dao.setStatus(dto.getStatus().toUpperCase());
+        //                Vet vet = new Vet();
+        //                vet.setId(dto.getVetId());
+        //                dao.setVet(vet);
+        //
+        //                Animal animal = new Animal();
+        //                animal.setId(dto.getAnimalId());
+        //                dao.setAnimal(animal);
       }
       return dao;
     }
@@ -177,32 +234,45 @@ public class Transformations {
     public static Animal animal(AnimalDto animalDto) {
       Animal animal = new Animal();
       if (animalDto != null) {
-        //change
-        //Long id = new Random().nextLong();
-        //animal.setId(id);
         animal.setAge(animalDto.getAge());
         animal.setName(animalDto.getName());
-        animal.setType(animalDto.getName());
+        animal.setType(animalDto.getType());
         animal.setAge(animalDto.getAge());
         animal.setGender(animalDto.getGender());
+        animal.setPhotoUrl(animalDto.getPhotoUrl());
 
-        PetOwnerDto petOwnerDtoToBeTransformed = animalDto.getOwner();
-        PetOwner petOwnerTransformed = null;
-        petOwnerTransformed =
-          Transformations.DTO_TO_MODEL_CONVERTER.petOwner(
-            petOwnerDtoToBeTransformed
+        if (
+          animalDto.getMedicalHistory() != null &&
+          !animalDto.getMedicalHistory().isEmpty()
+        ) {
+          animal.setMedicalHistories(
+            animalDto
+              .getMedicalHistory()
+              .stream()
+              .map(DTO_TO_MODEL_CONVERTER::medicalHistory)
+              .collect(Collectors.toList())
           );
-
-        animal.setOwner(petOwnerTransformed);
-        animal.setAppointment(null);
-        // to do recursively transform medical history.
-        animal.setMedicalHistories(null);
+        }
       }
+
       return animal;
+    }
+
+    public static MedicalHistory medicalHistory(MedicalHistoryDto dto) {
+      MedicalHistory dao = new MedicalHistory();
+      if (dto != null) {
+        dao.setDateDiagnosed(dto.getDateDiagnosed());
+        dao.setAilmentName(dto.getAilmentName());
+        dao.setPrescription(dto.getPrescription());
+        dao.setVaccines(dto.getVaccines());
+        dao.setVet(DTO_TO_MODEL_CONVERTER.vet(dto.getVet()));
+      }
+      return dao;
     }
 
     public static User user(UserDto userDto) {
       User user = new User();
+
       if (userDto != null) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setUserId(userDto.getUsername());
@@ -211,37 +281,6 @@ public class Transformations {
         user.setRole(userDto.getRole());
       }
       return user;
-    }
-
-    public static PetOwner petOwner(PetOwnerDto petOwnerDto) {
-      PetOwner petOwner = new PetOwner();
-      Long id = new Random().nextLong(); //remove
-      List<Animal> animalModel = new ArrayList<>();
-      if (petOwnerDto != null) {
-        List<AnimalDto> animalDtoList = petOwnerDto.getPets();
-        if (animalDtoList != null) {
-          for (AnimalDto animalDto : animalDtoList) {
-            animalModel.add(
-              Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto)
-            );
-          }
-        } else {
-          animalModel = null;
-        }
-
-        petOwner.setAnimals(animalModel);
-        petOwner.setId(id); // change to fetch and put owner id
-        String userName = petOwnerDto.getUsername();
-        User user = new User();
-        user.setUserId(userName);
-        petOwner.setUser(user); // set user
-        petOwner.setFirstName(petOwnerDto.getFirstName());
-        petOwner.setLastName(petOwnerDto.getLastName());
-        petOwner.setPhoneNo(petOwnerDto.getPhoneNo());
-        petOwner.setPhotoUrl(petOwnerDto.getPhotoUrl());
-        petOwner.setAddress(petOwnerDto.getAddress());
-      }
-      return petOwner;
     }
   }
 }

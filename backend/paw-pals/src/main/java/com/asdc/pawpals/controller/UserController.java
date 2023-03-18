@@ -18,6 +18,8 @@ import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.service.JwtService;
 import com.asdc.pawpals.service.UserService;
 import com.asdc.pawpals.utils.ApiResponse;
+import com.asdc.pawpals.utils.AuthenticationRequest;
+import com.asdc.pawpals.utils.AuthenticationResponse;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
 
@@ -25,7 +27,7 @@ import jakarta.annotation.PostConstruct;
 
 @RestController
 @CrossOrigin
- @RequestMapping("/unauth/user")
+@RequestMapping("/unauth/user")
 public class UserController {
 
     private static final Logger logger = LogManager.getLogger(UserController.class);
@@ -39,11 +41,11 @@ public class UserController {
     @Autowired
     ApiResponse apiResponse;
 
-    // @PostMapping({"/auth/authenticate"})
-    // public ResponseEntity<AuthenticationResponse> createJwtToken(@RequestBody
-    // AuthenticationRequest authenticationRequest) throws Exception {
-    // return ResponseEntity.ok(jwtService.authenticate(authenticationRequest));
-    // }
+    @PostMapping({"/authenticate"})
+    public ResponseEntity<AuthenticationResponse> createJwtToken(@RequestBody
+    AuthenticationRequest authenticationRequest) throws Exception {
+    return ResponseEntity.ok(jwtService.authenticate(authenticationRequest));
+    }
 
     // @GetMapping({"/auth/forAdmin"})
     // @PreAuthorize("hasAuthority('ROLE_ADMIN')")

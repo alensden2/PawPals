@@ -1,5 +1,6 @@
 package com.asdc.pawpals.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
@@ -19,9 +20,9 @@ public class User {
   private String email;
   private String password;
 
-  @OneToOne(mappedBy = "user")
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private Vet vet;
 
-  @OneToOne(mappedBy = "user")
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private PetOwner owner;
 }

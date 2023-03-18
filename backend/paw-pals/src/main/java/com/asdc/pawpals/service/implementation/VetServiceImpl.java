@@ -12,8 +12,10 @@ import org.springframework.data.util.Pair;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.asdc.pawpals.Enums.AppointmentStatus;
 import com.asdc.pawpals.dto.VetAvailabilityDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.dto.VetScheduleDto;
 import com.asdc.pawpals.model.Appointment;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
@@ -44,20 +46,19 @@ public class VetServiceImpl implements VetService {
 
 
     @Override
-    public Boolean registerVet(VetDto vetDto){
+    public Boolean registerVet(VetDto vetDto) throws UsernameNotFoundException {
         Boolean vetRegistered = false;
-        if(vetDto != null){
+        if (vetDto != null) {
             Vet vet = Transformations.DTO_TO_MODEL_CONVERTER.vet(vetDto);
             //check if user with given username exists, then only register that user as vet
             Optional<User> user = userRepository.findById(vetDto.getUsername());
-            if(!user.isEmpty()){
+            if (!user.isEmpty()) {
                 Long oldCount = vetRepository.count();
-                vet.setId(oldCount+1);
+                vet.setId(oldCount + 1);
                 vetRepository.save(vet);
                 Long newCount = vetRepository.count();
                 vetRegistered = ((oldCount + 1) == newCount);
-            }
-            else{
+            } else {
                 throw new UsernameNotFoundException("Please provide a valid username");
             }
         }
@@ -65,50 +66,83 @@ public class VetServiceImpl implements VetService {
     }
 
     @Override
-    public List<VetAvailabilityDto> getVetAvailability(String userId){
-        List<VetAvailability> availability =  vetAvailabilityRepository.findByVet_User_UserId(userId);
+    public List<VetAvailabilityDto> getVetAvailability(String userId) {
+        List<VetAvailability> availability = vetAvailabilityRepository.findByVet_User_UserId(userId);
         List<VetAvailabilityDto> availabilityDto = null;
-        if(availability != null){
+        if (availability != null) {
             availabilityDto = availability.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vetAvailability).collect(Collectors.toList());
         }
         return availabilityDto;
     }
 
     @Override
-    public List<VetAvailabilityDto> getVetAvailability(Long vetId){
-        List<VetAvailability> availability =  vetAvailabilityRepository.findByVetId(vetId);
+    public List<VetAvailabilityDto> getVetAvailability(Long vetId) {
+        List<VetAvailability> availability = vetAvailabilityRepository.findByVetId(vetId);
         List<VetAvailabilityDto> availabilityDto = null;
-        if(availability != null){
+        if (availability != null) {
             availabilityDto = availability.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vetAvailability).collect(Collectors.toList());
         }
         return availabilityDto;
     }
 
     @Override
-    public VetAvailabilityDto getVetAvailabilityOnSpecificDay(String userId, String date){
-        List<VetAvailability> availability =  vetAvailabilityRepository.findByVet_User_UserId(userId);
+    public VetAvailabilityDto getVetAvailabilityOnSpecificDay(String userId, String date) {
+        List<VetAvailability> availability = vetAvailabilityRepository.findByVet_User_UserId(userId);
         List<Appointment> appointments = appointmentRepository.findByVet_User_UserId(userId);
+        return findVetAvailabilityOnSpecificDay(availability, appointments, date);
+    }
+
+    @Override
+    public VetAvailabilityDto getVetAvailabilityOnSpecificDay(Long vetId, String date) {
+        List<VetAvailability> availability = vetAvailabilityRepository.findByVetId(vetId);
+        List<Appointment> appointments = appointmentRepository.findByVetId(vetId);
+        return findVetAvailabilityOnSpecificDay(availability, appointments, date);
+    }
+
+    @Override
+    public VetScheduleDto getVetScheduleOnSpecificDay(String userId, String date) {
+        List<Appointment> appointments = appointmentRepository.findByVet_User_UserId(userId);
+        VetScheduleDto vetSchedule = new VetScheduleDto();
+        vetSchedule.setVetUserId(userId);
+        List<Pair<String, String>> slotsBooked = new ArrayList<>();
+        if (appointments != null) {
+            appointments.stream().filter(Objects::nonNull)
+                    .filter(apt -> apt.getDate() != null)
+                    .filter(apt -> apt.getDate().equals(date))
+                    .filter(apt -> apt.getStatus() != null)
+                    .filter(apt -> apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
+                    .forEach(appointment -> {
+                        slotsBooked.add(Pair.of(appointment.getStartTime(), appointment.getEndTime()));
+                    });
+            vetSchedule.setSlotsBooked(slotsBooked);
+        }
+        return vetSchedule;
+    }
+
+    private VetAvailabilityDto findVetAvailabilityOnSpecificDay(List<VetAvailability> availability, List<Appointment> appointments, String date) {
         VetAvailabilityDto availabilityDto = null;
-        if(availability != null){
+        if (availability != null) {
             //get the original vet availability on the specific day mentioned (derived from date given)
             availabilityDto = availability.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vetAvailability)
-            .filter(avl->avl.getDayOfWeek().equals(CommonUtils.getDayFromDate(date))).findFirst().orElse(null);
+                    .filter(avl -> avl.getDayOfWeek().equals(CommonUtils.getDayFromDate(date))).findFirst().orElse(null);
 
-            if(availabilityDto != null){
+            if (availabilityDto != null) {
                 List<Pair<String, String>> freeSlots = new ArrayList<>();
                 String starTime = availabilityDto.getSlots().get(0).getFirst();
                 String endTime = availabilityDto.getSlots().get(0).getSecond();
-                String effectiveLastSlot = CommonUtils.getPreviousSlotTime(endTime);
 
                 String currentSlot = starTime;
-                while(!currentSlot.equals(effectiveLastSlot)){
+                while(!currentSlot.equals(endTime)){
                     final String fCurrSlot = currentSlot;
                     Boolean appointmentBooked = appointments.stream().filter(Objects::nonNull)
-                        .filter(apt->apt.getDate().equals(date))
-                        .anyMatch(apt->{
-                            return apt.getStartTime().equals(fCurrSlot);
-                        });
-                    if(!appointmentBooked){
+                            .filter(apt -> apt.getDate() != null)
+                            .filter(apt -> apt.getDate().equals(date))
+                            .filter(apt -> apt.getStatus() != null)
+                            .filter(apt -> apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
+                            .anyMatch(apt -> {
+                                return apt.getStartTime().equals(fCurrSlot);
+                            });
+                    if (!appointmentBooked) {
                         freeSlots.add(Pair.of(currentSlot, CommonUtils.getNextSlotTime(currentSlot)));
                     }
                     currentSlot = CommonUtils.getNextSlotTime(currentSlot);
@@ -116,22 +150,9 @@ public class VetServiceImpl implements VetService {
 
                 availabilityDto.setSlots(freeSlots);
 
-                // appointments.stream().filter(Objects::nonNull)
-                //     .filter(apt-> apt.getDate().equals(date)).forEach(appointment->{
-                //             //1. assuming that appointments were booked by checking no conflicts
-                //             //2. assuming that appointments are sorted in increasing order of start time
-                //             //3. assuming that each appointment is only 30 mins long
-                            
-                //     });
-
             }
         }
         return availabilityDto;
-    }
-
-    @Override
-    public VetAvailabilityDto getVetAvailabilityOnSpecificDay(Long vetId, String date){
-        return null;
     }
 
 }

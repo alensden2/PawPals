@@ -9,6 +9,13 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(4)
   },
   submitButton: {
+    marginTop: theme.spacing(4)
+  },
+  selectDropdown: {
+    width: '100%'
+  },
+  selectDropdownContainer: {
+    width: '100%',
     marginTop: theme.spacing(2)
   }
 }));

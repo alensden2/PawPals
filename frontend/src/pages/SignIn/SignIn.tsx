@@ -1,20 +1,70 @@
-import React, { useState } from 'react';
+// react
+import React, { useState, useContext } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+
+// material ui
 import { Container, Link, IconButton, Typography } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+// styles
 import useStyles from './SignIn.styles';
 
+// components
 import { TextField, Button } from '@src/components';
 
+// api
+import { authenticateUser } from '@src/api';
+import { AuthenticateUserType } from '@src/api/type';
+
+// constants
+import {
+  TOAST_MESSAGE_SIGNIN_SUCCESS,
+  ROLE_TO_ROUTE_MAPPING,
+  TOAST_MESSAGE_SIGNIN_FAILURE
+} from '@src/constants';
+
+// context
+import { ToastContext } from '@src/context';
+
+// hooks
+import { useNavigate } from '@src/hooks';
+
 const SignIn: React.FC = () => {
+  // styles
   const classes = useStyles();
-  const [email, setEmail] = useState('');
+
+  // context
+  const { setToast } = useContext(ToastContext);
+
+  // state
+  const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // submit click
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const response: AuthenticateUserType = await authenticateUser({
+      username: userName,
+      password
+    });
+
+    const hasError = response.error;
+    if (hasError) {
+      // display error toast
+      setToast({ type: 'error', message: TOAST_MESSAGE_SIGNIN_FAILURE });
+    } else {
+      setToast({
+        type: 'success',
+        message: TOAST_MESSAGE_SIGNIN_SUCCESS
+      });
+
+      // TODO: Store data in local storage and pass in every request
+
+      // based on role redirect to respective home page
+      navigate(ROLE_TO_ROUTE_MAPPING[response.role], { replace: true });
+    }
   };
 
   const onBackClick = () => {
@@ -31,14 +81,14 @@ const SignIn: React.FC = () => {
       </div>
       <Container maxWidth="xs" className={classes.root}>
         <Typography variant="h4" align="center" gutterBottom>
-          Sign In
+          Log In
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            label="User Name"
+            type="text"
+            value={userName}
+            onChange={(event) => setUserName(event.target.value)}
             fullWidth={true}
           />
           <TextField
@@ -52,7 +102,7 @@ const SignIn: React.FC = () => {
             type="submit"
             variant="contained"
             color="primary"
-            disabled={!email || !password}
+            disabled={!userName || !password}
             fullWidth={true}
             className={classes.submitButton}
           >

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.List;
@@ -27,10 +28,8 @@ public class Vet {
   private Integer experience;
   private String qualification;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")
-  private List<MedicalHistory> medicalHistories;
-
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne
+  @JoinColumn(name = "user_userId")
   private User user;
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")

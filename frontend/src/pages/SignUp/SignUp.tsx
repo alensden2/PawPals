@@ -1,19 +1,82 @@
-import React, { useState } from 'react';
-import { Container, Link, IconButton, Typography } from '@material-ui/core';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import useStyles from './SignUp.styles';
+// react
+import React, { useState, useContext } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+
+// material ui
+import {
+  Container,
+  Link,
+  IconButton,
+  Typography,
+  Select,
+  InputLabel,
+  MenuItem
+} from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
+// components
 import { TextField, Button } from '@src/components';
 
+// styles
+import useStyles from './SignUp.styles';
+
+// constants
+import { TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
+
+// context
+import { ToastContext } from '@src/context';
+
+// api
+import { RegisterUserType } from '@src/api/type';
+import { registerUser } from '@src/api/auth';
+
+// hooks
+import { useNavigate } from '@src/hooks';
+
 const SignUp: React.FC = () => {
+  // styles
   const classes = useStyles();
+
+  // state
+  const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
+
+  // context
+  const { setToast } = useContext(ToastContext);
+
+  // navigation
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // submit function
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const response: RegisterUserType = await registerUser({
+      userName,
+      password,
+      role: selectedOption,
+      email
+    });
+
+    const hasError = response.error;
+    if (hasError) {
+      // display error toast
+      setToast({ type: 'error', message: response.errorMessage });
+    } else {
+      // display success toast and ask user to sign in
+      setToast({
+        type: 'success',
+        message: TOAST_MESSAGE_SIGNUP_SUCCESS
+      });
+
+      navigate('/signin');
+    }
+  };
+
+  const handleSelectChange = (event: any) => {
+    setSelectedOption(event.target.value);
   };
 
   const onBackClick = () => {
@@ -34,6 +97,13 @@ const SignUp: React.FC = () => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
+            label="Username"
+            type="text"
+            value={userName}
+            fullWidth={true}
+            onChange={(event) => setUserName(event.target.value)}
+          />
+          <TextField
             label="Email"
             type="email"
             value={email}
@@ -47,6 +117,18 @@ const SignUp: React.FC = () => {
             fullWidth={true}
             onChange={(event) => setPassword(event.target.value)}
           />
+          <div className={classes.selectDropdownContainer}>
+            <InputLabel>Select Role</InputLabel>
+            <Select
+              value={selectedOption}
+              onChange={handleSelectChange}
+              className={classes.selectDropdown}
+            >
+              <MenuItem value="VET">Vet</MenuItem>
+              <MenuItem value="PET_OWNER">Pet Owner</MenuItem>
+              <MenuItem value="ROLE_ADMIN">Admin</MenuItem>
+            </Select>
+          </div>
           <Button
             type="submit"
             variant="contained"
