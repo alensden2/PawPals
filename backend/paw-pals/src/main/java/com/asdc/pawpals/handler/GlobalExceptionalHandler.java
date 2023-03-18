@@ -1,5 +1,6 @@
 package com.asdc.pawpals.handler;
 
+import com.asdc.pawpals.controller.AnimalController;
 import com.asdc.pawpals.controller.PetOwnerController;
 import com.asdc.pawpals.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 
-@RestControllerAdvice(assignableTypes = { UserController.class, PetOwnerController.class})
+@RestControllerAdvice(assignableTypes = { UserController.class, PetOwnerController.class, AnimalController.class})
 public class GlobalExceptionalHandler {
 	
 Logger logger=LogManager.getLogger(GlobalExceptionalHandler.class);
@@ -148,6 +149,19 @@ ApiResponse apiResponse;
 		logger.trace(e.getMessage());
 		apiResponse.setBody(e.getMessage());
 		apiResponse.setMessage("Invalid object parameters");
+		apiResponse.setError(true);
+		apiResponse.setSuccess(false);
+
+		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+
+	}
+
+	@ExceptionHandler(InvalidAnimalObject.class)
+	public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForInvalidAnimalObject(Exception e) {
+
+		logger.trace(e.getMessage());
+		apiResponse.setBody(e.getMessage());
+		apiResponse.setMessage("Invalid animal object parameters");
 		apiResponse.setError(true);
 		apiResponse.setSuccess(false);
 

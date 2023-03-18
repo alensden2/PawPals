@@ -19,6 +19,8 @@ public class Transformations {
                 dto.setType(dao.getType());
                 dto.setAge(dao.getAge());
                 dto.setGender(dao.getGender());
+                dto.setPhotoUrl(dao.getPhotoUrl());
+                dto.setOwnerId(dao.getOwner().getUser().getUserId());
                 if (dao.getMedicalHistories() != null
                         && !dao.getMedicalHistories().isEmpty()) {
                     dto.setMedicalHistory(
@@ -195,6 +197,7 @@ public class Transformations {
                 animal.setType(animalDto.getType());
                 animal.setAge(animalDto.getAge());
                 animal.setGender(animalDto.getGender());
+                animal.setPhotoUrl(animalDto.getPhotoUrl());
 
                 if (animalDto.getMedicalHistory() != null
                         && !animalDto.getMedicalHistory().isEmpty()) {

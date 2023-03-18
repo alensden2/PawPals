@@ -1,6 +1,8 @@
 package com.asdc.pawpals.model;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter @NoArgsConstructor
+
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -31,5 +34,6 @@ public class Animal {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
     List<Appointment> appointment;
+
 
 }
