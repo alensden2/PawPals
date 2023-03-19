@@ -1,38 +1,40 @@
 package com.asdc.pawpals.model;
 
-import java.util.List;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Vet {
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  private Long id;
 
-    @Id
-    private Long id;
-    private String name;
-    private String licenseNumber;
-    private String clinicAddress;
-    private Integer experience;
-    private String qualification;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
-    private List<MedicalHistory> medicalHistories;
+  private String name;
+  private String licenseNumber;
+  private String clinicAddress;
+  private Integer experience;
+  private String qualification;
 
-    @OneToOne
-    @JoinColumn(name = "user_userId")
-    private User user;
+  @OneToOne
+  @JoinColumn(name = "user_userId")
+  private User user;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
-    List<Appointment> appointment;
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")
+  List<Appointment> appointment;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "vet")
-    List<VetAvailability> availability;
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")
+  List<VetAvailability> availability;
 }

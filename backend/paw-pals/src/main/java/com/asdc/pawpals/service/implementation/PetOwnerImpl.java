@@ -72,6 +72,7 @@ public class PetOwnerImpl implements PetOwnerService {
     @Override
     public List<AnimalDto> retrieveAllPets(Long ownerId) throws InvalidOwnerID, NoPetRegisterUnderPetOwner {
         logger.debug("Get All Pets By owner Id", ownerId);
+
         PetOwner petOwner = petOwnerRepository.findById(ownerId).orElseThrow(InvalidOwnerID::new);
         List<AnimalDto> animalDtoList = animalRepository.findAll().stream().
                 filter(a -> a.getOwner().getId() == ownerId).

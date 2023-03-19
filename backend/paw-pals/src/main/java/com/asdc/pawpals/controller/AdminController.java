@@ -3,17 +3,24 @@ package com.asdc.pawpals.controller;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
 import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.service.AdminReadService;
+import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.service.AdminService;
+import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +34,10 @@ public class AdminController {
   );
 
   @Autowired
-  AdminReadService adminReadService;
+  AdminService adminReadService;
+
+  @Autowired
+  ApiResponse apiResponse;
 
   /**
    * Gets all the animal records
@@ -39,7 +49,7 @@ public class AdminController {
   public ResponseEntity<List<AnimalDto>> getAllAnimalRecords() {
     List<AnimalDto> animalDetails = null;
     if (adminReadService != null) {
-        animalDetails = adminReadService.getAllAnimalRecords();
+      animalDetails = adminReadService.getAllAnimalRecords();
     }
     return ResponseEntity.ok().body(animalDetails);
   }
@@ -72,28 +82,106 @@ public class AdminController {
     return ResponseEntity.ok().body(userDetails);
   }
 
-  //  @PostMapping("/add-vet")
-  //  public ResponseEntity<Boolean> addVet(@ResponseBody Object requestBody){
-  //    logger.info("Recieved request as :", requestBody.toString());
-  //    /** add edge case if wrong data sent */
-  //    boolean vetAdded = false;
-  //
-  //    if(CommonUtils.isStrictTypeOf(requestBody, VetDto.class)){
-  //      VetDto vetDto = Objec
-  //    }
-  //    return ResponseEntity.ok(vetAdded);
-  //  }
-
   @PostMapping("/post-animal")
-  public ResponseEntity<Boolean> postAnimal(@RequestBody Object requestBody) {
+  public ResponseEntity<ApiResponse> addAnimal(@RequestBody Object requestBody)
+    throws PetOwnerAlreadyDoesNotExists {
     logger.info("Recieved request as :", requestBody.toString());
-    Boolean animalAdd = false;
+    Animal animal = null;
     if (CommonUtils.isStrictTypeOf(requestBody, Animal.class)) {
-      AnimalDto animal = ObjectMapperWrapper
-        .getInstance()
-        .convertValue(requestBody, AnimalDto.class);
-      animalAdd = adminReadService.addAnimal(animal);
+      animal =
+        ObjectMapperWrapper
+          .getInstance()
+          .convertValue(requestBody, Animal.class);
+      apiResponse.setBody(adminReadService.addAnimal(animal));
+      apiResponse.setMessage("successfully inserted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
     }
-    return null;
+    return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+  }
+
+  @DeleteMapping("/delete-animal/{id}")
+  public ResponseEntity<ApiResponse> deleteAnimal(@PathVariable Long id) {
+    logger.info(
+      "Received delete request for Animal with id: {}",
+      id.toString()
+    );
+    if (CommonUtils.isStrictTypeOf(id, Long.class)) {
+      id = ObjectMapperWrapper.getInstance().convertValue(id, Long.class);
+      apiResponse.setBody(adminReadService.deleteAnimal(id));
+      apiResponse.setMessage("successfully deleted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+  }
+
+  @PostMapping("/post-vet")
+  public ResponseEntity<ApiResponse> addVet(@RequestBody Object requestBody) {
+    logger.info("Recieved message as :", requestBody.toString());
+    Vet vet = null;
+    if (CommonUtils.isStrictTypeOf(requestBody, Vet.class)) {
+      vet =
+        ObjectMapperWrapper.getInstance().convertValue(requestBody, Vet.class);
+      apiResponse.setBody(adminReadService.addVet(vet));
+      apiResponse.setMessage("successfully inserted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+  }
+
+  @PutMapping("/update-animal/{id}")
+  public ResponseEntity<ApiResponse> updateAnimal(
+    @PathVariable("id") Long id,
+    @RequestBody Object requestBody
+  )
+    throws PetOwnerAlreadyDoesNotExists {
+    logger.info("Received request as: {}", requestBody.toString());
+    Animal animal = null;
+    if (CommonUtils.isStrictTypeOf(requestBody, Animal.class)) {
+      animal =
+        ObjectMapperWrapper
+          .getInstance()
+          .convertValue(requestBody, Animal.class);
+      animal.setId(id); // Set the ID of the updated animal
+      apiResponse.setBody(adminReadService.updateAnimal(id, animal));
+      apiResponse.setMessage("Successfully updated object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+  }
+
+  @PutMapping("/update-vet/{id}")
+  public ResponseEntity<ApiResponse> updateVet(
+    @PathVariable Long id,
+    @RequestBody Object requestBody
+  ) {
+    logger.info("Received message as:", requestBody.toString());
+    Vet vet = null;
+    if (CommonUtils.isStrictTypeOf(requestBody, Vet.class)) {
+      vet =
+        ObjectMapperWrapper.getInstance().convertValue(requestBody, Vet.class);
+      vet.setId(id);
+      apiResponse.setBody(adminReadService.updateVet(id, vet));
+      apiResponse.setMessage("successfully updated object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+  }
+
+  @DeleteMapping("/delete-vet/{id}")
+  public ResponseEntity<ApiResponse> deleteVet(@PathVariable Long id) {
+    logger.info("Received delete request for Vet with id: {}", id.toString());
+    if (CommonUtils.isStrictTypeOf(id, Long.class)) {
+      id = ObjectMapperWrapper.getInstance().convertValue(id, Long.class);
+      apiResponse.setBody(adminReadService.deleteVet(id));
+      apiResponse.setMessage("successfully deleted object");
+      apiResponse.setSuccess(true);
+      apiResponse.setError(false);
+    }
+    return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
   }
 }

@@ -1,18 +1,16 @@
 package com.asdc.pawpals.dto;
 
+import java.util.List;
 import lombok.*;
 
-import java.util.List;
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class PetOwnerDto extends UserDto {
-    private String phoneNo;
-    private Byte[] photoUrl;
-    private String address;
-    private List<AnimalDto> pets;
-
+  private String phoneNo;
+  private Byte[] photoUrl;
+  private String address;
+  private List<AnimalDto> pets;
 }
