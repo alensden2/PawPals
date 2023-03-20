@@ -7,4 +7,13 @@ import DeleteDialog from './DeleteDialog';
 import Loader from './Loader';
 import Select from './Select';
 
-export { TextField, Button, Toast, Header, EmptyState, DeleteDialog, Loader, Select };
+export {
+  TextField,
+  Button,
+  Toast,
+  Header,
+  EmptyState,
+  DeleteDialog,
+  Loader,
+  Select
+};
