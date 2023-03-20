@@ -1,7 +1,6 @@
 package com.asdc.pawpals.controller;
 
 import com.asdc.pawpals.dto.AnimalDto;
-import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.exception.*;
 import com.asdc.pawpals.service.AnimalService;
 import com.asdc.pawpals.utils.ApiResponse;
@@ -35,7 +34,7 @@ public class AnimalController {
     // delete animal
 
     @PostMapping({"/register"})
-    public ResponseEntity<ApiResponse> registerUser(@RequestPart("animal") Object requestBody, @RequestPart("image") MultipartFile image) throws  IOException, UserNameNotFound, InvalidImage, InvalidAnimalObject {
+    public ResponseEntity<ApiResponse> registerAnimal(@RequestPart("animal") Object requestBody, @RequestPart("image") MultipartFile image) throws  IOException, UserNameNotFound, InvalidImage, InvalidAnimalObject {
         logger.info("Received request as :", requestBody.toString());
         AnimalDto animalDto = null;
         if (CommonUtils.isStrictTypeOf(requestBody, AnimalDto.class)) {

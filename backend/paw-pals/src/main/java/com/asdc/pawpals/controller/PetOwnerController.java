@@ -3,6 +3,7 @@ package com.asdc.pawpals.controller;
 import com.asdc.pawpals.dto.AppointmentDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.exception.*;
+import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
@@ -53,7 +54,7 @@ public class PetOwnerController {
     public ResponseEntity<ApiResponse> getPetsByOwnerId(
             @PathVariable(value = "owner_id") Long ownerId
     ) throws InvalidOwnerID, NoPetRegisterUnderPetOwner {
-
+        logger.info("Received request for fetching pets for owner :", ownerId);
         if (petOwnerService != null && ownerId != null) {
             apiResponse.setBody(petOwnerService.retrieveAllPets(ownerId));
             apiResponse.setMessage("successfully retrieve list");
@@ -75,9 +76,52 @@ public class PetOwnerController {
             apiResponse.setError(false);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
-
     }
 
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> updatePetOwner(
+            @PathVariable("id") String id,
+            @RequestBody Object requestBody)
+            throws PetOwnerAlreadyDoesNotExists, InvalidPetOwnerObject, UserNameNotFound {
+        logger.info("Received request as: {}", requestBody.toString());
+        PetOwnerDto petOwnerDto = null;
+        if (CommonUtils.isStrictTypeOf(requestBody, PetOwnerDto.class)) {
+            petOwnerDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, PetOwnerDto.class);
+//            animal.setId(id); // Set the ID of the updated animal
+            apiResponse.setBody(petOwnerService.updatePetOwner(id, petOwnerDto));
+            apiResponse.setMessage("Successfully updated object");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deletePetOwner(@PathVariable String id) throws UserNameNotFound {
+        logger.info("Received delete request for Pet Owner with id: {}", id.toString());
+        if (CommonUtils.isStrictTypeOf(id, String.class)) {
+            id = ObjectMapperWrapper.getInstance().convertValue(id, String.class);
+            apiResponse.setBody(petOwnerService.deletePetOwner(id));
+            apiResponse.setMessage("successfully deleted object");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
+    }
+
+    @GetMapping("/pets/appointments/{owner_id}")
+    public ResponseEntity<ApiResponse> getPetsAppointmentsByOwnerId(
+            @PathVariable(value = "owner_id") String ownerId
+    ) throws  NoPetRegisterUnderPetOwner, UserNameNotFound {
+        logger.info("Received request for fetching pets for owner :", ownerId);
+        if (petOwnerService != null && ownerId != null) {
+            apiResponse.setBody(petOwnerService.retrievePetsAppointments(ownerId));
+            apiResponse.setMessage("successfully retrieve list");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
 
 }

@@ -6,15 +6,13 @@ import java.util.Objects;
 
 import com.asdc.pawpals.model.MedicalHistory;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 public class AnimalDto {
     private String name;
     private String type;

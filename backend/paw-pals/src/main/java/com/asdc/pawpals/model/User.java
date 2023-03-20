@@ -23,6 +23,6 @@ public class User {
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private Vet vet;
 
-  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @OneToOne(mappedBy = "user", cascade = {CascadeType.ALL})
   private PetOwner owner;
 }

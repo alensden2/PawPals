@@ -34,6 +34,7 @@ public class PetOwner {
 
   private String address;
 
+//  @OneToMany(cascade = { CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH, CascadeType.REMOVE}  ,orphanRemoval = true, mappedBy = "owner")
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private List<Animal> animals;
 
