@@ -136,7 +136,22 @@ const Landing: React.FC = () => {
           </Grid>
         </Grid>
       </Container>
-
+      <Box className={classes.footer}>
+        <Typography variant="body1">
+          {'© 2023 PawPals. All rights reserved.'}
+        </Typography>
+        <nav>
+          <Link href="#" color="inherit" className={classes.footerLink}>
+            {'Privacy Policy'}
+          </Link>
+          <Link href="#" color="inherit" className={classes.footerLink}>
+            {'Terms of Use'}
+          </Link>
+          <Link href="#" color="inherit" className={classes.footerLink}>
+            {'Sitemap'}
+          </Link>
+        </nav>
+      </Box>
     </>
   );
 };
