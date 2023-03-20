@@ -124,7 +124,16 @@ const Landing: React.FC = () => {
               }
             </Typography>
           </Grid>
-
+          <Grid item xs={12} className={classes.petBackground}>
+            <Typography variant="h1" className={classes.bottomImageTitle}>
+              {'Your Pet Deserves the Best'}
+            </Typography>
+            <Typography variant="h4" className={classes.bottomImageSubtitle}>
+              {
+                'At PawPals, we provide the best care possible to ensure your pets are healthy and happy. Our team of expert veterinarians and pet care professionals are dedicated to making sure your pets receive the attention and care they deserve.'
+              }
+            </Typography>
+          </Grid>
         </Grid>
       </Container>
 
