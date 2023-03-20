@@ -17,6 +17,7 @@ import {
   PetHealthAndDiseaseInfo,
   PetMedicalHistory,
   PetOwnerAllVets,
+  AboutUs,
   PetOwnerManagePets
 } from '@src/pages';
 
@@ -28,6 +29,7 @@ const RoutesComp = () => {
           <Route path="/" element={<Landing />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="about-us" element={<AboutUs />} />
           <Route path="pet-owner" element={<PetOwner />}>
             <Route path="home" element={<PetOwnerHome />} />
             <Route path="registration" element={<PetOwnerRegistration />} />
