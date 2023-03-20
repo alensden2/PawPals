@@ -7,6 +7,7 @@ import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.service.UserService;
 import com.asdc.pawpals.utils.Transformations;
+import com.asdc.pawpals.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    MailService mailService;
 
     public void initRolesAndUsers() {
         User user1 = new User();
@@ -62,6 +66,11 @@ public class UserServiceImpl implements UserService {
         {
             throw new InvalidUserDetails("incorrect user data "+ userDto);
         }
+
+        String subject = "Register Success";
+        String body = "Welcome to Pawpals";
+        String to = userDto.getEmail();
+        mailService.sendMail(to, subject, body);
 
         return returnedDto;
 
