@@ -104,6 +104,30 @@ const Landing: React.FC = () => {
           </nav>
         </Toolbar>
       </AppBar>
+      <Container className={classes.containerClass}>
+        <Grid container spacing={3} className={classes.gridContainer}>
+          <Grid item xs={12} className={classes.petBackgroundMain}>
+            <Typography variant="h1" className={classes.petBackgroundTitle}>
+              {'Welcome to Pawpals'}
+            </Typography>
+            <Typography variant="h4" className={classes.petBackgroundSubtitle}>
+              {'Get the Best Care for your Pets with PawPals.'}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} className={classes.care}>
+            <Typography variant="h2" className={classes.careTitle}>
+              {'We care for your Pets'}
+            </Typography>
+            <Typography variant="h6" className={classes.careSubtitle}>
+              {
+                "At PawPals, we understand how much you love your furry friends. That's why we provide the best care possible to ensure they are healthy and happy. Our team of expert veterinarians and pet care professionals are dedicated to making sure your pets receive the attention and care they deserve."
+              }
+            </Typography>
+          </Grid>
+
+        </Grid>
+      </Container>
+
     </>
   );
 };
