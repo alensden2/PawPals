@@ -1,46 +1,28 @@
-import React from 'react';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import useStyles from './Landing.styles';
-// hooks
+import * as React from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Link,
+  Container,
+  Grid,
+  Box
+} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import PAW_LOGO from '@src/assets/images/paw-black.png';
 import { useNavigate } from '@src/hooks';
-
-import HOME_PAGE_IMAGE from '@src/assets/images/homepage.jpg';
+import useStyles from './Landing.styles';
+import { Button } from '@src/components';
 
 const Landing: React.FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const onLoginClick = () => {
-    navigate('/signin');
-  };
-
-  const onSignUpClick = () => {
-    navigate('/signup');
-  };
 
   return (
-    <div className={classes.container}>
-      <div className={classes.leftContainer}>
-        <img src={HOME_PAGE_IMAGE} alt="Product" className={classes.image} />
-      </div>
-      <div className={classes.rightContainer}>
-        <div>
-          <h1 className={classes.pawpalsText}>Paw Pals</h1>
-        </div>
-        <div className={classes.buttonContainer} onClick={onLoginClick}>
-          <div style={{ fontFamily: 'Oswald' }} className={classes.loginText}>
-            Sign In
-          </div>
-          <ChevronRightIcon />
-        </div>
-        <div className={classes.buttonContainer} onClick={onSignUpClick}>
-          <div style={{}} className={classes.signUpText}>
-            Sign Up
-          </div>
-          <ChevronRightIcon />
-        </div>
-      </div>
-    </div>
+    <>
+    </>
   );
 };
 
