@@ -1,9 +1,5 @@
-import { Vet } from "@src/types";
+import { Vet } from '@src/types';
 
-export interface RegisterVetApiInputType extends Omit<Vet, "vetUserId">{
+export interface RegisterVetApiInputType extends Omit<Vet, 'vetUserId'> {}
 
-}
-
-export interface RegisterVetApiResponseType extends Vet{
-    
-}
+export interface RegisterVetApiResponseType extends Vet {}

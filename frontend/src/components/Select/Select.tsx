@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import Select, { SelectProps } from '@material-ui/core/Select';
-import { InputLabel, MenuItem, OutlinedInput, Theme, useTheme } from '@material-ui/core';
+import {
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Theme,
+  useTheme
+} from '@material-ui/core';
 
 interface CustomSelectProps extends SelectProps {
   options: { label?: string; value: string | number }[];
@@ -18,32 +24,31 @@ const MenuProps = {
   }
 };
 
-
 const CustomSelect: React.FC<CustomSelectProps> = (props) => {
-    const theme = useTheme();
-    const [selectedOptions, setSelectedOptions] = useState([] as string[]);
+  const theme = useTheme();
+  const [selectedOptions, setSelectedOptions] = useState([] as string[]);
 
-    function getStyles(value: string, options: string[], theme: Theme) {
-      return {
-        fontWeight:
+  function getStyles(value: string, options: string[], theme: Theme) {
+    return {
+      fontWeight:
         options.indexOf(value) === -1
-            ? theme.typography.fontWeightRegular
-            : theme.typography.fontWeightBold
-      };
-    }
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightBold
+    };
+  }
 
-    return (
+  return (
     <>
       <InputLabel>{props.label}</InputLabel>
       <Select
         labelId={props.labelId || 'select-label-' + Math.random() * 1000}
         id={props.id || 'select-' + Math.random() * 1000}
         value={props.value}
-        onChange={(e,c)=>{
-            setSelectedOptions(e.target.value as string[]);
-            if(props.onChange){
-                return props.onChange(e,c)
-            }
+        onChange={(e, c) => {
+          setSelectedOptions(e.target.value as string[]);
+          if (props.onChange) {
+            return props.onChange(e, c);
+          }
         }}
         variant="outlined"
         fullWidth={props.fullWidth}
@@ -55,10 +60,11 @@ const CustomSelect: React.FC<CustomSelectProps> = (props) => {
         {props.options.map(
           (option: { label?: string; value: string | number }) => {
             return (
-              <MenuItem 
-                key={option.label || option.value} 
-                value={option.value} 
-                style={getStyles(option.value+"", selectedOptions, theme)}>
+              <MenuItem
+                key={option.label || option.value}
+                value={option.value}
+                style={getStyles(option.value + '', selectedOptions, theme)}
+              >
                 {option.label || option.value}
               </MenuItem>
             );

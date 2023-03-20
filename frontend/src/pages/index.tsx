@@ -14,6 +14,8 @@ import PetHealthAndDiseaseInfo from './PetHealthAndDiseaseInfo';
 import PetMedicalHistory from './PetMedicalHistory';
 import PetOwnerAllVets from './PetOwnerAllVets';
 import PetOwnerManagePets from './PetOwnerManagePets';
+import AboutUs from './AboutUs';
+import ContactUs from './ContactUs';
 
 export {
   Landing,
@@ -31,5 +33,7 @@ export {
   PetHealthAndDiseaseInfo,
   PetMedicalHistory,
   PetOwnerAllVets,
+  AboutUs,
+  ContactUs,
   PetOwnerManagePets
 };

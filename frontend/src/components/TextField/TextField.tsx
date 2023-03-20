@@ -2,13 +2,13 @@ import React, { ChangeEvent } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { TextFieldProps } from '@mui/material';
 
-interface CustomTextFieldProps  {
+interface CustomTextFieldProps {
   label: string;
   type: string;
   value: string;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
   fullWidth?: boolean;
-  nativeProps?:TextFieldProps
+  nativeProps?: TextFieldProps;
 }
 
 const CustomTextField: React.FC<CustomTextFieldProps> = ({
