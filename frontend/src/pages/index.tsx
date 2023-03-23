@@ -11,7 +11,7 @@ import VetRegistration from './VetRegistration';
 import Admin from './Admin';
 import AdminHome from './AdminHome';
 import PetHealthAndDiseaseInfo from './PetHealthAndDiseaseInfo';
-import PetMedicalHistory from './PetMedicalHistory';
+import PetMedicalRecord from './PetMedicalRecord';
 import PetOwnerAllVets from './PetOwnerAllVets';
 import PetOwnerManagePets from './PetOwnerManagePets';
 
@@ -29,7 +29,7 @@ export {
   Admin,
   AdminHome,
   PetHealthAndDiseaseInfo,
-  PetMedicalHistory,
+  PetMedicalRecord,
   PetOwnerAllVets,
   PetOwnerManagePets
 };
