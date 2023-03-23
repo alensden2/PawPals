@@ -38,3 +38,40 @@ export type VetList = {
 export type VetsState = {
   vets: Vet[];
 };
+
+export type MedicalRecord = {
+  medicalHistoryId: number;
+  dateDiagnosed: string;
+  prescription: string;
+  vaccines: string;
+  pet: {
+    id: number;
+    age: number;
+    gender: string;
+    name: string;
+    type: string;
+  };
+  vet: {
+    vetId: number;
+    name: string;
+    phoneNo: string;
+    email: string;
+    experience: number;
+    licenseNumber: string;
+    qualification: string;
+    clinicAddress: string;
+    clinicPhotoUrl?: string;
+  };
+};
+
+export type MedicalRecordList = {
+  medicalRecords: MedicalRecord[];
+};
+
+export type MedicalRecordState = {
+  medicalRecords: MedicalRecord[];
+};
+
+export type MedicalRecordCardProps = {
+  medicalRecord: MedicalRecord;
+};
