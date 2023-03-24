@@ -1,15 +1,13 @@
 package com.asdc.pawpals.service;
 
-import com.asdc.pawpals.dto.AnimalDto;
-import com.asdc.pawpals.dto.AppointmentDto;
-import com.asdc.pawpals.dto.PetAppointmentsDto;
-import com.asdc.pawpals.dto.PetOwnerDto;
+import com.asdc.pawpals.dto.*;
 import com.asdc.pawpals.exception.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public interface PetOwnerService {
@@ -17,12 +15,14 @@ public interface PetOwnerService {
 
     List<AnimalDto> retrieveAllPets(Long ownerId) throws InvalidOwnerID, NoPetRegisterUnderPetOwner;
 
-    AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidVetID, InvalidAnimalId, InvalidObjectException;
+    AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound;
 
-    PetOwnerDto updatePetOwner(String id, PetOwnerDto petOwnerDto) throws UserNameNotFound, InvalidPetOwnerObject;
+    PetOwnerDto updatePetOwner(String id, PetOwnerDto petOwnerDto, MultipartFile image) throws UserNameNotFound, InvalidPetOwnerObject, InvalidImage, IOException;
 
     PetOwnerDto deletePetOwner(String id) throws UserNameNotFound;
 
 
     List<PetAppointmentsDto> retrievePetsAppointments(String ownerId) throws UserNameNotFound, NoPetRegisterUnderPetOwner;
+
+    List<PetMedicalHistoryDto> retrievePetsMedicalHistory(String ownerId) throws UserNameNotFound, NoPetRegisterUnderPetOwner;
 }

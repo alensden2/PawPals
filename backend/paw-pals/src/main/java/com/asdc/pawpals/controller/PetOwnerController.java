@@ -3,7 +3,6 @@ package com.asdc.pawpals.controller;
 import com.asdc.pawpals.dto.AppointmentDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.exception.*;
-import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
@@ -65,7 +64,7 @@ public class PetOwnerController {
     }
 
     @PostMapping({"/book-appointment"})
-    public ResponseEntity<ApiResponse> bookAppointment(@RequestBody Object requestBody) throws InvalidAnimalId, InvalidObjectException, InvalidVetID {
+    public ResponseEntity<ApiResponse> bookAppointment(@RequestBody Object requestBody) throws InvalidAnimalId, InvalidObjectException, InvalidVetID, UserNameNotFound {
         logger.info("Received request as :", requestBody.toString());
         AppointmentDto appointmentDto = null;
         if (CommonUtils.isStrictTypeOf(requestBody, AppointmentDto.class)) {
@@ -79,17 +78,18 @@ public class PetOwnerController {
     }
 
 
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse> updatePetOwner(
             @PathVariable("id") String id,
-            @RequestBody Object requestBody)
-            throws PetOwnerAlreadyDoesNotExists, InvalidPetOwnerObject, UserNameNotFound {
+            @RequestBody Object requestBody,
+            @RequestPart("image") MultipartFile image)
+            throws InvalidPetOwnerObject, UserNameNotFound, InvalidImage, IOException {
         logger.info("Received request as: {}", requestBody.toString());
         PetOwnerDto petOwnerDto = null;
         if (CommonUtils.isStrictTypeOf(requestBody, PetOwnerDto.class)) {
             petOwnerDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, PetOwnerDto.class);
-//            animal.setId(id); // Set the ID of the updated animal
-            apiResponse.setBody(petOwnerService.updatePetOwner(id, petOwnerDto));
+            apiResponse.setBody(petOwnerService.updatePetOwner(id, petOwnerDto, image));
             apiResponse.setMessage("Successfully updated object");
             apiResponse.setSuccess(true);
             apiResponse.setError(false);
@@ -113,10 +113,24 @@ public class PetOwnerController {
     @GetMapping("/pets/appointments/{owner_id}")
     public ResponseEntity<ApiResponse> getPetsAppointmentsByOwnerId(
             @PathVariable(value = "owner_id") String ownerId
-    ) throws  NoPetRegisterUnderPetOwner, UserNameNotFound {
+    ) throws NoPetRegisterUnderPetOwner, UserNameNotFound {
         logger.info("Received request for fetching pets for owner :", ownerId);
         if (petOwnerService != null && ownerId != null) {
             apiResponse.setBody(petOwnerService.retrievePetsAppointments(ownerId));
+            apiResponse.setMessage("successfully retrieve list");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+
+    @GetMapping("/pets/medicalHistory/{owner_id}")
+    public ResponseEntity<ApiResponse> getPetMedicalHistoryByOwnerId(
+            @PathVariable(value = "owner_id") String ownerId
+    ) throws NoPetRegisterUnderPetOwner, UserNameNotFound {
+        logger.info("Received request for fetching Medical Histories for All pets for pet owner:", ownerId);
+        if (petOwnerService != null && ownerId != null) {
+            apiResponse.setBody(petOwnerService.retrievePetsMedicalHistory(ownerId));
             apiResponse.setMessage("successfully retrieve list");
             apiResponse.setSuccess(true);
             apiResponse.setError(false);
