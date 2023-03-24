@@ -13,4 +13,6 @@ public class PetAppointmentsDto {
     VetDto vetDto;
     AppointmentDto appointmentDto;
 
+    AnimalDto animalDto;
+
 }

@@ -24,5 +24,5 @@ public interface PetOwnerService {
     PetOwnerDto deletePetOwner(String id) throws UserNameNotFound;
 
 
-    Map<AnimalDto,List<PetAppointmentsDto>> retrievePetsAppointments(String ownerId) throws UserNameNotFound, NoPetRegisterUnderPetOwner;
+    List<PetAppointmentsDto> retrievePetsAppointments(String ownerId) throws UserNameNotFound, NoPetRegisterUnderPetOwner;
 }

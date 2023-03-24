@@ -172,7 +172,7 @@ public class PetOwnerImpl implements PetOwnerService {
      * @return
      */
     @Override
-    public Map<AnimalDto, List<PetAppointmentsDto>> retrievePetsAppointments(String ownerId) throws UserNameNotFound, NoPetRegisterUnderPetOwner {
+    public List<PetAppointmentsDto> retrievePetsAppointments(String ownerId) throws UserNameNotFound, NoPetRegisterUnderPetOwner {
         logger.debug("Get All Pets Appointment By owner Id", ownerId);
 
         PetOwner petOwner = petOwnerRepository.findByUser_UserId(ownerId).orElseThrow(UserNameNotFound::new);
@@ -181,20 +181,19 @@ public class PetOwnerImpl implements PetOwnerService {
             throw new NoPetRegisterUnderPetOwner("No Pet Registered for Owner " + petOwner.getFirstName() + " " + petOwner.getLastName());
         }
 
-        Map<AnimalDto, List<PetAppointmentsDto>> animalAppointmentsMap = petOwner.getAnimals().stream()
-                .collect(Collectors.toMap(
-                        animal -> Transformations.MODEL_TO_DTO_CONVERTER.animal(animal),
-                        animal -> animal.getAppointment().stream()
-                                .map(appointment -> {
-                                    PetAppointmentsDto petAppointmentsDto = new PetAppointmentsDto();
-                                    petAppointmentsDto.setAppointmentDto(Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment));
-                                    petAppointmentsDto.setVetDto(Transformations.MODEL_TO_DTO_CONVERTER.vet(appointment.getVet()));
-                                    return petAppointmentsDto;
-                                })
-                                .collect(Collectors.toList())
-                ));
 
-        return animalAppointmentsMap;
+
+
+        List<PetAppointmentsDto> petAppointmentsDtos=petOwner.getAnimals().stream().flatMap(animal -> animal.getAppointment().stream()
+                .map(appointment -> {
+                    PetAppointmentsDto petAppointmentsDto = new PetAppointmentsDto();
+                    petAppointmentsDto.setAppointmentDto(Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment));
+                    petAppointmentsDto.setVetDto(Transformations.MODEL_TO_DTO_CONVERTER.vet(appointment.getVet()));
+                    petAppointmentsDto.setAnimalDto(Transformations.MODEL_TO_DTO_CONVERTER.animal(animal));
+                    return petAppointmentsDto;
+                })).collect(Collectors.toList());
+
+        return petAppointmentsDtos;
 
     }
 
