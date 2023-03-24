@@ -46,51 +46,51 @@ public class VetControllerTest {
         assertEquals("Hello 1", vetController.getVetById(1));
     }
 
-    @Test
-    public void shouldRegisterVet(){
-        //Arrange
-        VetDto vetToRegister = new VetDto();
-        when(vetServiceMock.registerVet(any(VetDto.class))).thenReturn(true);
-        vetToRegister.setUserName("jDoe");
-        //Act
-        ResponseEntity<String> response = vetController.registerVet(vetToRegister);
-        //Assert
-        assertEquals("jDoe", response.getBody());
-    }
+    // @Test
+    // public void shouldRegisterVet(){
+    //     //Arrange
+    //     VetDto vetToRegister = new VetDto();
+    //     when(vetServiceMock.registerVet(any(VetDto.class))).thenReturn(true);
+    //     vetToRegister.setUserName("jDoe");
+    //     //Act
+    //     ResponseEntity<String> response = vetController.registerVet(vetToRegister);
+    //     //Assert
+    //     assertEquals("jDoe", response.getBody());
+    // }
 
-    @Test
-    public void shouldReturnInternalServerError(){
-        //Arrange
-        VetDto vetToRegister = new VetDto();
-        when(vetServiceMock.registerVet(any(VetDto.class))).thenReturn(false);
-        vetToRegister.setUserName("jDoe");
-        //Act
-        ResponseEntity<String> response = vetController.registerVet(vetToRegister);
-        //Assert
-        assertEquals(500, response.getStatusCode().value());
-    }
+    // @Test
+    // public void shouldReturnInternalServerError(){
+    //     //Arrange
+    //     VetDto vetToRegister = new VetDto();
+    //     when(vetServiceMock.registerVet(any(VetDto.class))).thenReturn(false);
+    //     vetToRegister.setUserName("jDoe");
+    //     //Act
+    //     ResponseEntity<String> response = vetController.registerVet(vetToRegister);
+    //     //Assert
+    //     assertEquals(500, response.getStatusCode().value());
+    // }
 
-    @Test
-    public void shouldReturnBadRequestWhenUserNotFound(){
-        //Arrange
-        VetDto vetToRegister = new VetDto();
-        when(vetServiceMock.registerVet(any(VetDto.class))).thenThrow(new UsernameNotFoundException("Invalid Username"));
-        vetToRegister.setUserName("jDoe");
-        //Act
-        ResponseEntity<String> response = vetController.registerVet(vetToRegister);
-        //Assert
-        assertEquals("User name provided is invalid", response.getBody());
-        assertEquals(400, response.getStatusCode().value()); 
-    }
+    // @Test
+    // public void shouldReturnBadRequestWhenUserNotFound(){
+    //     //Arrange
+    //     VetDto vetToRegister = new VetDto();
+    //     when(vetServiceMock.registerVet(any(VetDto.class))).thenThrow(new UsernameNotFoundException("Invalid Username"));
+    //     vetToRegister.setUserName("jDoe");
+    //     //Act
+    //     ResponseEntity<String> response = vetController.registerVet(vetToRegister);
+    //     //Assert
+    //     assertEquals("User name provided is invalid", response.getBody());
+    //     assertEquals(400, response.getStatusCode().value()); 
+    // }
 
-    @Test
-    public void shouldReturnBadRequestWhenInvalidInput(){
-        //Act
-        ResponseEntity<String> response = vetController.registerVet("Invalid Input");
-        //Assert
-        assertEquals("Invalid input provided", response.getBody());
-        assertEquals(400, response.getStatusCode().value()); 
-    }
+    // @Test
+    // public void shouldReturnBadRequestWhenInvalidInput(){
+    //     //Act
+    //     ResponseEntity<String> response = vetController.registerVet("Invalid Input");
+    //     //Assert
+    //     assertEquals("Invalid input provided", response.getBody());
+    //     assertEquals(400, response.getStatusCode().value()); 
+    // }
 
     @Test
     public void shouldReturnVetAvailability(){

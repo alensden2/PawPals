@@ -1,10 +1,12 @@
 package com.asdc.pawpals.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +14,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.asdc.pawpals.dto.VetAvailabilityDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.dto.VetScheduleDto;
+import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.service.VetService;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
@@ -37,15 +42,15 @@ public class VetController {
         return "Hello "+id;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerVet(@RequestBody Object requestBody){
-        logger.info("Recieved request as :", requestBody.toString());
+    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> registerVet(@RequestPart("vet") Object requestBody, @RequestPart("clinicPhoto") MultipartFile clinicPhoto) throws IOException, InvalidImage{
         Boolean vetRegistered = false;
         ResponseEntity<String> response = null;
         try{
             VetDto vet = null;
             if(CommonUtils.isStrictTypeOf(requestBody, VetDto.class)){
                 vet = ObjectMapperWrapper.getInstance().convertValue(requestBody, VetDto.class);
+                vet.setClinicUrl(CommonUtils.getBytes(clinicPhoto));
                 vetRegistered = vetService.registerVet(vet);
                 response = vetRegistered ? ResponseEntity.ok(vet.getUsername()) : ResponseEntity.internalServerError().body("There was some error, please try again");
             }
