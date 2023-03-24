@@ -1,14 +1,17 @@
 package com.asdc.pawpals.model;
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +30,10 @@ public class Vet {
   private String clinicAddress;
   private Integer experience;
   private String qualification;
+
+  @Column(name = "clinic_url", length = 10485760)
+  @Lob
+  private Byte[] clinicUrl;
 
   @OneToOne
   @JoinColumn(name = "user_userId")

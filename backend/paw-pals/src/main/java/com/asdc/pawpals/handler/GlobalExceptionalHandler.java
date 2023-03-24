@@ -4,6 +4,7 @@ import com.asdc.pawpals.controller.AdminController;
 import com.asdc.pawpals.controller.AnimalController;
 import com.asdc.pawpals.controller.PetOwnerController;
 import com.asdc.pawpals.controller.UserController;
+import com.asdc.pawpals.controller.VetController;
 import com.asdc.pawpals.exception.*;
 import com.asdc.pawpals.exception.InvalidUserDetails;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
                 PetOwnerController.class,
                 AnimalController.class,
                 AdminController.class,
+                VetController.class
         }
 )
 public class GlobalExceptionalHandler {

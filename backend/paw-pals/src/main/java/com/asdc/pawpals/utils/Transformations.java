@@ -98,6 +98,7 @@ public class Transformations {
         dto.setExperience(dao.getExperience());
         dto.setQualification(dao.getQualification());
         dto.setClinicAddress(dao.getClinicAddress());
+        dto.setClinicUrl(dao.getClinicUrl());
       }
       return dto;
     }
@@ -127,8 +128,8 @@ public class Transformations {
         dto.setStartTime(dao.getStartTime());
         dto.setEndTime(dao.getEndTime());
         dto.setStatus(dao.getStatus());
-        if (dao.getVet() != null) {
-          dto.setVetId(dao.getVet().getId());
+        if (dao.getVet() != null && dao.getVet().getUser() != null) {
+          dto.setVetUserId(dao.getVet().getUser().getUserId());
         }
         if (dao.getAnimal() != null) {
           dto.setAnimalId(dao.getAnimal().getId());
@@ -159,6 +160,7 @@ public class Transformations {
         vet.setExperience(vetDto.getExperience());
         vet.setQualification(vetDto.getQualification());
         vet.setClinicAddress(vetDto.getClinicAddress());
+        vet.setClinicUrl(vetDto.getClinicUrl());
         if (vetDto.getUsername() != null) {
           User user = new User();
           user.setUserId(vetDto.getUsername());
@@ -220,13 +222,15 @@ public class Transformations {
         dao.setStartTime(dto.getStartTime());
         dao.setEndTime(dto.getEndTime());
         dao.setStatus(dto.getStatus().toUpperCase());
-        //                Vet vet = new Vet();
-        //                vet.setId(dto.getVetId());
-        //                dao.setVet(vet);
-        //
-        //                Animal animal = new Animal();
-        //                animal.setId(dto.getAnimalId());
-        //                dao.setAnimal(animal);
+        Vet vet = new Vet();
+        User user = new User();
+        user.setUserId(dto.getVetUserId());
+        vet.setUser(user);
+        dao.setVet(vet);
+
+        Animal animal = new Animal();
+        animal.setId(dto.getAnimalId());
+        dao.setAnimal(animal);
       }
       return dao;
     }
