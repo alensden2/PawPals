@@ -14,6 +14,7 @@ import {
   Box
 } from '@material-ui/core';
 import { CloseOutlined } from '@material-ui/icons';
+import useStyles from './AppointmentDetailsModal.styles';
 
 const medicalRecord = 'This is the medical record tab';
 
