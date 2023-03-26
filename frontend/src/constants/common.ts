@@ -16,7 +16,7 @@ export const PET_OWNER_HOME_PAGE_CARDS = [
     uid: 'MEDICAL_HISTORY',
     title: 'Medical History',
     color: '#4d7c8a',
-    route: '/pet-owner/medical-history'
+    route: '/pet-owner/medical-record'
   },
   {
     uid: 'BOOK_APPOINTMENT_WITH_VET',

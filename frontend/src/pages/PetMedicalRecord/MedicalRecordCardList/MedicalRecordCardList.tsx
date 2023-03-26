@@ -11,7 +11,7 @@ const MedicalRecordCardList: React.FC<MedicalRecordList> = ({
   return (
     <div className={classes.root}>
       {medicalRecords.map((item) => (
-        <MedicalRecordCard key={item.medicalHistoryId} medicalHistory={item} />
+        <MedicalRecordCard key={item.medicalHistoryId} medicalRecord={item} />
       ))}
     </div>
   );

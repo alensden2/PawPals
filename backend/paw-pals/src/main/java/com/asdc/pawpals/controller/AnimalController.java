@@ -1,7 +1,10 @@
 package com.asdc.pawpals.controller;
 
 import com.asdc.pawpals.dto.AnimalDto;
-import com.asdc.pawpals.exception.*;
+import com.asdc.pawpals.exception.InvalidAnimalId;
+import com.asdc.pawpals.exception.InvalidAnimalObject;
+import com.asdc.pawpals.exception.InvalidImage;
+import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.service.AnimalService;
 import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
@@ -34,7 +37,7 @@ public class AnimalController {
     // delete animal
 
     @PostMapping({"/register"})
-    public ResponseEntity<ApiResponse> registerAnimal(@RequestPart("animal") Object requestBody, @RequestPart("image") MultipartFile image) throws  IOException, UserNameNotFound, InvalidImage, InvalidAnimalObject {
+    public ResponseEntity<ApiResponse> registerAnimal(@RequestPart("animal") Object requestBody, @RequestPart("image") MultipartFile image) throws IOException, UserNameNotFound, InvalidImage, InvalidAnimalObject {
         logger.info("Received request as :", requestBody.toString());
         AnimalDto animalDto = null;
         if (CommonUtils.isStrictTypeOf(requestBody, AnimalDto.class)) {
@@ -46,7 +49,34 @@ public class AnimalController {
             apiResponse.setError(false);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
 
+
+    @PutMapping({"/{id}"})
+    public ResponseEntity<ApiResponse> updateAnimal(@RequestPart("animal") Object requestBody, @RequestPart("image") MultipartFile image, @PathVariable("id") Long id) throws IOException, InvalidImage, InvalidAnimalObject, InvalidAnimalId {
+        logger.info("Received request as :", requestBody.toString());
+        AnimalDto animalDto = null;
+        if (CommonUtils.isStrictTypeOf(requestBody, AnimalDto.class)) {
+            animalDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, AnimalDto.class);
+            apiResponse.setBody(animalService.updateAnimal(animalDto, id, image));
+            apiResponse.setMessage("successfully updated object");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteAnimal(@PathVariable Long id) throws InvalidAnimalId {
+        logger.info("Received delete request for Pet Owner with id: {}", id.toString());
+        if (CommonUtils.isStrictTypeOf(id, String.class)) {
+            id = ObjectMapperWrapper.getInstance().convertValue(id, Long.class);
+            apiResponse.setBody(animalService.deleteAnimal(id));
+            apiResponse.setMessage("successfully deleted object");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
 }
