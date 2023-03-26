@@ -42,3 +42,18 @@ export const PLACEHOLDER_PET_IMAGE =
   'https://via.placeholder.com/150x150.png?text=Pet+Image';
 
 export const PET_NAME = 'PET_NAME';
+
+export const QUALIFICATION_OPTIONS: Array<{ value: string }> = [
+  {
+    value: 'MBBS'
+  },
+  {
+    value: 'BMBS'
+  },
+  {
+    value: 'MD'
+  },
+  {
+    value: 'DO'
+  }
+];

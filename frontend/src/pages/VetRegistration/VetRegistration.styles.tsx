@@ -3,10 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(4),
-    border: '1px solid #ccc',
-    boxShadow: '0.1em 0.1em 0.2em #aaa'
+    marginTop: theme.spacing(1)
   },
   formContainer: {
     paddingBottom: theme.spacing(2)
