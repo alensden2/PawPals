@@ -1,3 +1,3 @@
-import axios from './axios';
+import { axiosFORM, axiosJSON } from './axios';
 
-export { axios };
+export { axiosFORM, axiosJSON };
