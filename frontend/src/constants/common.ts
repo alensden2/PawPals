@@ -66,3 +66,18 @@ export const VET_HOME_APPOINTMENT_CONSTANT = {
     shouldShowInfoButton: false
   }
 };
+
+export const QUALIFICATION_OPTIONS: Array<{ value: string }> = [
+  {
+    value: 'MBBS'
+  },
+  {
+    value: 'BMBS'
+  },
+  {
+    value: 'MD'
+  },
+  {
+    value: 'DO'
+  }
+];
