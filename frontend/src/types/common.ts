@@ -31,6 +31,17 @@ export type Vet = {
   clinicPhoto?: File;
 };
 
+export type PetOwner = {
+  userName?: string;
+  firstName: string;
+  lastName: string;
+  phoneNo: string;
+  email?: string;
+  address:string;
+  photoUrl?: File;
+  pets?: Array<Pet>;
+};
+
 export type VetList = {
   vets: Vet[];
 };

@@ -26,7 +26,7 @@ import { Button, TextField } from '@src/components';
 import useStyles from './SignUp.styles';
 
 // constants
-import { TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
+import { TOAST_MESSAGE_SIGNUP_ERROR, TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
 
 // context
 import { ToastContext } from '@src/context';
@@ -38,6 +38,7 @@ import { RegisterUserType } from '@src/api/type';
 // hooks
 import { useNavigate } from '@src/hooks';
 import { registerVet } from '@src/api/vet';
+import { registerPetOwner } from '@src/api/petowner';
 
 const SignUp: React.FC = () => {
   // styles
@@ -58,7 +59,6 @@ const SignUp: React.FC = () => {
   const [clinicPhoto, setClinicPhoto] = useState(null as unknown as File);
   const [profilePhoto, setProfilePhoto] = useState(null as unknown as File);
   const [loader, setLoader] = React.useState(false);
-
 
   const handleClose = () => {
     setLoader(false);
@@ -89,29 +89,44 @@ const SignUp: React.FC = () => {
       // display error toast
       setToast({ type: 'error', message: response.errorMessage });
     } else {
-      const response = await registerVet({
-        userName,
-        firstName,
-        lastName,
-        clinicAddress,
-        experience,
-        licenseNumber: lNumber,
-        phoneNo: phoneNumber,
-        qualification: qualifications.join(', '),
-        clinicPhoto,
-        email
-      });
-
-      if (response === userName) {
-        setLoader(false);
-        // display success toast and ask user to sign in
-        setToast({
-          type: 'success',
-          message: TOAST_MESSAGE_SIGNUP_SUCCESS
+      let success = false;
+      if (selectedOption === 'VET') {
+        const response = await registerVet({
+          userName,
+          firstName,
+          lastName,
+          clinicAddress,
+          experience,
+          licenseNumber: lNumber,
+          phoneNo: phoneNumber,
+          qualification: qualifications.join(', '),
+          clinicPhoto,
+          email
         });
+        success = response === userName;
+      } else if (selectedOption === 'PET_OWNER') {
+        const response = await registerPetOwner({
+          userName,
+          firstName,
+          lastName,
+          address: clinicAddress,
+          phoneNo: phoneNumber,
+          photoUrl: profilePhoto,
+          email
+        });
+        success = !!response.success && !response.error;
       }
-
-      navigate('/signin');
+      setLoader(false);
+      // display success toast and ask user to sign in
+      setToast({
+        type: success ? 'success' : 'error',
+        message: success
+          ? TOAST_MESSAGE_SIGNUP_SUCCESS
+          : TOAST_MESSAGE_SIGNUP_ERROR
+      });
+      if (success) {
+        navigate('/signin');
+      }
     }
   };
 
@@ -264,6 +279,13 @@ const SignUp: React.FC = () => {
               </>
             ) : selectedOption === 'PET_OWNER' ? (
               <>
+                <TextField
+                  label="Address"
+                  type="text"
+                  value={clinicAddress}
+                  onChange={(event) => setClinicAddress(event.target.value)}
+                  fullWidth={true}
+                />
                 <MuiTextField
                   type="file"
                   label="Profile Photo"
