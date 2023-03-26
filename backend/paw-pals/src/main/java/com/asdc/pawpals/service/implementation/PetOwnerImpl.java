@@ -97,7 +97,7 @@ public class PetOwnerImpl implements PetOwnerService {
                 appointmentDto.getEndTime() != null && appointmentDto.getStatus() != null
                 && AppointmentValidators.isValidAppointment(appointmentDto.getDate(), appointmentDto.getStartTime(), appointmentDto.getEndTime(), appointmentDto.getStatus())) {
             Appointment appointment = Transformations.DTO_TO_MODEL_CONVERTER.appointment(appointmentDto);
-            Vet vet = vetRepository.findById(appointmentDto.getVetId()).orElseThrow(InvalidVetID::new);
+            Vet vet = vetRepository.findByUser_UserId(appointmentDto.getVetUserId()).orElseThrow(InvalidVetID::new);
             Animal animal = animalRepository.findById(appointmentDto.getAnimalId()).orElseThrow(InvalidAnimalId::new);
             appointment.setVet(vet);
             appointment.setAnimal(animal);
