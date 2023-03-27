@@ -41,3 +41,11 @@ export const getAllMedicalHistoryOfPetApiCall = async ({ petOwnerUserId }) => {
     console.error(e);
   }
 };
+
+export const getAllPetsApiCall = async ({ ownerUserId = 'ishan' } = {}) => {
+  try {
+    return await axiosJSON.get(`/unauth/pet-owner/pets/${ownerUserId}`);
+  } catch (e) {
+    console.error(e);
+  }
+};

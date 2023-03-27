@@ -22,3 +22,13 @@ export const getAllMedicalHistoryOfPet = async ({ petOwnerUserId }) => {
     }));
   } else return [];
 };
+
+export const getAllPets = async () => {
+  const response = await getAllPetsApiCall();
+  const body = response?.data?.body || [];
+
+  return body.map((item) => ({
+    ...item,
+    photoUrl: item.photoUrl ? bytesToImageUrl(item.photoUrl) : ''
+  }));
+};

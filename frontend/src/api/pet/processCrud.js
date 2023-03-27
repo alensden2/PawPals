@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 import {
   createPetApiCall
   // deletePetApiCall,
   // updatePetApiCall,
-  // getAllPetsApiCall
 } from './crud';
 
 import { bytesToImageUrl } from '@src/utils';
@@ -18,10 +20,6 @@ export const createPet = async ({ input = {} } = {}) => {
     ...body,
     photoUrl: url
   };
-};
-
-export const getAllPets = async ({}) => {
-  console.error('getAllPets');
 };
 
 export const deletePet = async ({}) => {

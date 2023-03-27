@@ -30,14 +30,6 @@ export const createPetApiCall = async ({ input = {} } = {}) => {
   }
 };
 
-export const getAllPetsApiCall = async ({ ownerUserId }) => {
-  try {
-    return await axiosJSON.get('/unauth/animal/pets', { ownerId: ownerUserId });
-  } catch (e) {
-    console.error(e);
-  }
-};
-
 export const updatePetApiCall = async ({ petId, input }) => {
   try {
     return await axiosJSON.put(`/unauth/animal/${petId}`, input);
