@@ -14,6 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class AnimalDto {
+    private Long id;
     private String name;
     private String type;
     private Integer age;
