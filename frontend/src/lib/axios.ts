@@ -48,6 +48,15 @@ class API {
       throw error;
     }
   }
+
+  public async put(endpoint: string, data?: object): Promise<AxiosResponse> {
+    try {
+      const response = await this.apiClient.put(`${endpoint}`, data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const axiosJSON = new API('application/json');
