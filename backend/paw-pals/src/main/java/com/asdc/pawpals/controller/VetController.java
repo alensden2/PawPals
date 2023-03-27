@@ -45,7 +45,7 @@ public class VetController {
     }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> registerVet(@RequestPart("vet") Object requestBody, @RequestPart("clinicPhoto") MultipartFile clinicPhoto) throws IOException, InvalidImage {
+    public ResponseEntity<String> registerVet(@RequestPart("vet") Map<String, Object> requestBody, @RequestPart("clinicPhoto") MultipartFile clinicPhoto) throws IOException, InvalidImage{
         Boolean vetRegistered = false;
         ResponseEntity<String> response = null;
         try {

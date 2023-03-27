@@ -42,3 +42,42 @@ export const PLACEHOLDER_PET_IMAGE =
   'https://via.placeholder.com/150x150.png?text=Pet+Image';
 
 export const PET_NAME = 'PET_NAME';
+
+export const VET_HOME_APPOINTMENT_CONSTANT = {
+  PENDING: {
+    headerText: 'Review Appointments',
+    shouldShowApproveDeclineButtons: true,
+    shouldShowDiagnoseButton: false,
+    shouldShowViewDetailsButton: false,
+    shouldShowInfoButton: true
+  },
+  CONFIRMED: {
+    headerText: 'Upcoming Appointments',
+    shouldShowApproveDeclineButtons: false,
+    shouldShowDiagnoseButton: true,
+    shouldShowViewDetailsButton: false,
+    shouldShowInfoButton: true
+  },
+  DIAGNOSED: {
+    headerText: 'Completed Appointments',
+    shouldShowApproveDeclineButtons: false,
+    shouldShowDiagnoseButton: false,
+    shouldShowViewDetailsButton: true,
+    shouldShowInfoButton: false
+  }
+};
+
+export const QUALIFICATION_OPTIONS: Array<{ value: string }> = [
+  {
+    value: 'MBBS'
+  },
+  {
+    value: 'BMBS'
+  },
+  {
+    value: 'MD'
+  },
+  {
+    value: 'DO'
+  }
+];
