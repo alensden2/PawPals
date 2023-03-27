@@ -34,6 +34,7 @@ public class Transformations {
     public static AnimalDto animal(Animal dao) {
       AnimalDto dto = new AnimalDto();
       if (dao != null) {
+        dto.setId(dao.getId());
         dto.setName(dao.getName());
         dto.setType(dao.getType());
         dto.setAge(dao.getAge());
@@ -238,6 +239,7 @@ public class Transformations {
     public static Animal animal(AnimalDto animalDto) {
       Animal animal = new Animal();
       if (animalDto != null) {
+        animal.setId(animalDto.getId());
         animal.setAge(animalDto.getAge());
         animal.setName(animalDto.getName());
         animal.setType(animalDto.getType());

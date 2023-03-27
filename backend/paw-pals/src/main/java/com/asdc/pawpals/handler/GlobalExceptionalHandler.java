@@ -207,5 +207,30 @@ public class GlobalExceptionalHandler {
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
     }
 
+    @ExceptionHandler(InvalidAppointmentId.class)
+    public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForInvalidAppointmentId(
+            Exception e
+    ) {
+        logger.trace(e.getMessage());
+        apiResponse.setBody(e.getMessage());
+        apiResponse.setMessage("Invalid Appointment Id entered");
+        apiResponse.setError(true);
+        apiResponse.setSuccess(false);
 
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+    }
+
+
+    @ExceptionHandler(NoAppointmentExist.class)
+    public ResponseEntity<ApiResponse> GlobalUserExceptionHandlerForNoAppointmentExist(
+            Exception e
+    ) {
+        logger.trace(e.getMessage());
+        apiResponse.setBody(e.getMessage());
+        apiResponse.setMessage("No Appointment exist for this vet");
+        apiResponse.setError(true);
+        apiResponse.setSuccess(false);
+
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(apiResponse);
+    }
 }
