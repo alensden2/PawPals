@@ -7,7 +7,7 @@ import { Grid } from '@material-ui/core';
 import { AddBox } from '@material-ui/icons';
 
 // Import context, components, and data
-import { HeaderContext } from '@src/context';
+import { HeaderContext, ToastContext } from '@src/context';
 import { Button, DeleteDialog, Loader, EmptyState } from '@src/components';
 
 // Import styles and internal components
@@ -15,11 +15,12 @@ import useStyles from './PetOwnerManagePets.styles';
 import PetCardList from './PetCardList';
 import AddEditPetModal from './AddEditPetModal';
 
-import { createPet, getAllPets, updatePet } from '@src/api';
+import { createPet, getAllPets, updatePet, deletePet } from '@src/api';
 
 // Define PetOwnerManagePets component
 const PetOwnerManagePets = () => {
   const classes = useStyles();
+  const { setToast } = useContext(ToastContext);
 
   // Define initial state for pet data and modal/dialog states
   const initialPetData = {
@@ -141,8 +142,18 @@ const PetOwnerManagePets = () => {
     }));
   };
 
-  const onDeleteDialogClick = () => {
-    deletePet();
+  const onDeleteDialogClick = async () => {
+    const isSuccess = await deletePet({
+      petId: deleteDialogState.data.id
+    });
+
+    if (isSuccess) {
+      setPets((prevState) => {
+        return prevState.filter((pet) => pet.id !== deleteDialogState.data.id);
+      });
+    } else {
+      setToast({ type: 'error', message: 'Something went wrong!' });
+    }
 
     setDeleteDialogState((prevState) => ({
       ...prevState,
@@ -161,12 +172,6 @@ const PetOwnerManagePets = () => {
           id: Math.floor(Math.random() * 1000) + 1
         }
       ]
-    }));
-  };
-
-  const deletePet = () => {
-    setPets((prevState) => ({
-      pets: prevState.filter((pet) => pet.id !== deleteDialogState.data.id)
     }));
   };
 

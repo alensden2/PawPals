@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
-import { createPetApiCall, updatePetApiCall } from './crud';
+import { createPetApiCall, updatePetApiCall, deletePetApiCall } from './crud';
 
 import { bytesToImageUrl } from '@src/utils';
 
@@ -18,8 +18,9 @@ export const createPet = async ({ input = {} } = {}) => {
   };
 };
 
-export const deletePet = async ({}) => {
-  console.error('deletePet');
+export const deletePet = async ({ petId }) => {
+  const response = await deletePetApiCall({ petId });
+  return response?.data?.success || false;
 };
 
 export const updatePet = async ({ input = {}, petId = null } = {}) => {
