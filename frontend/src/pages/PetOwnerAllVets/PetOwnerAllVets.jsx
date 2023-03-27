@@ -4,17 +4,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { HeaderContext } from '@src/context';
 import VetCardList from './VetCardList';
-import { vetsData } from '@src/data';
 import { Loader, EmptyState } from '@src/components';
 import useStyles from './PetOwnerAllVets.styles';
+import { getAllVets } from '@src/api';
 
 const PetOwnerAllVets = () => {
   const { setHeader } = useContext(HeaderContext);
   const classes = useStyles();
 
-  const [vetsState, setVetsState] = useState({
-    vets: []
-  });
+  const [vetsState, setVetsState] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -26,11 +24,19 @@ const PetOwnerAllVets = () => {
       shouldShowBackButton: true
     });
 
-    setIsLoading(true);
-    setTimeout(() => {
-      setVetsState(vetsData);
-      setIsLoading(false);
-    }, 3000);
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const result = await getAllVets();
+        setIsLoading(false);
+
+        setVetsState(result);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -39,11 +45,11 @@ const PetOwnerAllVets = () => {
       return <Loader />;
     }
 
-    if (vetsState?.vets?.length === 0) {
-      return <EmptyState />;
+    if (vetsState?.length === 0) {
+      return <EmptyState text={'No Vets Available!'} />;
     }
 
-    return <VetCardList vets={vetsState.vets} />;
+    return <VetCardList vets={vetsState} />;
   };
 
   return <div className={classes.root}>{render()}</div>;

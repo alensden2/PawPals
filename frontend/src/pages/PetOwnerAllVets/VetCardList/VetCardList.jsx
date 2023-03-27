@@ -14,7 +14,7 @@ const VetCardList = ({
 
   return (
     <Grid container spacing={2} className={classes.main}>
-      {vets.map((vetData) => (
+      {vets.map((vetData, idx) => (
         <Grid
           item
           xs={12}
@@ -22,7 +22,7 @@ const VetCardList = ({
           key={vetData.vetId} // set a unique key to each grid item
           className={classes.petCardContainer}
         >
-          <VetCard key={vetData.vetId} {...vetData} />
+          <VetCard key={idx} {...vetData} />
         </Grid>
       ))}
     </Grid>
