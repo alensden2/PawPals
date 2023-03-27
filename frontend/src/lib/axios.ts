@@ -57,6 +57,15 @@ class API {
       throw error;
     }
   }
+
+  public async delete(endpoint: string): Promise<AxiosResponse> {
+    try {
+      const response = await this.apiClient.delete(`${endpoint}`);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 const axiosJSON = new API('application/json');
