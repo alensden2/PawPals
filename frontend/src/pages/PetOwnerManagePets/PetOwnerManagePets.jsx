@@ -15,7 +15,7 @@ import useStyles from './PetOwnerManagePets.styles';
 import PetCardList from './PetCardList';
 import AddEditPetModal from './AddEditPetModal';
 
-import { createPet, getAllPets } from '@src/api';
+import { createPet, getAllPets, updatePet } from '@src/api';
 
 // Define PetOwnerManagePets component
 const PetOwnerManagePets = () => {
@@ -109,8 +109,26 @@ const PetOwnerManagePets = () => {
   // Define action functions for adding, editing, and deleting pets
   const onModalSubmitClick = async () => {
     if (petModalState.modalMode === 'edit') {
-      updatePet();
+      const updateInput = {
+        name: petModalState.data.name,
+        type: petModalState.data.type,
+        age: petModalState.data.age,
+        gender: petModalState.data.gender,
+        photoUrl: petModalState.data.photoUrl
+      };
+
+      await updatePet({
+        input: updateInput,
+        petId: petModalState.data.id
+      });
+
+      setPets((prevState) => {
+        return prevState.map((pet) =>
+          pet.id === petModalState.data.id ? petModalState.data : pet
+        );
+      });
     }
+
     if (petModalState.modalMode === 'add') {
       addPet();
       await createPet({
@@ -133,13 +151,6 @@ const PetOwnerManagePets = () => {
   };
 
   // ----------- CRUD functions -----------
-  const updatePet = () => {
-    setPets((prevState) => ({
-      pets: prevState.map((pet) =>
-        pet.id === petModalState.data.id ? petModalState.data : pet
-      )
-    }));
-  };
 
   const addPet = () => {
     setPets((prevState) => ({
