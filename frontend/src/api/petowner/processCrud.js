@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
+
 import {
   registerPetOwnerApiCall,
-  getAllMedicalHistoryOfPetApiCall
+  getAllMedicalHistoryOfPetApiCall,
+  getAllPetsApiCall
 } from './crud';
+import { bytesToImageUrl } from '@src/utils';
 
 export const registerPetOwner = async (petOwner) => {
   const response = await registerPetOwnerApiCall(petOwner);
