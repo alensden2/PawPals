@@ -13,7 +13,7 @@ import java.util.List;
 public interface PetOwnerService {
     PetOwnerDto registerPetOwner(PetOwnerDto petOwner) throws UserNameNotFound, InvalidUserDetails, UserAlreadyExist;
 
-    List<AnimalDto> retrieveAllPets(Long ownerId) throws InvalidOwnerID, NoPetRegisterUnderPetOwner;
+    List<AnimalDto> retrieveAllPets(String ownerId) throws NoPetRegisterUnderPetOwner, UserNameNotFound;
 
     AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound;
 

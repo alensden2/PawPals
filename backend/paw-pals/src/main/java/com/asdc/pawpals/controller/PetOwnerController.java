@@ -51,8 +51,8 @@ public class PetOwnerController {
 
     @GetMapping("/pets/{owner_id}")
     public ResponseEntity<ApiResponse> getPetsByOwnerId(
-            @PathVariable(value = "owner_id") Long ownerId
-    ) throws InvalidOwnerID, NoPetRegisterUnderPetOwner {
+            @PathVariable(value = "owner_id") String ownerId
+    ) throws  NoPetRegisterUnderPetOwner, UserNameNotFound {
         logger.info("Received request for fetching pets for owner :", ownerId);
         if (petOwnerService != null && ownerId != null) {
             apiResponse.setBody(petOwnerService.retrieveAllPets(ownerId));
@@ -76,6 +76,8 @@ public class PetOwnerController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
+
+
 
 
 
