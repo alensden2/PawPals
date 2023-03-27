@@ -41,6 +41,9 @@ export const PET_OWNER_HOME_PAGE_CARDS = [
 export const PLACEHOLDER_PET_IMAGE =
   'https://via.placeholder.com/150x150.png?text=Pet+Image';
 
+export const PLACEHOLDER_VET_CLINIC_IMAGE =
+  'https://via.placeholder.com/500x500.png?text=Clinic+Image';
+
 export const PET_NAME = 'PET_NAME';
 
 export const VET_HOME_APPOINTMENT_CONSTANT = {
