@@ -1,18 +1,18 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 import React, { useContext, useEffect, useState } from 'react';
 import { HeaderContext } from '@src/context';
 import VetCardList from './VetCardList';
-import { VetsState } from '@src/types';
-import { vetsData } from '@src/data';
 import { Loader, EmptyState } from '@src/components';
 import useStyles from './PetOwnerAllVets.styles';
+import { getAllVets } from '@src/api';
 
-const PetOwnerAllVets: React.FC = () => {
+const PetOwnerAllVets = () => {
   const { setHeader } = useContext(HeaderContext);
   const classes = useStyles();
 
-  const [vetsState, setVetsState] = useState<VetsState>({
-    vets: []
-  });
+  const [vetsState, setVetsState] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -24,11 +24,19 @@ const PetOwnerAllVets: React.FC = () => {
       shouldShowBackButton: true
     });
 
-    setIsLoading(true);
-    setTimeout(() => {
-      setVetsState(vetsData);
-      setIsLoading(false);
-    }, 3000);
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const result = await getAllVets();
+        setIsLoading(false);
+
+        setVetsState(result);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -37,11 +45,11 @@ const PetOwnerAllVets: React.FC = () => {
       return <Loader />;
     }
 
-    if (vetsState?.vets?.length === 0) {
-      return <EmptyState />;
+    if (vetsState?.length === 0) {
+      return <EmptyState text={'No Vets Available!'} />;
     }
 
-    return <VetCardList vets={vetsState.vets} />;
+    return <VetCardList vets={vetsState} />;
   };
 
   return <div className={classes.root}>{render()}</div>;
