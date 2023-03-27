@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
-import { axiosFORM as axios } from '@src/lib';
+import { axiosFORM as axios, axiosJSON } from '@src/lib';
 
 export const createPetApiCall = async ({ input = {} } = {}) => {
   try {
@@ -25,6 +25,30 @@ export const createPetApiCall = async ({ input = {} } = {}) => {
     }
 
     return await axios.post('/unauth/animal/register', formData);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getAllPetsApiCall = async ({ ownerUserId }) => {
+  try {
+    return await axiosJSON.get('/unauth/animal/pets', { ownerId: ownerUserId });
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const updatePetApiCall = async ({ petId, input }) => {
+  try {
+    return await axiosJSON.put(`/unauth/animal/${petId}`, input);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const deletePetApiCall = async ({ petId }) => {
+  try {
+    return await axiosJSON.delete(`/unauth/animal/${petId}`);
   } catch (e) {
     console.error(e);
   }
