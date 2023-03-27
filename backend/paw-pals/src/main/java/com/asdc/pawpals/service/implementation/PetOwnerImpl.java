@@ -71,13 +71,11 @@ public class PetOwnerImpl implements PetOwnerService {
      * @return
      */
     @Override
-    public List<AnimalDto> retrieveAllPets(Long ownerId) throws InvalidOwnerID, NoPetRegisterUnderPetOwner {
+    public List<AnimalDto> retrieveAllPets(String ownerId) throws NoPetRegisterUnderPetOwner, UserNameNotFound {
         logger.debug("Get All Pets By owner Id", ownerId);
 
-        PetOwner petOwner = petOwnerRepository.findById(ownerId).orElseThrow(InvalidOwnerID::new);
-        List<AnimalDto> animalDtoList = animalRepository.findAll().stream().
-                filter(a -> a.getOwner().getId() == ownerId).
-                map(Transformations.MODEL_TO_DTO_CONVERTER::animal).collect(Collectors.toList());
+        PetOwner petOwner = petOwnerRepository.findByUser_UserId(ownerId).orElseThrow(UserNameNotFound::new);
+        List<AnimalDto> animalDtoList = petOwner.getAnimals().stream().map(Transformations.MODEL_TO_DTO_CONVERTER::animal).collect(Collectors.toList());
         if (animalDtoList.isEmpty()) {
             throw new NoPetRegisterUnderPetOwner("No Pet Registered for Owner " + petOwner.getFirstName() + " " + petOwner.getLastName());
         }

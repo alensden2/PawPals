@@ -1,21 +1,10 @@
 package com.asdc.pawpals.service.implementation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.data.util.Pair;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
-
 import com.asdc.pawpals.Enums.AppointmentStatus;
-import com.asdc.pawpals.dto.VetAvailabilityDto;
-import com.asdc.pawpals.dto.VetDto;
-import com.asdc.pawpals.dto.VetScheduleDto;
+import com.asdc.pawpals.dto.*;
+import com.asdc.pawpals.exception.InvalidAppointmentId;
+import com.asdc.pawpals.exception.NoAppointmentExist;
+import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.Appointment;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
@@ -27,6 +16,17 @@ import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.VetService;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.Transformations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.util.Pair;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Lazy
@@ -119,6 +119,47 @@ public class VetServiceImpl implements VetService {
         return vetSchedule;
     }
 
+    /**
+     * @param appointmentDto
+     * @param id
+     * @return
+     */
+    @Override
+    public AppointmentDto changeStatus(AppointmentDto appointmentDto, Integer id) throws InvalidAppointmentId {
+
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(InvalidAppointmentId::new);
+
+        if (appointment.getStatus() != null) {
+            appointment.setStatus(appointmentDto.getStatus());
+        }
+
+        return Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment);
+
+    }
+
+    /**
+     * @param vetId
+     * @return
+     */
+    @Override
+    public List<VetAppointmentDto> retrieveAllPets(String vetId) throws UserNameNotFound, NoAppointmentExist {
+        Vet vet = vetRepository.findByUser_UserId(vetId).orElseThrow(UserNameNotFound::new);
+
+        if (vet.getAppointment().isEmpty()) {
+            throw new NoAppointmentExist("No appointment exist for vet" + vetId);
+        }
+
+        return vet.getAppointment().stream().map(appointment -> {
+            VetAppointmentDto vetAppointmentDto = new VetAppointmentDto();
+            vetAppointmentDto.setAppointment(appointment);
+            vetAppointmentDto.setAnimal(appointment.getAnimal());
+            vetAppointmentDto.setPetOwner(appointment.getAnimal().getOwner());
+            vetAppointmentDto.setMedicalHistoryList(appointment.getAnimal().getMedicalHistories());
+            return vetAppointmentDto;
+        }).collect(Collectors.toList());
+    }
+
+
     private VetAvailabilityDto findVetAvailabilityOnSpecificDay(List<VetAvailability> availability, List<Appointment> appointments, String date) {
         VetAvailabilityDto availabilityDto = null;
         if (availability != null) {
@@ -132,7 +173,7 @@ public class VetServiceImpl implements VetService {
                 String endTime = availabilityDto.getSlots().get(0).getSecond();
 
                 String currentSlot = starTime;
-                while(!currentSlot.equals(endTime)){
+                while (!currentSlot.equals(endTime)) {
                     final String fCurrSlot = currentSlot;
                     Boolean appointmentBooked = appointments.stream().filter(Objects::nonNull)
                             .filter(apt -> apt.getDate() != null)
