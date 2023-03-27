@@ -2,6 +2,7 @@
 // @ts-nocheck
 
 import axios from 'axios';
+import { axiosJSON } from '@src/lib';
 
 export const registerPetOwnerApiCall = async (petOwner) => {
   let response;
@@ -29,4 +30,14 @@ export const registerPetOwnerApiCall = async (petOwner) => {
     response = error.errorReponse;
   }
   return response;
+};
+
+export const getAllMedicalHistoryOfPetApiCall = async ({ petOwnerUserId }) => {
+  try {
+    return await axiosJSON.get(
+      `/unauth/pet-owner/pets/medicalHistory/${petOwnerUserId}`
+    );
+  } catch (e) {
+    console.error(e);
+  }
 };
