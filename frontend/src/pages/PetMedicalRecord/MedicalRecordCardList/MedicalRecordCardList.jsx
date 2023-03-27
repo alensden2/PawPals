@@ -5,13 +5,13 @@ import React from 'react';
 import MedicalRecordCard from '../MedicalRecordCard';
 import useStyles from './MedicalRecordCardList.styles';
 
-const MedicalRecordCardList = ({ medicalRecords }) => {
+const MedicalRecordCardList = ({ petMedicalRecord }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      {medicalRecords.map((item) => (
-        <MedicalRecordCard key={item.medicalHistoryId} medicalRecord={item} />
+      {petMedicalRecord.map((item, idx) => (
+        <MedicalRecordCard key={idx} medicalRecord={item} />
       ))}
     </div>
   );
