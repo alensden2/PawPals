@@ -5,11 +5,19 @@ import {
   // getAllPetsApiCall
 } from './crud';
 
-export const createPet = async ({ input = {} } = {}) => {
-  await createPetApiCall({ input });
-  // TODO: once id is resolved from backend, return data from here
+import { bytesToImageUrl } from '@src/utils';
 
-  return {};
+export const createPet = async ({ input = {} } = {}) => {
+  const response = await createPetApiCall({ input });
+  const body = response?.data?.body || [];
+  const photoUrl = body.photoUrl;
+
+  const url = photoUrl ? bytesToImageUrl(photoUrl) : '';
+
+  return {
+    ...body,
+    photoUrl: url
+  };
 };
 
 export const getAllPets = async ({}) => {
