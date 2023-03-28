@@ -7,8 +7,13 @@ import useStyles from './VetHome.styles';
 import HorizontalList from './HorizontalList';
 import AppointmentDetailsModal from './AppointmentDetailsModal';
 import DiagnoseModal from './DiagnoseModal';
-import { getAllAppointmentsOfVet, updateStatusOfAppointment } from '@src/api';
+import {
+  getAllAppointmentsOfVet,
+  updateStatusOfAppointment,
+  createMedicalRecord
+} from '@src/api';
 import { Loader } from '@src/components';
+import { localStorageUtil, getTodayDate } from '@src/utils';
 
 const VetHome = () => {
   const { setHeader } = useContext(HeaderContext);
@@ -118,6 +123,27 @@ const VetHome = () => {
     }
   };
 
+  const onDiagnoseModalSubmitClick = async ({
+    ailmentName,
+    prescription,
+    vaccines
+  }) => {
+    const petId = diagnoseModal.data.petId;
+    const user = localStorageUtil.getItem('user');
+    const vetUserId = user.userName;
+
+    await createMedicalRecord({
+      input: {
+        ailmentName,
+        prescription,
+        vaccines,
+        animalId: petId,
+        vetUserId,
+        dateDiagnosed: getTodayDate()
+      }
+    });
+  };
+
   const openAppointmentDetailsModal = ({ appointment = null }) => {
     let newState = {
       isOpen: true
@@ -199,6 +225,7 @@ const VetHome = () => {
           <DiagnoseModal
             handleClose={onDiagnoseModalCancelButtonClick}
             isOpen={diagnoseModal.isOpen}
+            onDiagnoseModalSubmitClick={onDiagnoseModalSubmitClick}
           />
         ) : null}
       </>
