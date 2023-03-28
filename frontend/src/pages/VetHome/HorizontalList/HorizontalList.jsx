@@ -16,6 +16,7 @@ const HorizontalList = ({
   status,
   openAppointmentDetailsModal,
   onDeclineAppointmentClick,
+  onDiagnoseButtonClick,
   onApproveAppointmentClick
 }) => {
   const classes = useStyles();
@@ -51,6 +52,7 @@ const HorizontalList = ({
               openAppointmentDetailsModal={openAppointmentDetailsModal}
               onApproveAppointmentClick={onApproveAppointmentClick}
               onDeclineAppointmentClick={onDeclineAppointmentClick}
+              onDiagnoseButtonClick={onDiagnoseButtonClick}
             />
           </div>
         ))}

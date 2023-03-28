@@ -16,6 +16,7 @@ const AppointmentCard = ({
   appointment,
   openAppointmentDetailsModal,
   onDeclineAppointmentClick,
+  onDiagnoseButtonClick,
   onApproveAppointmentClick
 }) => {
   const classes = useStyles();
@@ -65,6 +66,12 @@ const AppointmentCard = ({
           className={classes.button}
           fullWidth
           variant="outlined"
+          onClick={() =>
+            onDiagnoseButtonClick({
+              petId: appointment.pet.id,
+              openModal: true
+            })
+          }
         >
           Diagnose
         </Button>

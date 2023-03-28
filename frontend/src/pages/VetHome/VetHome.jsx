@@ -18,6 +18,30 @@ const VetHome = () => {
     isOpen: false,
     appointment: {}
   });
+  const [diagnoseModal, setDiagnoseModal] = useState({
+    isOpen: false,
+    data: {
+      vetId: null,
+      petId: null,
+      ailmentName: null,
+      prescription: null,
+      vaccines: null,
+      dateDiagnosed: null
+    }
+  });
+
+  const onDiagnoseButtonClick = ({ petId, openModal }) => {
+    setDiagnoseModal((prevState) => {
+      return {
+        ...prevState,
+        isOpen: openModal,
+        data: {
+          ...prevState.data,
+          petId
+        }
+      };
+    });
+  };
 
   const onApproveAppointmentClick = ({ appointmentId }) => {
     setAllAppointments((prevState) => {
@@ -98,6 +122,7 @@ const VetHome = () => {
       <HorizontalList
         onApproveAppointmentClick={onApproveAppointmentClick}
         onDeclineAppointmentClick={onDeclineAppointmentClick}
+        onDiagnoseButtonClick={onDiagnoseButtonClick}
         appointments={getFilteredAppointmentsByStatus(status)}
         status={status}
         openAppointmentDetailsModal={openAppointmentDetailsModal}
