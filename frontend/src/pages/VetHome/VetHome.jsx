@@ -60,21 +60,32 @@ const VetHome = () => {
     setDiagnoseModal(initialDiagnoseModalState);
   };
 
-  const onApproveAppointmentClick = ({ appointmentId }) => {
-    setAllAppointments((prevState) => {
-      return prevState.map((appointment) => {
-        if (appointment.appointment.id === appointmentId) {
-          return {
-            ...appointment,
-            appointment: {
-              ...appointment.appointment,
-              status: 'CONFIRMED'
-            }
-          };
-        }
-        return appointment;
-      });
+  const onApproveAppointmentClick = async ({ appointmentId }) => {
+    const isSuccess = await updateStatusOfAppointment({
+      appointmentId,
+      input: {
+        status: 'CONFIRMED'
+      }
     });
+
+    if (isSuccess) {
+      setAllAppointments((prevState) => {
+        return prevState.map((appointment) => {
+          if (appointment.appointment.id === appointmentId) {
+            return {
+              ...appointment,
+              appointment: {
+                ...appointment.appointment,
+                status: 'CONFIRMED'
+              }
+            };
+          }
+          return appointment;
+        });
+      });
+    } else {
+      setToast({ type: 'error', message: 'Something went wrong!' });
+    }
   };
 
   const onDeclineAppointmentClick = ({ appointmentId }) => {
