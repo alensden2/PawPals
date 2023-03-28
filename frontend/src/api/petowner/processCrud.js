@@ -20,7 +20,12 @@ export const getAllMedicalHistoryOfPet = async ({ petOwnerUserId }) => {
   if (body) {
     return body.map((item) => ({
       vet: item.vetDto,
-      animal: item.animalDto,
+      animal: {
+        ...item.animalDto,
+        photoUrl: item.animalDto.photoUrl
+          ? getImageUrlFromBytes({ bytes: item.animalDto.photoUrl })
+          : ''
+      },
       medicalHistory: item.medicalHistoryDto
     }));
   } else return [];
