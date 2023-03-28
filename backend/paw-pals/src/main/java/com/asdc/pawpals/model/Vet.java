@@ -25,7 +25,8 @@ public class Vet {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  private String name;
+  private String firstName;
+  private String lastName;
   private String licenseNumber;
   private String clinicAddress;
   private Integer experience;

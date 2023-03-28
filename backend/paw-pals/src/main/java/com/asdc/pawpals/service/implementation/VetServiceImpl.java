@@ -215,9 +215,9 @@ public class VetServiceImpl implements VetService {
                 vet.setQualification(vetDto.getQualification());
             }
             if (vetDto.getProfileStatus() != null) {
-                if (vetDto.getProfileStatus().equals(Status.CONFIRMED)) {
+                if (vetDto.getProfileStatus().equals(Status.CONFIRMED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Successfully Approved", "your profile is successfully approved by Admin");
-                } else if (vetDto.getProfileStatus().equals(Status.REJECTED)) {
+                } else if (vetDto.getProfileStatus().equals(Status.REJECTED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Profile Decline", "Unfortunately your profile has been rejected by Admin");
                 }
                 vet.setQualification(vetDto.getProfileStatus());
@@ -225,8 +225,11 @@ public class VetServiceImpl implements VetService {
             if (vetDto.getLicenseNumber() != null) {
                 vet.setLicenseNumber(vetDto.getLicenseNumber());
             }
-            if (vetDto.getName() != null) {
-                vet.setName(vet.getName());
+            if (vetDto.getFirstName() != null) {
+                vet.setFirstName(vetDto.getFirstName());
+            }
+            if (vetDto.getLastName() != null) {
+                vet.setLastName(vetDto.getLastName());
             }
             if (vetDto.getClinicAddress() != null) {
                 vet.setClinicUrl(vet.getClinicUrl());

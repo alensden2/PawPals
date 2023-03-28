@@ -173,7 +173,8 @@ public class AdminServiceImpl implements AdminService {
     if (optionalVet.isPresent()) {
       // populating the vet
       Vet vet = optionalVet.get();
-      vet.setName(updatedVet.getName());
+      vet.setFirstName(updatedVet.getFirstName());
+      vet.setLastName(updatedVet.getLastName());
       vet.setLicenseNumber(updatedVet.getLicenseNumber());
       vet.setClinicAddress(updatedVet.getClinicAddress());
       vet.setExperience(updatedVet.getExperience());
