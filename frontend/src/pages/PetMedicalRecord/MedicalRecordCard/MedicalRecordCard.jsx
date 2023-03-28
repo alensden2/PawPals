@@ -34,7 +34,7 @@ const MedicalHistoryCard = ({ medicalRecord }) => {
             }
           />
           <Typography variant="h5" className={classes.headerTitle}>
-            {`Health Record Card - ${medicalRecord.dateDiagnosed}`}
+            {`Health Record Card - ${medicalHistory.dateDiagnosed}`}
           </Typography>
         </div>
         <CardContent className={classes.cardContent}>
@@ -45,7 +45,7 @@ const MedicalHistoryCard = ({ medicalRecord }) => {
             <Grid container alignItems="center">
               <Grid item>
                 <Avatar
-                  src="pet.jpg"
+                  src={pet.photoUrl}
                   alt="pet"
                   className={classes.petInfoImage}
                 />
