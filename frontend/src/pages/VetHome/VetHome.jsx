@@ -158,23 +158,31 @@ const VetHome = () => {
     );
   };
 
-  return (
-    <div className={classes.root}>
-      {renderAppointments()}
-      {appointmentDetailsModal.isOpen ? (
-        <AppointmentDetailsModal
-          appointmentDetailsModal={appointmentDetailsModal}
-          closeAppointmentDetailsModal={closeAppointmentDetailsModal}
-        />
-      ) : null}
-      {diagnoseModal.isOpen ? (
-        <DiagnoseModal
-          handleClose={onDiagnoseModalCancelButtonClick}
-          isOpen={diagnoseModal.isOpen}
-        />
-      ) : null}
-    </div>
-  );
+  const render = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    return (
+      <>
+        {renderAppointments()}
+        {appointmentDetailsModal.isOpen ? (
+          <AppointmentDetailsModal
+            appointmentDetailsModal={appointmentDetailsModal}
+            closeAppointmentDetailsModal={closeAppointmentDetailsModal}
+          />
+        ) : null}
+        {diagnoseModal.isOpen ? (
+          <DiagnoseModal
+            handleClose={onDiagnoseModalCancelButtonClick}
+            isOpen={diagnoseModal.isOpen}
+          />
+        ) : null}
+      </>
+    );
+  };
+
+  return <div className={classes.root}>{render()}</div>;
 };
 
 export default VetHome;
