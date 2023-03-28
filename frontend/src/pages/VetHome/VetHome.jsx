@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import React, { useContext, useEffect, useState } from 'react';
-import { HeaderContext } from '@src/context';
+import { HeaderContext, ToastContext } from '@src/context';
 
 import useStyles from './VetHome.styles';
 import HorizontalList from './HorizontalList';
 import AppointmentDetailsModal from './AppointmentDetailsModal';
 import DiagnoseModal from './DiagnoseModal';
-import { getAllAppointmentsOfVet } from '@src/api';
+import { getAllAppointmentsOfVet, updateStatusOfAppointment } from '@src/api';
 import { Loader } from '@src/components';
 
 const VetHome = () => {
   const { setHeader } = useContext(HeaderContext);
   const classes = useStyles();
+  const { setToast } = useContext(ToastContext);
+
   const [allAppointments, setAllAppointments] = useState([]);
   const [appointmentDetailsModal, setAppointmentDetailsModal] = useState({
     isOpen: false,
