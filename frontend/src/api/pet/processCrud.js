@@ -3,25 +3,18 @@
 
 import { createPetApiCall, updatePetApiCall, deletePetApiCall } from './crud';
 
-import { getImageUrlFromBytes } from '@src/utils';
+import { bytesToImageUrl } from '@src/utils';
 
 export const createPet = async ({ input = {} } = {}) => {
   const response = await createPetApiCall({ input });
   const body = response?.data?.body || [];
   const photoUrl = body.photoUrl;
 
-  const url = photoUrl ? getImageUrlFromBytes({ bytes: photoUrl }) : '';
+  const url = photoUrl ? bytesToImageUrl(photoUrl) : '';
 
   return {
-    isSuccess: response?.data?.success,
-    data: {
-      id: body.id,
-      name: body.name,
-      type: body.type,
-      age: body.age,
-      gender: body.gender,
-      photoUrl: url
-    }
+    ...body,
+    photoUrl: url
   };
 };
 

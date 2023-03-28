@@ -1,9 +1,8 @@
 package com.asdc.pawpals.service.implementation;
 
-import com.asdc.pawpals.Enums.Status;
+import com.asdc.pawpals.Enums.AppointmentStatus;
 import com.asdc.pawpals.dto.*;
 import com.asdc.pawpals.exception.InvalidAppointmentId;
-import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.exception.NoAppointmentExist;
 import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.Appointment;
@@ -17,16 +16,12 @@ import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.VetService;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.Transformations;
-import com.asdc.pawpals.validators.AppointmentValidators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.util.Pair;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -49,8 +44,6 @@ public class VetServiceImpl implements VetService {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    MailServiceImpl mailService;
 
     @Override
     public Boolean registerVet(VetDto vetDto) throws UsernameNotFoundException {
@@ -62,9 +55,7 @@ public class VetServiceImpl implements VetService {
             if (!user.isEmpty()) {
                 Long oldCount = vetRepository.count();
                 vet.setId(oldCount + 1);
-                vet.setProfileStatus(Status.PENDING.getLabel());
                 vetRepository.save(vet);
-                mailService.sendMail(vet.getUser().getEmail(), "pending for Approval", "your application is under process for admin approval");
                 Long newCount = vetRepository.count();
                 vetRegistered = ((oldCount + 1) == newCount);
             } else {
@@ -119,7 +110,7 @@ public class VetServiceImpl implements VetService {
                     .filter(apt -> apt.getDate() != null)
                     .filter(apt -> apt.getDate().equals(date))
                     .filter(apt -> apt.getStatus() != null)
-                    .filter(apt -> apt.getStatus().equals(Status.CONFIRMED.getLabel()))
+                    .filter(apt -> apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
                     .forEach(appointment -> {
                         slotsBooked.add(Pair.of(appointment.getStartTime(), appointment.getEndTime()));
                     });
@@ -137,23 +128,12 @@ public class VetServiceImpl implements VetService {
     public AppointmentDto changeStatus(AppointmentDto appointmentDto, Integer id) throws InvalidAppointmentId {
 
         Appointment appointment = appointmentRepository.findById(id).orElseThrow(InvalidAppointmentId::new);
-        Appointment returnedAppointment = null;
-        if (appointmentDto.getStatus() != null) {
+
+        if (appointment.getStatus() != null) {
             appointment.setStatus(appointmentDto.getStatus());
         }
-        if (appointmentDto.getDate() != null) {
-            appointment.setDate(appointmentDto.getDate());
-        }
-        if (appointmentDto.getStartTime() != null) {
-            appointment.setStartTime(appointmentDto.getStartTime());
-        }
-        if (appointmentDto.getEndTime() != null) {
-            appointment.setEndTime(appointmentDto.getEndTime());
-        }
-        if (AppointmentValidators.isValidAppointment(appointment.getDate(), appointment.getStartTime(), appointment.getEndTime(), appointment.getStatus())) {
-            returnedAppointment = appointmentRepository.saveAndFlush(appointment);
-        }
-        return Transformations.MODEL_TO_DTO_CONVERTER.appointment(returnedAppointment);
+
+        return Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment);
 
     }
 
@@ -171,75 +151,12 @@ public class VetServiceImpl implements VetService {
 
         return vet.getAppointment().stream().map(appointment -> {
             VetAppointmentDto vetAppointmentDto = new VetAppointmentDto();
-            vetAppointmentDto.setAppointmentDto(Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment));
-            vetAppointmentDto.setAnimalDto(Transformations.MODEL_TO_DTO_CONVERTER.animal(appointment.getAnimal()));
-            vetAppointmentDto.setPetOwnerDto(Transformations.MODEL_TO_DTO_CONVERTER.petOwner(appointment.getAnimal().getOwner()));
-            vetAppointmentDto.setMedicalHistoryDtos(appointment.getAnimal().getMedicalHistories().stream().map(m ->
-                    Transformations.MODEL_TO_DTO_CONVERTER.medicalHistory(m)).collect(Collectors.toList())
-            );
+            vetAppointmentDto.setAppointment(appointment);
+            vetAppointmentDto.setAnimal(appointment.getAnimal());
+            vetAppointmentDto.setPetOwner(appointment.getAnimal().getOwner());
+            vetAppointmentDto.setMedicalHistoryList(appointment.getAnimal().getMedicalHistories());
             return vetAppointmentDto;
         }).collect(Collectors.toList());
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public List<VetDto> retrieveAllVets() {
-        return vetRepository.findAll().stream().
-                filter(v -> v.getProfileStatus().equals(Status.PENDING)).
-                map(v -> Transformations.MODEL_TO_DTO_CONVERTER.vet(v)).
-                collect(Collectors.toList());
-    }
-
-    /**
-     * @param vetDto
-     * @param id
-     * @return
-     */
-    @Override
-    public VetDto updateVet(VetDto vetDto, String id, MultipartFile image) throws UserNameNotFound, IOException, InvalidImage {
-
-        if (null != id && !id.isEmpty() && vetDto != null && image != null) {
-            Vet vet = vetRepository.findByUser_UserId(id).orElseThrow(UserNameNotFound::new);
-            if (vetDto.getClinicAddress() != null) {
-                vet.setClinicAddress(vetDto.getClinicAddress());
-            }
-            if (vetDto.getClinicUrl() != null) {
-                vet.setClinicUrl(CommonUtils.getBytes(image));
-            }
-            if (vetDto.getExperience() != null) {
-                vet.setExperience(vetDto.getExperience());
-            }
-            if (vetDto.getQualification() != null) {
-                vet.setQualification(vetDto.getQualification());
-            }
-            if (vetDto.getProfileStatus() != null) {
-                if (vetDto.getProfileStatus().equals(Status.CONFIRMED)) {
-                    mailService.sendMail(vet.getUser().getEmail(), "Successfully Approved", "your profile is successfully approved by Admin");
-                } else if (vetDto.getProfileStatus().equals(Status.REJECTED)) {
-                    mailService.sendMail(vet.getUser().getEmail(), "Profile Decline", "Unfortunately your profile has been rejected by Admin");
-                }
-                vet.setQualification(vetDto.getProfileStatus());
-            }
-            if (vetDto.getLicenseNumber() != null) {
-                vet.setLicenseNumber(vetDto.getLicenseNumber());
-            }
-            if (vetDto.getName() != null) {
-                vet.setName(vet.getName());
-            }
-            if (vetDto.getClinicAddress() != null) {
-                vet.setClinicUrl(vet.getClinicUrl());
-            }
-
-            vetRepository.saveAndFlush(vet);
-            return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
-
-        } else if (vetDto == null) {
-            throw new InvalidObjectException("Invalid pet owner object body");
-        } else {
-            throw new UserNameNotFound("User name is not found for " + id);
-        }
     }
 
 
@@ -262,7 +179,7 @@ public class VetServiceImpl implements VetService {
                             .filter(apt -> apt.getDate() != null)
                             .filter(apt -> apt.getDate().equals(date))
                             .filter(apt -> apt.getStatus() != null)
-                            .filter(apt -> apt.getStatus().equals(Status.CONFIRMED.getLabel()))
+                            .filter(apt -> apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
                             .anyMatch(apt -> {
                                 return apt.getStartTime().equals(fCurrSlot);
                             });

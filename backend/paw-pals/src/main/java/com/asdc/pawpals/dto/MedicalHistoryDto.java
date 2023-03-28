@@ -14,7 +14,6 @@ public class MedicalHistoryDto {
     private String ailmentName;
     private String prescription;
     private String vaccines;
-    private String vetUserId;
-    private Long animalId;
+    private VetDto vet;
 
 }

@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
       maxHeight: '40em'
     },
     '&.expanded.petowner': {
-      maxHeight: '25em'
+      maxHeight: '20em'
     },
     '&.collapsed': {
       maxHeight: '0'

@@ -5,7 +5,6 @@ import useStyles from './Header.styles';
 import PAW_LOGO from '@src/assets/images/paw-white.png';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useNavigate } from '@src/hooks';
-import { localStorageUtil } from '@src/utils';
 
 type HeaderProps = {
   title?: string;
@@ -25,11 +24,6 @@ const Header: React.FC<HeaderProps> = ({
 
   const handleBack = () => {
     navigate(backRoute, { replace: true });
-  };
-
-  const onLogoutClick = () => {
-    localStorageUtil.clear();
-    navigate('/');
   };
 
   return (
@@ -64,14 +58,14 @@ const Header: React.FC<HeaderProps> = ({
             <Typography
               variant="body1"
               className={classes.clickable}
-              onClick={onLogoutClick}
+              //   onClick={onLogoutClick}
             >
               Logout
             </Typography>
             <IconButton
               color="inherit"
               className={classes.clickable}
-              onClick={onLogoutClick}
+              //   onClick={onLogoutClick}
             >
               <ExitToApp />
             </IconButton>

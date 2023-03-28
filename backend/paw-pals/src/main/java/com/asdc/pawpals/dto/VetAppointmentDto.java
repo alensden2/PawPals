@@ -15,12 +15,12 @@ import java.util.List;
 @Setter
 public class VetAppointmentDto {
 
-    AppointmentDto appointmentDto;
-    AnimalDto animalDto;
+    Appointment appointment;
+    Animal animal;
 
-    PetOwnerDto petOwnerDto;
+    PetOwner petOwner;
 
-    List<MedicalHistoryDto> medicalHistoryDtos;
+    List<MedicalHistory> medicalHistoryList;
 
 
 }

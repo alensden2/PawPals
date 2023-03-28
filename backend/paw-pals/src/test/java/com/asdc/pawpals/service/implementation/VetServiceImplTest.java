@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.asdc.pawpals.Enums.Status;
+import com.asdc.pawpals.Enums.AppointmentStatus;
 import com.asdc.pawpals.dto.VetAvailabilityDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.dto.VetScheduleDto;
@@ -179,7 +179,7 @@ public class VetServiceImplTest {
         appointment.setDate("15-03-2023");
         appointment.setStartTime("10:00");
         appointment.setEndTime("10:30");
-        appointment.setStatus(Status.CONFIRMED.getLabel());
+        appointment.setStatus(AppointmentStatus.CONFIRMED.getLabel());
         appointments.add(appointment);
         when(aptRepoMock.findByVet_User_UserId(anyString())).thenReturn(appointments);
 
@@ -213,7 +213,7 @@ public class VetServiceImplTest {
         appointment.setDate("15-03-2023");
         appointment.setStartTime("10:00");
         appointment.setEndTime("10:30");
-        appointment.setStatus(Status.CONFIRMED.getLabel());
+        appointment.setStatus(AppointmentStatus.CONFIRMED.getLabel());
         appointments.add(appointment);
         when(aptRepoMock.findByVetId(anyLong())).thenReturn(appointments);
 
@@ -239,7 +239,7 @@ public class VetServiceImplTest {
         appointment.setDate("15-03-2023");
         appointment.setStartTime("10:00");
         appointment.setEndTime("10:30");
-        appointment.setStatus(Status.CONFIRMED.getLabel());
+        appointment.setStatus(AppointmentStatus.CONFIRMED.getLabel());
         appointments.add(appointment);
         when(aptRepoMock.findByVet_User_UserId(anyString())).thenReturn(appointments);
 
