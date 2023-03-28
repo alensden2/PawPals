@@ -84,33 +84,6 @@ public class PetOwnerImpl implements PetOwnerService {
         return animalDtoList;
     }
 
-    /**
-     * @param appointmentDto
-     * @return
-     */
-    @Override
-    public AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound {
-        logger.debug("Book pet owner appointment with vet", appointmentDto.toString());
-        if(appointmentDto == null){
-            throw new InvalidObjectException("Invalid Appointment Object");
-        }
-        appointmentDto.setStatus(Constants.STATUS[2]); //set status to pending manually
-        if (appointmentDto.getDate() != null && appointmentDto.getStartTime() != null &&
-                appointmentDto.getEndTime() != null
-                && AppointmentValidators.isValidAppointment(appointmentDto.getDate(), appointmentDto.getStartTime(), appointmentDto.getEndTime(), appointmentDto.getStatus())) {
-            Appointment appointment = Transformations.DTO_TO_MODEL_CONVERTER.appointment(appointmentDto);
-            Vet vet = vetRepository.findByUser_UserId(appointmentDto.getVetUserId()).orElseThrow(UserNameNotFound::new);
-            Animal animal = animalRepository.findById(appointmentDto.getAnimalId()).orElseThrow(InvalidAnimalId::new);
-            appointment.setVet(vet);
-            appointment.setAnimal(animal);
-            appointment = appointmentRepository.save(appointment);
-            return Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment);
-        } else {
-            throw new InvalidObjectException("Invalid Appointment Object");
-        }
-
-
-    }
 
     /**
      * @param id
