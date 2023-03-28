@@ -7,6 +7,7 @@ import useStyles from './VetHome.styles';
 import { vetAppointments } from '@src/data';
 import HorizontalList from './HorizontalList';
 import AppointmentDetailsModal from './AppointmentDetailsModal';
+import DiagnoseModal from './DiagnoseModal';
 
 const VetHome = () => {
   const { setHeader } = useContext(HeaderContext);
@@ -18,17 +19,13 @@ const VetHome = () => {
     isOpen: false,
     appointment: {}
   });
-  const [diagnoseModal, setDiagnoseModal] = useState({
+  const initialDiagnoseModalState = {
     isOpen: false,
     data: {
-      vetId: null,
-      petId: null,
-      ailmentName: null,
-      prescription: null,
-      vaccines: null,
-      dateDiagnosed: null
+      petId: null
     }
-  });
+  };
+  const [diagnoseModal, setDiagnoseModal] = useState(initialDiagnoseModalState);
 
   const onDiagnoseButtonClick = ({ petId, openModal }) => {
     setDiagnoseModal((prevState) => {
@@ -41,6 +38,10 @@ const VetHome = () => {
         }
       };
     });
+  };
+
+  const onDiagnoseModalCancelButtonClick = () => {
+    setDiagnoseModal(initialDiagnoseModalState);
   };
 
   const onApproveAppointmentClick = ({ appointmentId }) => {
@@ -147,6 +148,12 @@ const VetHome = () => {
         <AppointmentDetailsModal
           appointmentDetailsModal={appointmentDetailsModal}
           closeAppointmentDetailsModal={closeAppointmentDetailsModal}
+        />
+      ) : null}
+      {diagnoseModal.isOpen ? (
+        <DiagnoseModal
+          handleClose={onDiagnoseModalCancelButtonClick}
+          isOpen={diagnoseModal.isOpen}
         />
       ) : null}
     </div>
