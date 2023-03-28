@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 import React from 'react';
 import {
   Card,
@@ -11,12 +14,10 @@ import {
 } from '@material-ui/core';
 import HEALTH_CARD from '@src/assets/images/health-card.png';
 import useStyles from './MedicalRecordCard.styles';
-import { MedicalRecordCardProps } from '@src/types';
 
-const MedicalHistoryCard: React.FC<MedicalRecordCardProps> = ({
-  medicalRecord
-}) => {
+const MedicalHistoryCard = ({ medicalRecord }) => {
   const classes = useStyles();
+  const { vet, animal: pet, medicalHistory } = medicalRecord;
 
   return (
     <div className={classes.root}>
@@ -33,7 +34,7 @@ const MedicalHistoryCard: React.FC<MedicalRecordCardProps> = ({
             }
           />
           <Typography variant="h5" className={classes.headerTitle}>
-            {`Health Record Card - ${medicalRecord.dateDiagnosed}`}
+            {`Health Record Card - ${medicalHistory.dateDiagnosed}`}
           </Typography>
         </div>
         <CardContent className={classes.cardContent}>
@@ -44,7 +45,7 @@ const MedicalHistoryCard: React.FC<MedicalRecordCardProps> = ({
             <Grid container alignItems="center">
               <Grid item>
                 <Avatar
-                  src="pet.jpg"
+                  src={pet.photoUrl}
                   alt="pet"
                   className={classes.petInfoImage}
                 />
@@ -52,16 +53,16 @@ const MedicalHistoryCard: React.FC<MedicalRecordCardProps> = ({
               <Grid item>
                 <Box ml={3}>
                   <Typography variant="h6" className={classes.infoHeader}>
-                    {medicalRecord.pet.name}
+                    {pet.name}
                   </Typography>
                   <Typography variant="subtitle1" className={classes.infoText}>
-                    Type: {medicalRecord.pet.type}
+                    Type: {pet.type}
                   </Typography>
                   <Typography variant="subtitle1" className={classes.infoText}>
-                    Gender: {medicalRecord.pet.gender}
+                    Gender: {pet.gender}
                   </Typography>
                   <Typography variant="subtitle1" className={classes.infoText}>
-                    Age: {medicalRecord.pet.age}
+                    Age: {pet.age}
                   </Typography>
                 </Box>
               </Grid>
@@ -72,10 +73,10 @@ const MedicalHistoryCard: React.FC<MedicalRecordCardProps> = ({
               Medical Information
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Prescription: {medicalRecord.prescription}
+              Prescription: {medicalHistory.prescription}
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Vaccines: {medicalRecord.vaccines}
+              Vaccines: {medicalHistory.vaccines}
             </Typography>
           </Paper>
           <Paper className={classes.vetSubComponent}>
@@ -83,25 +84,25 @@ const MedicalHistoryCard: React.FC<MedicalRecordCardProps> = ({
               Vet Information
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Vet Name: {medicalRecord.vet.name}
+              Vet Name: {vet.name}
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Phone Number: {medicalRecord.vet.phoneNo}
+              Phone Number: {vet.phoneNo}
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Email: {medicalRecord.vet.email}
+              Email: {vet.email}
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Experience: {medicalRecord.vet.experience} years
+              Experience: {vet.experience} years
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              License Number: {medicalRecord.vet.licenseNumber}
+              License Number: {vet.licenseNumber}
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Qualification: {medicalRecord.vet.qualification}
+              Qualification: {vet.qualification}
             </Typography>
             <Typography variant="subtitle1" className={classes.infoText}>
-              Clinic Address: {medicalRecord.vet.clinicAddress}
+              Clinic Address: {vet.clinicAddress}
             </Typography>
           </Paper>
         </CardContent>

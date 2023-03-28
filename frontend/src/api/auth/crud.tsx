@@ -4,7 +4,7 @@ import {
   RegisterUserApiResponseType,
   AuthenticateUserApiResponseType
 } from './type';
-import { axios } from '@src/lib';
+import { axiosJSON as axios } from '@src/lib';
 
 export const registerUserApiCall = async (
   user: RegisterUserApiInputType

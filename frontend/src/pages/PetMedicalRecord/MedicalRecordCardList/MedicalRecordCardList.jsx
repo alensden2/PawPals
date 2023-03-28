@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 import React from 'react';
-import { MedicalRecordList } from '@src/types';
 import MedicalRecordCard from '../MedicalRecordCard';
 import useStyles from './MedicalRecordCardList.styles';
 
-const MedicalRecordCardList: React.FC<MedicalRecordList> = ({
-  medicalRecords
-}) => {
+const MedicalRecordCardList = ({ petMedicalRecord }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      {medicalRecords.map((item) => (
-        <MedicalRecordCard key={item.medicalHistoryId} medicalRecord={item} />
+      {petMedicalRecord.map((item, idx) => (
+        <MedicalRecordCard key={idx} medicalRecord={item} />
       ))}
     </div>
   );

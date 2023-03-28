@@ -1,25 +1,26 @@
-// Import React and necessary Material UI components
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
+// Import React and necessary Material UI compone nts
 import React, { useContext, useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { AddBox } from '@material-ui/icons';
 
 // Import context, components, and data
-import { HeaderContext } from '@src/context';
-import { Button, DeleteDialog } from '@src/components';
-import { petsData } from '@src/data';
+import { HeaderContext, ToastContext } from '@src/context';
+import { Button, DeleteDialog, Loader, EmptyState } from '@src/components';
 
 // Import styles and internal components
 import useStyles from './PetOwnerManagePets.styles';
 import PetCardList from './PetCardList';
 import AddEditPetModal from './AddEditPetModal';
 
-// Define types
-import { PetModalState, DeleteDialogState, PetsState } from './type';
-import { NullablePet } from '@src/types';
+import { createPet, getAllPets, updatePet, deletePet } from '@src/api';
 
 // Define PetOwnerManagePets component
-const PetOwnerManagePets: React.FC = () => {
+const PetOwnerManagePets = () => {
   const classes = useStyles();
+  const { setToast } = useContext(ToastContext);
 
   // Define initial state for pet data and modal/dialog states
   const initialPetData = {
@@ -30,15 +31,17 @@ const PetOwnerManagePets: React.FC = () => {
     gender: null,
     photoUrl: null
   };
-  const [petsState, setPetsState] = useState<PetsState>(petsData);
-  const [petModalState, setPetModalState] = useState<PetModalState>({
+  const [pets, setPets] = useState([]);
+  const [petModalState, setPetModalState] = useState({
     data: initialPetData,
     isOpen: false,
     modalMode: 'add'
   });
-  const [deleteDialogState, setDeleteDialogState] = useState<DeleteDialogState>(
-    { isOpen: false, data: initialPetData }
-  );
+  const [deleteDialogState, setDeleteDialogState] = useState({
+    isOpen: false,
+    data: initialPetData
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   // Set header context with title, back button, and logout button
   const { setHeader } = useContext(HeaderContext);
@@ -50,11 +53,25 @@ const PetOwnerManagePets: React.FC = () => {
       shouldShowLogoutButton: true,
       shouldShowBackButton: true
     });
+
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const response = await getAllPets();
+        setIsLoading(false);
+
+        setPets(response);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Define toggle functions for modals and dialogs
-  const openEditModal = (pet: NullablePet) => {
+  const openEditModal = (pet) => {
     setPetModalState((prevState) => ({
       ...prevState,
       isOpen: true,
@@ -70,7 +87,7 @@ const PetOwnerManagePets: React.FC = () => {
       data: initialPetData
     }));
   };
-  const openDeleteDialog = (pet: NullablePet) => {
+  const openDeleteDialog = (pet) => {
     setDeleteDialogState((prevState) => ({
       ...prevState,
       isOpen: true,
@@ -91,12 +108,45 @@ const PetOwnerManagePets: React.FC = () => {
   };
 
   // Define action functions for adding, editing, and deleting pets
-  const onModalSubmitClick = () => {
+  const onModalSubmitClick = async () => {
     if (petModalState.modalMode === 'edit') {
-      updatePet();
+      const updateInput = {
+        name: petModalState.data.name,
+        type: petModalState.data.type,
+        age: petModalState.data.age,
+        gender: petModalState.data.gender,
+        photoUrl: petModalState.data.photoUrl
+      };
+
+      await updatePet({
+        input: updateInput,
+        petId: petModalState.data.id
+      });
+
+      setPets((prevState) => {
+        return prevState.map((pet) =>
+          pet.id === petModalState.data.id ? petModalState.data : pet
+        );
+      });
     }
+
     if (petModalState.modalMode === 'add') {
-      addPet();
+      const response = await createPet({
+        input: petModalState.data
+      });
+
+      if (response.isSuccess) {
+        setPets((prevState) => {
+          return [
+            ...prevState,
+            {
+              ...response.data
+            }
+          ];
+        });
+      } else {
+        setToast({ type: 'error', message: 'Something went wrong!' });
+      }
     }
     setPetModalState((prevState) => ({
       ...prevState,
@@ -104,8 +154,18 @@ const PetOwnerManagePets: React.FC = () => {
     }));
   };
 
-  const onDeleteDialogClick = () => {
-    deletePet();
+  const onDeleteDialogClick = async () => {
+    const isSuccess = await deletePet({
+      petId: deleteDialogState.data.id
+    });
+
+    if (isSuccess) {
+      setPets((prevState) => {
+        return prevState.filter((pet) => pet.id !== deleteDialogState.data.id);
+      });
+    } else {
+      setToast({ type: 'error', message: 'Something went wrong!' });
+    }
 
     setDeleteDialogState((prevState) => ({
       ...prevState,
@@ -113,31 +173,24 @@ const PetOwnerManagePets: React.FC = () => {
     }));
   };
 
-  // ----------- CRUD functions -----------
-  const updatePet = () => {
-    setPetsState((prevState) => ({
-      pets: prevState.pets.map((pet) =>
-        pet.id === petModalState.data.id ? petModalState.data : pet
-      )
-    }));
-  };
+  const render = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
 
-  const addPet = () => {
-    setPetsState((prevState) => ({
-      pets: [
-        ...prevState.pets,
-        {
-          ...petModalState.data,
-          id: Math.floor(Math.random() * 1000) + 1
-        }
-      ]
-    }));
-  };
+    if (pets?.length === 0) {
+      return <EmptyState text={'No Pets Added!'} />;
+    }
 
-  const deletePet = () => {
-    setPetsState((prevState) => ({
-      pets: prevState.pets.filter((pet) => pet.id !== deleteDialogState.data.id)
-    }));
+    return (
+      <Grid container spacing={2} className={classes.grid}>
+        <PetCardList
+          pets={pets}
+          onEditClick={openEditModal}
+          onDeleteClick={openDeleteDialog}
+        />
+      </Grid>
+    );
   };
 
   // The component renders a Grid with a Button to add new pets, a PetCardList to display all the pets, and two dialogs.
@@ -163,13 +216,7 @@ const PetOwnerManagePets: React.FC = () => {
           </div>
         </Grid>
       </div>
-      <Grid container spacing={2} className={classes.grid}>
-        <PetCardList
-          pets={petsState.pets}
-          onEditClick={openEditModal}
-          onDeleteClick={openDeleteDialog}
-        />
-      </Grid>
+      {render()}
       {petModalState.isOpen ? (
         <AddEditPetModal
           handleSubmit={onModalSubmitClick}

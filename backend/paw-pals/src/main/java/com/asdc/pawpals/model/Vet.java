@@ -36,7 +36,7 @@ public class Vet {
   @Lob
   private Byte[] clinicUrl;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_userId")
   private User user;
 

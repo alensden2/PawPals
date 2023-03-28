@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+
 import React from 'react';
 import useStyles from './VetCard.styles';
 import {
@@ -7,10 +10,10 @@ import {
   Divider,
   Typography
 } from '@material-ui/core';
-import { Vet } from '@src/types';
 import { Button } from '@src/components';
+import { PLACEHOLDER_VET_CLINIC_IMAGE } from '@src/constants';
 
-const VetCard: React.FC<Vet> = ({
+const VetCard = ({
   name,
   phoneNo,
   email,
@@ -18,7 +21,7 @@ const VetCard: React.FC<Vet> = ({
   licenseNumber,
   qualification,
   clinicAddress,
-  clinicPhotoUrl
+  clinicUrl
 }) => {
   const classes = useStyles();
 
@@ -47,7 +50,7 @@ const VetCard: React.FC<Vet> = ({
       {/* Image Section */}
       <CardMedia
         className={classes.media}
-        image={clinicPhotoUrl}
+        image={clinicUrl ? clinicUrl : PLACEHOLDER_VET_CLINIC_IMAGE}
         title={name}
       />
 

@@ -2,7 +2,7 @@ import { Box, Typography } from '@material-ui/core';
 import NOTHING_HERE_YET from '@src/assets/images/nothing_here_yet.png';
 import useStyles from './EmptyState.styles';
 
-function EmptyState() {
+function EmptyState({ text = 'Nothing here yet!' } = {}) {
   const classes = useStyles();
 
   return (
@@ -25,7 +25,7 @@ function EmptyState() {
         color="textSecondary"
         gutterBottom
       >
-        Nothing here yet!
+        {text}
       </Typography>
     </Box>
   );
