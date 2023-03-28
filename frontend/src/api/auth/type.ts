@@ -37,7 +37,7 @@ export type AuthenticateUserApiResponseType = {
       email: string;
       firstName: string;
       lastName: string;
-      username: string;
+      userName: string;
       authorities: Authority[];
     };
   };

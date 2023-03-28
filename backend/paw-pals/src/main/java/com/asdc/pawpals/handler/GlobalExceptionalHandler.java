@@ -2,6 +2,8 @@ package com.asdc.pawpals.handler;
 
 import com.asdc.pawpals.controller.AdminController;
 import com.asdc.pawpals.controller.AnimalController;
+import com.asdc.pawpals.controller.AppointmentController;
+import com.asdc.pawpals.controller.MedicalRecordController;
 import com.asdc.pawpals.controller.PetOwnerController;
 import com.asdc.pawpals.controller.UserController;
 import com.asdc.pawpals.controller.VetController;
@@ -29,7 +31,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
                 PetOwnerController.class,
                 AnimalController.class,
                 AdminController.class,
-                VetController.class
+                VetController.class,
+                MedicalRecordController.class,
+                AppointmentController.class
         }
 )
 public class GlobalExceptionalHandler {

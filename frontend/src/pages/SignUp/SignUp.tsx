@@ -26,7 +26,10 @@ import { Button, TextField } from '@src/components';
 import useStyles from './SignUp.styles';
 
 // constants
-import { TOAST_MESSAGE_SIGNUP_ERROR, TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
+import {
+  TOAST_MESSAGE_SIGNUP_ERROR,
+  TOAST_MESSAGE_SIGNUP_SUCCESS
+} from '@src/constants';
 
 // context
 import { ToastContext } from '@src/context';
@@ -88,6 +91,7 @@ const SignUp: React.FC = () => {
     if (hasError) {
       // display error toast
       setToast({ type: 'error', message: response.errorMessage });
+      setLoader(false);
     } else {
       let success = false;
       if (selectedOption === 'VET') {

@@ -29,6 +29,8 @@ import { ToastContext } from '@src/context';
 // hooks
 import { useNavigate } from '@src/hooks';
 
+import { localStorageUtil } from '@src/utils';
+
 const SignIn: React.FC = () => {
   // styles
   const classes = useStyles();
@@ -49,6 +51,15 @@ const SignIn: React.FC = () => {
       username: userName,
       password
     });
+    const uName = response.userName;
+    const jwtToken = response.jwtToken;
+    const role = response.role;
+
+    localStorageUtil.setItem('user', {
+      userName: uName,
+      jwtToken,
+      role
+    });
 
     const hasError = response.error;
     if (hasError) {
@@ -59,8 +70,6 @@ const SignIn: React.FC = () => {
         type: 'success',
         message: TOAST_MESSAGE_SIGNIN_SUCCESS
       });
-
-      // TODO: Store data in local storage and pass in every request
 
       // based on role redirect to respective home page
       navigate(ROLE_TO_ROUTE_MAPPING[response.role], { replace: true });

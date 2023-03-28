@@ -2,6 +2,7 @@ package com.asdc.pawpals.controller;
 
 import com.asdc.pawpals.dto.MedicalHistoryDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
+import com.asdc.pawpals.exception.InvalidAnimalId;
 import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.exception.InvalidUserDetails;
 import com.asdc.pawpals.exception.UserAlreadyExist;
@@ -50,7 +51,7 @@ public class MedicalRecordController {
     }
 
     @PostMapping({"/create"})
-    public ResponseEntity<ApiResponse> createMedicalRecord(@RequestBody Object requestBody) throws InvalidObjectException {
+    public ResponseEntity<ApiResponse> createMedicalRecord(@RequestBody Object requestBody) throws InvalidObjectException, UserNameNotFound, InvalidAnimalId {
         logger.info("Received request as to create medical Record:", requestBody.toString());
         MedicalHistoryDto medicalHistoryDto = null;
         if (CommonUtils.isStrictTypeOf(requestBody, MedicalHistoryDto.class)) {

@@ -1,31 +1,13 @@
 package com.asdc.pawpals.utils;
 
 import com.asdc.pawpals.dto.*;
-import com.asdc.pawpals.dto.AnimalDto;
-import com.asdc.pawpals.dto.AppointmentDto;
-import com.asdc.pawpals.dto.MedicalHistoryDto;
-import com.asdc.pawpals.dto.PetOwnerDto;
-import com.asdc.pawpals.dto.UserDto;
-import com.asdc.pawpals.dto.VetAvailabilityDto;
-import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.*;
-import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.model.Appointment;
-import com.asdc.pawpals.model.MedicalHistory;
-import com.asdc.pawpals.model.PetOwner;
-import com.asdc.pawpals.model.User;
-import com.asdc.pawpals.model.Vet;
-import com.asdc.pawpals.model.VetAvailability;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Collectors;
 import org.springframework.data.util.Pair;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Transformations {
 
@@ -86,7 +68,14 @@ public class Transformations {
         dto.setAilmentName(dao.getAilmentName());
         dto.setPrescription(dao.getPrescription());
         dto.setVaccines(dao.getVaccines());
-        dto.setVet(MODEL_TO_DTO_CONVERTER.vet(dao.getVet()));
+        if(dao.getVet() != null 
+          && dao.getVet().getUser() != null 
+          && dao.getVet().getUser().getUserId() != null){
+            dto.setVetUserId(dao.getVet().getUser().getUserId());
+        }
+        if(dao.getAnimal() != null){
+          dto.setAnimalId(dao.getAnimal().getId());
+        }
       }
       return dto;
     }
@@ -100,6 +89,7 @@ public class Transformations {
         dto.setQualification(dao.getQualification());
         dto.setClinicAddress(dao.getClinicAddress());
         dto.setClinicUrl(dao.getClinicUrl());
+        dto.setProfileStatus(dto.getProfileStatus());
       }
       return dto;
     }
@@ -162,6 +152,7 @@ public class Transformations {
         vet.setQualification(vetDto.getQualification());
         vet.setClinicAddress(vetDto.getClinicAddress());
         vet.setClinicUrl(vetDto.getClinicUrl());
+        vet.setProfileStatus(vetDto.getProfileStatus());
         if (vetDto.getUsername() != null) {
           User user = new User();
           user.setUserId(vetDto.getUsername());
@@ -271,7 +262,14 @@ public class Transformations {
         dao.setAilmentName(dto.getAilmentName());
         dao.setPrescription(dto.getPrescription());
         dao.setVaccines(dto.getVaccines());
-        dao.setVet(DTO_TO_MODEL_CONVERTER.vet(dto.getVet()));
+        Vet vet = new Vet();
+        User user = new User();
+        user.setUserId(dto.getVetUserId());
+        vet.setUser(user);
+        dao.setVet(vet);
+        Animal animal = new Animal();
+        animal.setId(dto.getAnimalId());
+        dao.setAnimal(animal);
       }
       return dao;
     }

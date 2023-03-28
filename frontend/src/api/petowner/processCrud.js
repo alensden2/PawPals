@@ -6,7 +6,7 @@ import {
   getAllMedicalHistoryOfPetApiCall,
   getAllPetsApiCall
 } from './crud';
-import { bytesToImageUrl } from '@src/utils';
+import { getImageUrlFromBytes } from '@src/utils';
 
 export const registerPetOwner = async (petOwner) => {
   const response = await registerPetOwnerApiCall(petOwner);
@@ -20,7 +20,12 @@ export const getAllMedicalHistoryOfPet = async ({ petOwnerUserId }) => {
   if (body) {
     return body.map((item) => ({
       vet: item.vetDto,
-      animal: item.animalDto,
+      animal: {
+        ...item.animalDto,
+        photoUrl: item.animalDto.photoUrl
+          ? getImageUrlFromBytes({ bytes: item.animalDto.photoUrl })
+          : ''
+      },
       medicalHistory: item.medicalHistoryDto
     }));
   } else return [];
@@ -32,6 +37,8 @@ export const getAllPets = async () => {
 
   return body.map((item) => ({
     ...item,
-    photoUrl: item.photoUrl ? bytesToImageUrl(item.photoUrl) : ''
+    photoUrl: item.photoUrl
+      ? getImageUrlFromBytes({ bytes: item.photoUrl })
+      : ''
   }));
 };
