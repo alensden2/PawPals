@@ -26,6 +26,23 @@ const VetHome = () => {
     }
   };
   const [diagnoseModal, setDiagnoseModal] = useState(initialDiagnoseModalState);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const result = await getAllAppointmentsOfVet();
+
+        setAllAppointments(result);
+        setIsLoading(false);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const onDiagnoseButtonClick = ({ petId, openModal }) => {
     setDiagnoseModal((prevState) => {
