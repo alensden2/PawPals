@@ -38,7 +38,6 @@ const VetHome = () => {
   };
 
   const closeAppointmentDetailsModal = () => {
-    console.log('-------------1-------------');
     setAppointmentDetailsModal((prevValue) => ({
       ...prevValue,
       isOpen: false,
