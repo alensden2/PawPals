@@ -88,21 +88,32 @@ const VetHome = () => {
     }
   };
 
-  const onDeclineAppointmentClick = ({ appointmentId }) => {
-    setAllAppointments((prevState) => {
-      return prevState.map((appointment) => {
-        if (appointment.appointment.id === appointmentId) {
-          return {
-            ...appointment,
-            appointment: {
-              ...appointment.appointment,
-              status: 'REJECTED'
-            }
-          };
-        }
-        return appointment;
-      });
+  const onDeclineAppointmentClick = async ({ appointmentId }) => {
+    const isSuccess = await updateStatusOfAppointment({
+      appointmentId,
+      input: {
+        status: 'REJECTED'
+      }
     });
+
+    if (isSuccess) {
+      setAllAppointments((prevState) => {
+        return prevState.map((appointment) => {
+          if (appointment.appointment.id === appointmentId) {
+            return {
+              ...appointment,
+              appointment: {
+                ...appointment.appointment,
+                status: 'REJECTED'
+              }
+            };
+          }
+          return appointment;
+        });
+      });
+    } else {
+      setToast({ type: 'error', message: 'Something went wrong!' });
+    }
   };
 
   const openAppointmentDetailsModal = ({ appointment = null }) => {
