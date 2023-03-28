@@ -14,13 +14,23 @@ import PAW_LOGO from '@src/assets/images/paw-black.png';
 import { useNavigate } from '@src/hooks';
 import useStyles from './Landing.styles';
 import { Button } from '@src/components';
+import { localStorageUtil } from '@src/utils';
+import { ROLE_TO_ROUTE_MAPPING } from '@src/constants';
 
 const Landing: React.FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
   const onLoginClick = () => {
-    navigate('signin');
+    const user = localStorageUtil.getItem('user');
+
+    if (['VET', 'PET_OWNER'].includes(user?.role)) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      navigate(ROLE_TO_ROUTE_MAPPING[user?.role], { replace: true });
+    } else {
+      navigate('signin');
+    }
   };
 
   const onSignUpClick = () => {

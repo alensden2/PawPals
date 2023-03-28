@@ -1,11 +1,11 @@
 package com.asdc.pawpals.Enums;
 
-public enum AppointmentStatus {
+public enum Status {
     CONFIRMED("CONFIRMED"), REJECTED("REJECTED"), PENDING("PENDING");
 
     private String label;
 
-    private AppointmentStatus(String label){
+    private Status(String label){
         this.label = label;
     }
 

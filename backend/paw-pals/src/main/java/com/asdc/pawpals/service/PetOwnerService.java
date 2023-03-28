@@ -15,7 +15,6 @@ public interface PetOwnerService {
 
     List<AnimalDto> retrieveAllPets(String ownerId) throws NoPetRegisterUnderPetOwner, UserNameNotFound;
 
-    AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound;
 
     PetOwnerDto updatePetOwner(String id, PetOwnerDto petOwnerDto, MultipartFile image) throws UserNameNotFound, InvalidPetOwnerObject, InvalidImage, IOException;
 
