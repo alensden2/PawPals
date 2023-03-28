@@ -87,7 +87,7 @@ public class PetOwnerImpl implements PetOwnerService {
      * @return
      */
     @Override
-    public AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound {
+    public AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidAnimalId, InvalidObjectException, UserNameNotFound {
         logger.debug("Book pet owner appointment with vet", appointmentDto.toString());
         if (appointmentDto != null && appointmentDto.getDate() != null && appointmentDto.getStartTime() != null &&
                 appointmentDto.getEndTime() != null && appointmentDto.getStatus() != null

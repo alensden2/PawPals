@@ -30,6 +30,7 @@ public class Vet {
   private String clinicAddress;
   private Integer experience;
   private String qualification;
+  private String profileStatus;
 
   @Column(name = "clinic_url", length = 10485760)
   @Lob

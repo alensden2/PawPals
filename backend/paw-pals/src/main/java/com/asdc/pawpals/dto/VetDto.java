@@ -17,4 +17,6 @@ public class VetDto extends UserDto {
   private Integer experience;
   private String qualification;
   private Byte[] clinicUrl;
+
+  private String profileStatus;
 }
