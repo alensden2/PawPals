@@ -26,7 +26,10 @@ import { Button, TextField } from '@src/components';
 import useStyles from './SignUp.styles';
 
 // constants
-import { TOAST_MESSAGE_SIGNUP_ERROR, TOAST_MESSAGE_SIGNUP_SUCCESS } from '@src/constants';
+import {
+  TOAST_MESSAGE_SIGNUP_ERROR,
+  TOAST_MESSAGE_SIGNUP_SUCCESS
+} from '@src/constants';
 
 // context
 import { ToastContext } from '@src/context';
