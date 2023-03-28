@@ -19,6 +19,40 @@ const VetHome = () => {
     appointment: {}
   });
 
+  const onApproveAppointmentClick = ({ appointmentId }) => {
+    setAllAppointments((prevState) => {
+      return prevState.map((appointment) => {
+        if (appointment.appointment.id === appointmentId) {
+          return {
+            ...appointment,
+            appointment: {
+              ...appointment.appointment,
+              status: 'CONFIRMED'
+            }
+          };
+        }
+        return appointment;
+      });
+    });
+  };
+
+  const onDeclineAppointmentClick = ({ appointmentId }) => {
+    setAllAppointments((prevState) => {
+      return prevState.map((appointment) => {
+        if (appointment.appointment.id === appointmentId) {
+          return {
+            ...appointment,
+            appointment: {
+              ...appointment.appointment,
+              status: 'REJECTED'
+            }
+          };
+        }
+        return appointment;
+      });
+    });
+  };
+
   const openAppointmentDetailsModal = ({ appointment = null }) => {
     let newState = {
       isOpen: true
@@ -62,6 +96,8 @@ const VetHome = () => {
   const renderHorizontalList = (status) => {
     return (
       <HorizontalList
+        onApproveAppointmentClick={onApproveAppointmentClick}
+        onDeclineAppointmentClick={onDeclineAppointmentClick}
         appointments={getFilteredAppointmentsByStatus(status)}
         status={status}
         openAppointmentDetailsModal={openAppointmentDetailsModal}

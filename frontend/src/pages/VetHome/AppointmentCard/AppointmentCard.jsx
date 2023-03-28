@@ -12,7 +12,12 @@ import {
 import useStyles from './AppointmentCard.styles';
 import { VET_HOME_APPOINTMENT_CONSTANT } from '@src/constants';
 
-const AppointmentCard = ({ appointment, openAppointmentDetailsModal }) => {
+const AppointmentCard = ({
+  appointment,
+  openAppointmentDetailsModal,
+  onDeclineAppointmentClick,
+  onApproveAppointmentClick
+}) => {
   const classes = useStyles();
   const status = appointment.appointment.status;
 
@@ -25,6 +30,11 @@ const AppointmentCard = ({ appointment, openAppointmentDetailsModal }) => {
           className={classes.button}
           fullWidth
           variant="outlined"
+          onClick={() =>
+            onApproveAppointmentClick({
+              appointmentId: appointment.appointment.id
+            })
+          }
         >
           Approve
         </Button>
@@ -34,6 +44,11 @@ const AppointmentCard = ({ appointment, openAppointmentDetailsModal }) => {
           className={classes.button}
           fullWidth
           variant="outlined"
+          onClick={() =>
+            onDeclineAppointmentClick({
+              appointmentId: appointment.appointment.id
+            })
+          }
         >
           Decline
         </Button>

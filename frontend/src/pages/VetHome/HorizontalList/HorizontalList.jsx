@@ -14,7 +14,9 @@ import { VET_HOME_APPOINTMENT_CONSTANT } from '@src/constants';
 const HorizontalList = ({
   appointments,
   status,
-  openAppointmentDetailsModal
+  openAppointmentDetailsModal,
+  onDeclineAppointmentClick,
+  onApproveAppointmentClick
 }) => {
   const classes = useStyles();
 
@@ -47,6 +49,8 @@ const HorizontalList = ({
             <AppointmentCard
               appointment={appointment}
               openAppointmentDetailsModal={openAppointmentDetailsModal}
+              onApproveAppointmentClick={onApproveAppointmentClick}
+              onDeclineAppointmentClick={onDeclineAppointmentClick}
             />
           </div>
         ))}
