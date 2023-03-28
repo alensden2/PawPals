@@ -86,7 +86,14 @@ public class Transformations {
         dto.setAilmentName(dao.getAilmentName());
         dto.setPrescription(dao.getPrescription());
         dto.setVaccines(dao.getVaccines());
-        dto.setVet(MODEL_TO_DTO_CONVERTER.vet(dao.getVet()));
+        if(dao.getVet() != null 
+          && dao.getVet().getUser() != null 
+          && dao.getVet().getUser().getUserId() != null){
+            dto.setVetUserId(dao.getVet().getUser().getUserId());
+        }
+        if(dao.getAnimal() != null){
+          dto.setAnimalId(dao.getAnimal().getId());
+        }
       }
       return dto;
     }
@@ -271,7 +278,14 @@ public class Transformations {
         dao.setAilmentName(dto.getAilmentName());
         dao.setPrescription(dto.getPrescription());
         dao.setVaccines(dto.getVaccines());
-        dao.setVet(DTO_TO_MODEL_CONVERTER.vet(dto.getVet()));
+        Vet vet = new Vet();
+        User user = new User();
+        user.setUserId(dto.getVetUserId());
+        vet.setUser(user);
+        dao.setVet(vet);
+        Animal animal = new Animal();
+        animal.setId(dto.getAnimalId());
+        dao.setAnimal(animal);
       }
       return dao;
     }
