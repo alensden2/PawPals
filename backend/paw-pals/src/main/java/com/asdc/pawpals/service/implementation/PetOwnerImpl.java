@@ -6,12 +6,10 @@ import com.asdc.pawpals.model.*;
 import com.asdc.pawpals.repository.*;
 import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.utils.CommonUtils;
-import com.asdc.pawpals.utils.Constants;
 import com.asdc.pawpals.utils.Transformations;
 import com.asdc.pawpals.validators.AppointmentValidators;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -84,6 +82,29 @@ public class PetOwnerImpl implements PetOwnerService {
         return animalDtoList;
     }
 
+    /**
+     * @param appointmentDto
+     * @return
+     */
+    @Override
+    public AppointmentDto bookAppointment(AppointmentDto appointmentDto) throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound {
+        logger.debug("Book pet owner appointment with vet", appointmentDto.toString());
+        if (appointmentDto != null && appointmentDto.getDate() != null && appointmentDto.getStartTime() != null &&
+                appointmentDto.getEndTime() != null && appointmentDto.getStatus() != null
+                && AppointmentValidators.isValidAppointment(appointmentDto.getDate(), appointmentDto.getStartTime(), appointmentDto.getEndTime(), appointmentDto.getStatus())) {
+            Appointment appointment = Transformations.DTO_TO_MODEL_CONVERTER.appointment(appointmentDto);
+            Vet vet = vetRepository.findByUser_UserId(appointmentDto.getVetUserId()).orElseThrow(UserNameNotFound::new);
+            Animal animal = animalRepository.findById(appointmentDto.getAnimalId()).orElseThrow(InvalidAnimalId::new);
+            appointment.setVet(vet);
+            appointment.setAnimal(animal);
+            appointment = appointmentRepository.save(appointment);
+            return Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment);
+        } else {
+            throw new InvalidObjectException("Invalid Appointment Object");
+        }
+
+
+    }
 
     /**
      * @param id

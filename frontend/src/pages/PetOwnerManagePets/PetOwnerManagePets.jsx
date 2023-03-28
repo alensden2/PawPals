@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
-// Import React and necessary Material UI compone nts
+// Import React and necessary Material UI components
 import React, { useContext, useEffect, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { AddBox } from '@material-ui/icons';
@@ -131,22 +131,10 @@ const PetOwnerManagePets = () => {
     }
 
     if (petModalState.modalMode === 'add') {
-      const response = await createPet({
+      addPet();
+      await createPet({
         input: petModalState.data
       });
-
-      if (response.isSuccess) {
-        setPets((prevState) => {
-          return [
-            ...prevState,
-            {
-              ...response.data
-            }
-          ];
-        });
-      } else {
-        setToast({ type: 'error', message: 'Something went wrong!' });
-      }
     }
     setPetModalState((prevState) => ({
       ...prevState,
@@ -170,6 +158,20 @@ const PetOwnerManagePets = () => {
     setDeleteDialogState((prevState) => ({
       ...prevState,
       isOpen: false
+    }));
+  };
+
+  // ----------- CRUD functions -----------
+
+  const addPet = () => {
+    setPets((prevState) => ({
+      pets: [
+        ...prevState,
+        {
+          ...petModalState.data,
+          id: Math.floor(Math.random() * 1000) + 1
+        }
+      ]
     }));
   };
 

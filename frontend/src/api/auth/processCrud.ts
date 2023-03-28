@@ -28,7 +28,7 @@ export const authenticateUser = async (
   if (response?.data?.user) {
     return {
       email: response.data.user.email,
-      userName: response.data.user.userName,
+      userName: response.data.user.username,
       jwtToken: response.data.token,
       role: response.data.user.authorities[0].authority,
       error: false,

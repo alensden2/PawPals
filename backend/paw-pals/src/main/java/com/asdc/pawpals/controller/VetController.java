@@ -45,7 +45,7 @@ public class VetController {
     }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> registerVet(@RequestPart("vet") Map<String, Object> requestBody, @RequestPart("clinicPhoto") MultipartFile clinicPhoto) throws IOException, InvalidImage {
+    public ResponseEntity<String> registerVet(@RequestPart("vet") Map<String, Object> requestBody, @RequestPart("clinicPhoto") MultipartFile clinicPhoto) throws IOException, InvalidImage{
         Boolean vetRegistered = false;
         ResponseEntity<String> response = null;
         try {
@@ -128,32 +128,6 @@ public class VetController {
         if (vetService != null && vetId != null) {
             apiResponse.setBody(vetService.retrieveAllPets(vetId));
             apiResponse.setMessage("successfully retrieve list");
-            apiResponse.setSuccess(true);
-            apiResponse.setError(false);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
-    }
-
-    @GetMapping("pending/vets")
-    public ResponseEntity<ApiResponse> getVetsByPendingStatus() {
-        logger.info("Get All pending status vets:");
-        if (vetService != null) {
-            apiResponse.setBody(vetService.retrieveAllVets());
-            apiResponse.setMessage("successfully retrieve list");
-            apiResponse.setSuccess(true);
-            apiResponse.setError(false);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
-    }
-
-    @PutMapping({"/{id}"})
-    public ResponseEntity<ApiResponse> updateVet(@RequestBody Object requestBody, @PathVariable String id, @RequestPart("image") MultipartFile image) throws UserNameNotFound, InvalidImage, IOException {
-        logger.info("Received request as :", requestBody.toString());
-        VetDto vetDto = null;
-        if (CommonUtils.isStrictTypeOf(requestBody, VetDto.class)) {
-            vetDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, VetDto.class);
-            apiResponse.setBody(vetService.updateVet(vetDto, id, image));
-            apiResponse.setMessage("Successful update the data");
             apiResponse.setSuccess(true);
             apiResponse.setError(false);
         }

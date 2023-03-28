@@ -7,7 +7,6 @@ import useStyles from './VetHome.styles';
 import { vetAppointments } from '@src/data';
 import HorizontalList from './HorizontalList';
 import AppointmentDetailsModal from './AppointmentDetailsModal';
-import DiagnoseModal from './DiagnoseModal';
 
 const VetHome = () => {
   const { setHeader } = useContext(HeaderContext);
@@ -19,64 +18,6 @@ const VetHome = () => {
     isOpen: false,
     appointment: {}
   });
-  const initialDiagnoseModalState = {
-    isOpen: false,
-    data: {
-      petId: null
-    }
-  };
-  const [diagnoseModal, setDiagnoseModal] = useState(initialDiagnoseModalState);
-
-  const onDiagnoseButtonClick = ({ petId, openModal }) => {
-    setDiagnoseModal((prevState) => {
-      return {
-        ...prevState,
-        isOpen: openModal,
-        data: {
-          ...prevState.data,
-          petId
-        }
-      };
-    });
-  };
-
-  const onDiagnoseModalCancelButtonClick = () => {
-    setDiagnoseModal(initialDiagnoseModalState);
-  };
-
-  const onApproveAppointmentClick = ({ appointmentId }) => {
-    setAllAppointments((prevState) => {
-      return prevState.map((appointment) => {
-        if (appointment.appointment.id === appointmentId) {
-          return {
-            ...appointment,
-            appointment: {
-              ...appointment.appointment,
-              status: 'CONFIRMED'
-            }
-          };
-        }
-        return appointment;
-      });
-    });
-  };
-
-  const onDeclineAppointmentClick = ({ appointmentId }) => {
-    setAllAppointments((prevState) => {
-      return prevState.map((appointment) => {
-        if (appointment.appointment.id === appointmentId) {
-          return {
-            ...appointment,
-            appointment: {
-              ...appointment.appointment,
-              status: 'REJECTED'
-            }
-          };
-        }
-        return appointment;
-      });
-    });
-  };
 
   const openAppointmentDetailsModal = ({ appointment = null }) => {
     let newState = {
@@ -97,6 +38,7 @@ const VetHome = () => {
   };
 
   const closeAppointmentDetailsModal = () => {
+    console.log('-------------1-------------');
     setAppointmentDetailsModal((prevValue) => ({
       ...prevValue,
       isOpen: false,
@@ -121,9 +63,6 @@ const VetHome = () => {
   const renderHorizontalList = (status) => {
     return (
       <HorizontalList
-        onApproveAppointmentClick={onApproveAppointmentClick}
-        onDeclineAppointmentClick={onDeclineAppointmentClick}
-        onDiagnoseButtonClick={onDiagnoseButtonClick}
         appointments={getFilteredAppointmentsByStatus(status)}
         status={status}
         openAppointmentDetailsModal={openAppointmentDetailsModal}
@@ -148,12 +87,6 @@ const VetHome = () => {
         <AppointmentDetailsModal
           appointmentDetailsModal={appointmentDetailsModal}
           closeAppointmentDetailsModal={closeAppointmentDetailsModal}
-        />
-      ) : null}
-      {diagnoseModal.isOpen ? (
-        <DiagnoseModal
-          handleClose={onDiagnoseModalCancelButtonClick}
-          isOpen={diagnoseModal.isOpen}
         />
       ) : null}
     </div>

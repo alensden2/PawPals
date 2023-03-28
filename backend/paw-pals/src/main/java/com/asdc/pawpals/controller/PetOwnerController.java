@@ -63,6 +63,21 @@ public class PetOwnerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
+    @PostMapping({"/book-appointment"})
+    public ResponseEntity<ApiResponse> bookAppointment(@RequestBody Object requestBody) throws InvalidAnimalId, InvalidObjectException, InvalidVetID, UserNameNotFound {
+        logger.info("Received request as :", requestBody.toString());
+        AppointmentDto appointmentDto = null;
+        if (CommonUtils.isStrictTypeOf(requestBody, AppointmentDto.class)) {
+            appointmentDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, AppointmentDto.class);
+            apiResponse.setBody(petOwnerService.bookAppointment(appointmentDto));
+            apiResponse.setMessage("Successfully created Appointment");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+
+
 
 
 
