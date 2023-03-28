@@ -51,5 +51,5 @@ export const updateStatusOfAppointment = async ({
     input
   });
 
-  return response;
+  return response?.data?.success || false;
 };
