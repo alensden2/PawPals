@@ -32,7 +32,7 @@ public class AppointmentValidators {
     }
 
     public static boolean isValidStatus(String statusStr) {
-        return Arrays.asList(Constants.STATUS).contains(statusStr);
+        return Arrays.asList(Constants.STATUS).contains(statusStr.toUpperCase());
     }
 
     public static boolean isValidStartTimeBeforeEndTime(String startTimeStr, String endTimeStr) {

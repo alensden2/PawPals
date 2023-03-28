@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import axios from 'axios';
+import { axiosJSON } from '@src/lib';
 
 export const registerVetApiCall = async (vet) => {
   let response;
@@ -25,4 +26,17 @@ export const registerVetApiCall = async (vet) => {
     response = error.errorReponse;
   }
   return response;
+};
+
+export const getAllAppointmentsOfVetApiCall = async ({
+  vetUserId = 'vet1'
+} = {}) => {
+  return await axiosJSON.get(`/unauth/vet/appointments/${vetUserId}`);
+};
+
+export const updateStatusOfAppointmentApiCall = async ({
+  appointmentId,
+  input
+} = {}) => {
+  return await axiosJSON.put(`/unauth/vet/status/${appointmentId}`, input);
 };
