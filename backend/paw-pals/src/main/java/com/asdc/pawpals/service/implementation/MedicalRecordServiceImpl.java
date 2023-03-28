@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 
 import com.asdc.pawpals.dto.MedicalHistoryDto;
 import com.asdc.pawpals.model.MedicalHistory;
+import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.MedicalRecordRepository;
+import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.MedicalRecordService;
 import com.asdc.pawpals.utils.Transformations;
 @Component
@@ -29,6 +31,12 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 
     @Autowired
     MedicalRecordRepository medicalRecordRepository;
+
+    @Autowired
+    AnimalRepository animalRepository;
+
+    @Autowired
+    VetRepository vetRepository;
 
     @Override
     public List<MedicalHistoryDto> retrieveMedicalRecord(Long animalId){
@@ -44,14 +52,23 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     /**
      * @param medicalHistoryDto
      * @return
+     * @throws UserNameNotFound
+     * @throws InvalidAnimalId
      */
     @Override
-    public MedicalHistoryDto postMedicalRecord(MedicalHistoryDto medicalHistoryDto) throws InvalidObjectException {
+    public MedicalHistoryDto postMedicalRecord(MedicalHistoryDto medicalHistoryDto) throws InvalidObjectException, UserNameNotFound, InvalidAnimalId {
         logger.debug("Book pet owner appointment with vet", medicalHistoryDto.toString());
         if(medicalHistoryDto!=null && medicalHistoryDto.getAilmentName()!=null && medicalHistoryDto.getPrescription()!=null &&
-        medicalHistoryDto.getDateDiagnosed()!=null && medicalHistoryDto.getPrescription()!=null && medicalHistoryDto.getVaccines()!=null)
+        medicalHistoryDto.getDateDiagnosed()!=null && medicalHistoryDto.getVaccines()!=null)
         {
+            if(!vetRepository.findByUser_UserId(medicalHistoryDto.getVetUserId()).isPresent()){
+                throw new UserNameNotFound("Vet does not exist");
+            }
+            if(!animalRepository.findById(medicalHistoryDto.getAnimalId()).isPresent()){
+                throw new InvalidAnimalId("Animal does not exist");
+            }
             MedicalHistory medicalHistory=Transformations.DTO_TO_MODEL_CONVERTER.medicalHistory(medicalHistoryDto);
+            medicalHistory.setVet(vetRepository.findByUser_UserId(medicalHistoryDto.getVetUserId()).get()); // this needs to be done because CascadeType.MERGE is not working with vet->USer->userId
             medicalHistory=medicalRecordRepository.save(medicalHistory);
             return Transformations.MODEL_TO_DTO_CONVERTER.medicalHistory(medicalHistory);
         } else {
