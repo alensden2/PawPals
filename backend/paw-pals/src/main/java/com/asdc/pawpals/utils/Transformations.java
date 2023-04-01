@@ -91,6 +91,9 @@ public class Transformations {
         dto.setClinicAddress(dao.getClinicAddress());
         dto.setClinicUrl(dao.getClinicUrl());
         dto.setProfileStatus(dto.getProfileStatus());
+        if(dao.getUser() != null && dao.getUser().getUserId() != null){
+          dto.setUserName(dao.getUser().getUserId());
+        }
       }
       return dto;
     }

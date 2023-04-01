@@ -251,7 +251,7 @@ public class VetServiceImpl implements VetService {
         if (availability != null) {
             //get the original vet availability on the specific day mentioned (derived from date given)
             availabilityDto = availability.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vetAvailability)
-                    .filter(avl -> avl.getDayOfWeek().equals(CommonUtils.getDayFromDate(date))).findFirst().orElse(null);
+                    .filter(avl -> avl.getDayOfWeek().equalsIgnoreCase(CommonUtils.getDayFromDate(date))).findFirst().orElse(null);
 
             if (availabilityDto != null) {
                 List<Pair<String, String>> freeSlots = new ArrayList<>();
