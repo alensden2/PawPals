@@ -4,5 +4,5 @@ export interface ApiResponse {
   message?: string;
   error: boolean;
   success: boolean;
-  body?: { [key: string]: number | boolean | string | [] | {} };
+  body?: { [key: string]: number | boolean | string | [] | object };
 }

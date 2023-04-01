@@ -34,6 +34,13 @@ export const getAllAppointmentsOfVetApiCall = async ({
   return await axiosJSON.get(`/unauth/vet/appointments/${vetUserId}`);
 };
 
+export const getAvailabilityOnSpecificDatApiCall = async ({
+  date = "01-01-2023",
+  vetUserId = ""
+}) => {
+  return await axiosJSON.post(`/unauth/vet/availability/${vetUserId}`, JSON.stringify({date}));
+}
+
 export const updateStatusOfAppointmentApiCall = async ({
   appointmentId,
   input

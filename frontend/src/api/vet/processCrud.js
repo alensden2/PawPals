@@ -4,7 +4,8 @@
 import {
   registerVetApiCall,
   getAllAppointmentsOfVetApiCall,
-  updateStatusOfAppointmentApiCall
+  updateStatusOfAppointmentApiCall,
+  getAvailabilityOnSpecificDatApiCall
 } from './crud';
 
 export const registerVet = async (vet) => {
@@ -18,6 +19,14 @@ export const getAllAppointmentsOfVet = async ({ vetUserId = 'vet1' } = {}) => {
 
   return response;
 };
+
+export const getVetAvailabilityOnSpecificDay = async (
+  date = "01-01-2023",
+  vetUserId = ""
+) =>{
+  const response = await getAvailabilityOnSpecificDatApiCall({date, vetUserId});
+  return response.data;
+}
 
 export const updateStatusOfAppointment = async ({
   appointmentId,
