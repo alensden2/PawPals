@@ -91,6 +91,10 @@ public class Transformations {
         dto.setClinicAddress(dao.getClinicAddress());
         dto.setClinicUrl(dao.getClinicUrl());
         dto.setProfileStatus(dto.getProfileStatus());
+        dto.setPhoneNo(dao.getPhoneNo());
+        if(dao.getUser() != null){
+          dto.setEmail(dao.getUser().getEmail());
+        }
         if(dao.getUser() != null && dao.getUser().getUserId() != null){
           dto.setUserName(dao.getUser().getUserId());
         }
@@ -158,6 +162,7 @@ public class Transformations {
         vet.setClinicAddress(vetDto.getClinicAddress());
         vet.setClinicUrl(vetDto.getClinicUrl());
         vet.setProfileStatus(vetDto.getProfileStatus());
+        vet.setPhoneNo(vetDto.getPhoneNo());
         if (vetDto.getUsername() != null) {
           User user = new User();
           user.setUserId(vetDto.getUsername());

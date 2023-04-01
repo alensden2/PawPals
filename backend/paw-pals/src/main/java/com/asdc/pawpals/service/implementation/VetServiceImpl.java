@@ -61,10 +61,10 @@ public class VetServiceImpl implements VetService {
             Optional<User> user = userRepository.findById(vetDto.getUsername());
             if (!user.isEmpty()) {
                 Long oldCount = vetRepository.count();
-                vet.setId(oldCount + 1);
                 vet.setProfileStatus(Status.PENDING.getLabel());
                 vetRepository.save(vet);
-                mailService.sendMail(vet.getUser().getEmail(), "pending for Approval", "your application is under process for admin approval");
+
+                mailService.sendMail(user.get().getEmail(), "pending for Approval", "your application is under process for admin approval");
                 Long newCount = vetRepository.count();
                 vetRegistered = ((oldCount + 1) == newCount);
             } else {
