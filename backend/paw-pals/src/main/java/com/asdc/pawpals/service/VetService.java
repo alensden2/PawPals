@@ -31,4 +31,6 @@ public interface VetService {
     VetDto updateVet(VetDto vetDto, String id, MultipartFile image) throws UserNameNotFound, IOException, InvalidImage;
 
     VetDto getVetByUserId(String id) throws UserNameNotFound;
+
+    VetDto updateProfileStatus(VetDto vetDto, String id) throws UserNameNotFound, InvalidObjectException;
 }

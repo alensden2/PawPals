@@ -167,5 +167,18 @@ public class VetController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
+    @PutMapping({"profile_status/{id}"})
+    public ResponseEntity<ApiResponse> updateVetStatus(@RequestBody Object requestBody, @PathVariable String id) throws UserNameNotFound, IOException {
+        logger.info("Updating Vet Profile Status:", requestBody.toString());
+        VetDto vetDto = null;
+        if (CommonUtils.isStrictTypeOf(id, String.class)) {
+            vetDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, VetDto.class);
+            apiResponse.setBody(vetService.updateProfileStatus(vetDto, id));
+            apiResponse.setMessage("Successful update profile status for Vet ");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
 
 }
