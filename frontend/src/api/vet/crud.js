@@ -35,15 +35,22 @@ export const getAllAppointmentsOfVetApiCall = async ({
 };
 
 export const getAvailabilityOnSpecificDatApiCall = async ({
-  date = "01-01-2023",
-  vetUserId = ""
+  date = '01-01-2023',
+  vetUserId = ''
 }) => {
-  return await axiosJSON.post(`/unauth/vet/availability/${vetUserId}`, JSON.stringify({date}));
-}
+  return await axiosJSON.post(
+    `/unauth/vet/availability/${vetUserId}`,
+    JSON.stringify({ date })
+  );
+};
 
 export const updateStatusOfAppointmentApiCall = async ({
   appointmentId,
   input
 } = {}) => {
   return await axiosJSON.put(`/unauth/vet/status/${appointmentId}`, input);
+};
+
+export const getVetByUserIdApiCall = async ({ vetUserId } = {}) => {
+  return await axiosJSON.get(`/unauth/vet/${vetUserId}`);
 };

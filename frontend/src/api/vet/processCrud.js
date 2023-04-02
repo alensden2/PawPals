@@ -5,6 +5,7 @@ import {
   registerVetApiCall,
   getAllAppointmentsOfVetApiCall,
   updateStatusOfAppointmentApiCall,
+  getVetByUserIdApiCall,
   getAvailabilityOnSpecificDatApiCall
 } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';
@@ -44,12 +45,15 @@ export const getAllAppointmentsOfVet = async ({ vetUserId = 'vet1' } = {}) => {
 };
 
 export const getVetAvailabilityOnSpecificDay = async (
-  date = "01-01-2023",
-  vetUserId = ""
-) =>{
-  const response = await getAvailabilityOnSpecificDatApiCall({date, vetUserId});
+  date = '01-01-2023',
+  vetUserId = ''
+) => {
+  const response = await getAvailabilityOnSpecificDatApiCall({
+    date,
+    vetUserId
+  });
   return response.data;
-}
+};
 
 export const updateStatusOfAppointment = async ({
   appointmentId,
@@ -61,4 +65,12 @@ export const updateStatusOfAppointment = async ({
   });
 
   return response?.data?.success || false;
+};
+
+export const getVetByUserId = async ({ vetUserId } = {}) => {
+  const response = await getVetByUserIdApiCall({
+    vetUserId
+  });
+
+  return response;
 };
