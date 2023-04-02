@@ -1,5 +1,5 @@
 // react
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material ui
@@ -14,13 +14,12 @@ import {
   Typography
 } from '@material-ui/core';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import { Select as CustomSelect } from '@src/components';
 import { QUALIFICATION_OPTIONS } from '@src/constants/common';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
 // components
-import { Button, TextField } from '@src/components';
+import { Button, TextField, Select as CustomSelect } from '@src/components';
 
 // styles
 import useStyles from './SignUp.styles';
@@ -32,7 +31,7 @@ import {
 } from '@src/constants';
 
 // context
-import { ToastContext } from '@src/context';
+import { ToastContext, HeaderContext } from '@src/context';
 
 // api
 import { registerUser } from '@src/api/auth';
@@ -62,6 +61,16 @@ const SignUp: React.FC = () => {
   const [clinicPhoto, setClinicPhoto] = useState(null as unknown as File);
   const [profilePhoto, setProfilePhoto] = useState(null as unknown as File);
   const [loader, setLoader] = React.useState(false);
+
+  const { setHeader } = useContext(HeaderContext);
+
+  // useEffect
+  useEffect(() => {
+    setHeader({
+      shouldShowHeader: false
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClose = () => {
     setLoader(false);
@@ -105,6 +114,7 @@ const SignUp: React.FC = () => {
           phoneNo: phoneNumber,
           qualification: qualifications.join(', '),
           clinicPhoto,
+          profileStatus: 'PENDING',
           email
         });
         success = response === userName;
