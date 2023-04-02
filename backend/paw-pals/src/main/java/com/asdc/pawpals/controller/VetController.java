@@ -39,9 +39,16 @@ public class VetController {
     ApiResponse apiResponse;
 
     @GetMapping("/{id}")
-    public String getVetById(@PathVariable Integer id) {
-        logger.info("VetController :: getVetById :: Entering with Id {}", id);
-        return "Hello " + id;
+    public ResponseEntity<ApiResponse> getVetById(@PathVariable String id) throws UserNameNotFound {
+        logger.info("Get vet By user Id", id);
+        if (vetService != null && id != null) {
+            apiResponse.setBody(vetService.getVetByUserId(id));
+            apiResponse.setMessage("successfully retrieve list");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

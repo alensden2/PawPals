@@ -242,6 +242,22 @@ public class VetServiceImpl implements VetService {
         }
     }
 
+    /**
+     * @param id
+     * @return
+     */
+    @Override
+    public VetDto getVetByUserId(String id) throws UserNameNotFound {
+
+        if (null != id && !id.isEmpty()) {
+            Vet vet = vetRepository.findByUser_UserId(id).get();
+            return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
+        } else {
+            throw new UserNameNotFound("No vet exist by id: " + id);
+        }
+
+    }
+
 
     private VetAvailabilityDto findVetAvailabilityOnSpecificDay(List<VetAvailability> availability, List<Appointment> appointments, String date) {
         VetAvailabilityDto availabilityDto = null;
