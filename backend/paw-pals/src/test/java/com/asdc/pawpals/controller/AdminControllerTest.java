@@ -46,7 +46,7 @@ public class AdminControllerTest {
   public void setUp() {
     validVet = new Vet();
     validVet.setId(1L);
-    validVet.setName("Alen John");
+    validVet.setFirstName("Alen John");
   }
 
   @Test

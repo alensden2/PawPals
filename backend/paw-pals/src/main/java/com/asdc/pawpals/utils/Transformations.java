@@ -83,13 +83,21 @@ public class Transformations {
     public static VetDto vet(Vet dao) {
       VetDto dto = new VetDto();
       if (dao != null) {
-        dto.setName(dao.getName());
+        dto.setFirstName(dao.getFirstName());
+        dto.setLastName(dao.getLastName());
         dto.setLicenseNumber(dao.getLicenseNumber());
         dto.setExperience(dao.getExperience());
         dto.setQualification(dao.getQualification());
         dto.setClinicAddress(dao.getClinicAddress());
         dto.setClinicUrl(dao.getClinicUrl());
         dto.setProfileStatus(dto.getProfileStatus());
+        dto.setPhoneNo(dao.getPhoneNo());
+        if(dao.getUser() != null){
+          dto.setEmail(dao.getUser().getEmail());
+        }
+        if(dao.getUser() != null && dao.getUser().getUserId() != null){
+          dto.setUserName(dao.getUser().getUserId());
+        }
       }
       return dto;
     }
@@ -146,13 +154,15 @@ public class Transformations {
     public static Vet vet(VetDto vetDto) {
       Vet vet = new Vet();
       if (vetDto != null) {
-        vet.setName(vetDto.getName());
+        vet.setFirstName(vetDto.getFirstName());
+        vet.setLastName(vetDto.getLastName());
         vet.setLicenseNumber(vetDto.getLicenseNumber());
         vet.setExperience(vetDto.getExperience());
         vet.setQualification(vetDto.getQualification());
         vet.setClinicAddress(vetDto.getClinicAddress());
         vet.setClinicUrl(vetDto.getClinicUrl());
         vet.setProfileStatus(vetDto.getProfileStatus());
+        vet.setPhoneNo(vetDto.getPhoneNo());
         if (vetDto.getUsername() != null) {
           User user = new User();
           user.setUserId(vetDto.getUsername());

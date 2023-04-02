@@ -25,12 +25,14 @@ public class Vet {
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
-  private String name;
+  private String firstName;
+  private String lastName;
   private String licenseNumber;
   private String clinicAddress;
   private Integer experience;
   private String qualification;
   private String profileStatus;
+  private String phoneNo;
 
   @Column(name = "clinic_url", length = 10485760)
   @Lob

@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VetDto extends UserDto {
-  private String name;
   private String phoneNo;
   private String licenseNumber;
   private String clinicAddress;
