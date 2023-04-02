@@ -61,10 +61,10 @@ public class VetServiceImpl implements VetService {
             Optional<User> user = userRepository.findById(vetDto.getUsername());
             if (!user.isEmpty()) {
                 Long oldCount = vetRepository.count();
-                vet.setId(oldCount + 1);
                 vet.setProfileStatus(Status.PENDING.getLabel());
                 vetRepository.save(vet);
-                mailService.sendMail(vet.getUser().getEmail(), "pending for Approval", "your application is under process for admin approval");
+
+                mailService.sendMail(user.get().getEmail(), "pending for Approval", "your application is under process for admin approval");
                 Long newCount = vetRepository.count();
                 vetRegistered = ((oldCount + 1) == newCount);
             } else {
@@ -215,9 +215,9 @@ public class VetServiceImpl implements VetService {
                 vet.setQualification(vetDto.getQualification());
             }
             if (vetDto.getProfileStatus() != null) {
-                if (vetDto.getProfileStatus().equals(Status.CONFIRMED)) {
+                if (vetDto.getProfileStatus().equals(Status.CONFIRMED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Successfully Approved", "your profile is successfully approved by Admin");
-                } else if (vetDto.getProfileStatus().equals(Status.REJECTED)) {
+                } else if (vetDto.getProfileStatus().equals(Status.REJECTED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Profile Decline", "Unfortunately your profile has been rejected by Admin");
                 }
                 vet.setQualification(vetDto.getProfileStatus());
@@ -225,8 +225,11 @@ public class VetServiceImpl implements VetService {
             if (vetDto.getLicenseNumber() != null) {
                 vet.setLicenseNumber(vetDto.getLicenseNumber());
             }
-            if (vetDto.getName() != null) {
-                vet.setName(vet.getName());
+            if (vetDto.getFirstName() != null) {
+                vet.setFirstName(vetDto.getFirstName());
+            }
+            if (vetDto.getLastName() != null) {
+                vet.setLastName(vetDto.getLastName());
             }
             if (vetDto.getClinicAddress() != null) {
                 vet.setClinicUrl(vet.getClinicUrl());
@@ -264,7 +267,7 @@ public class VetServiceImpl implements VetService {
         if (availability != null) {
             //get the original vet availability on the specific day mentioned (derived from date given)
             availabilityDto = availability.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vetAvailability)
-                    .filter(avl -> avl.getDayOfWeek().equals(CommonUtils.getDayFromDate(date))).findFirst().orElse(null);
+                    .filter(avl -> avl.getDayOfWeek().equalsIgnoreCase(CommonUtils.getDayFromDate(date))).findFirst().orElse(null);
 
             if (availabilityDto != null) {
                 List<Pair<String, String>> freeSlots = new ArrayList<>();

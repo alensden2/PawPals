@@ -10,6 +10,7 @@ import {
 import useStyles from './HorizontalList.styles';
 import AppointmentCard from '../AppointmentCard';
 import { VET_HOME_APPOINTMENT_CONSTANT } from '@src/constants';
+import NOTHING_HERE_YET from '@src/assets/images/nothing_here_yet.png';
 
 const HorizontalList = ({
   appointments,
@@ -35,15 +36,23 @@ const HorizontalList = ({
     }
   };
 
-  return (
-    <div className={classes.root}>
-      <div className={classes.header}>
-        {renderIcon()}
-        <Typography variant="h4" align="left" className={classes.listTitle}>
-          {VET_HOME_APPOINTMENT_CONSTANT[status].headerText}
-        </Typography>
-      </div>
-      <Divider variant="middle" className={classes.divider} />
+  const renderAppointments = () => {
+    if (appointments.length === 0) {
+      return (
+        <div className={classes.emptyStateContainer}>
+          <img className={classes.gif} src={NOTHING_HERE_YET} alt="My GIF" />
+          <Typography
+            variant="h6"
+            align="left"
+            className={classes.emptyStateText}
+          >
+            {'Nothing here yet!'}
+          </Typography>
+        </div>
+      );
+    }
+
+    return (
       <div className={classes.horizontalListContainer}>
         {appointments.map((appointment) => (
           <div className={classes.cardContainer} key={appointment.id}>
@@ -57,6 +66,19 @@ const HorizontalList = ({
           </div>
         ))}
       </div>
+    );
+  };
+
+  return (
+    <div className={classes.root}>
+      <div className={classes.header}>
+        {renderIcon()}
+        <Typography variant="h4" align="left" className={classes.listTitle}>
+          {VET_HOME_APPOINTMENT_CONSTANT[status].headerText}
+        </Typography>
+      </div>
+      <Divider variant="middle" className={classes.divider} />
+      {renderAppointments()}
     </div>
   );
 };

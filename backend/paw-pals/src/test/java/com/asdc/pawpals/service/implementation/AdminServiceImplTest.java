@@ -124,7 +124,7 @@ public class AdminServiceImplTest {
     Long vetId = 1L;
     Vet existingVet = new Vet();
     existingVet.setId(vetId);
-    existingVet.setName("Old Name");
+    existingVet.setFirstName("Old Name");
     existingVet.setLicenseNumber("123456");
     existingVet.setClinicAddress("Old Address");
     existingVet.setExperience(5);
@@ -132,7 +132,7 @@ public class AdminServiceImplTest {
     existingVet.setUser(new User());
 
     Vet updatedVet = new Vet();
-    updatedVet.setName("New Name");
+    updatedVet.setFirstName("New Name");
     updatedVet.setLicenseNumber("654321");
     updatedVet.setClinicAddress("New Address");
     updatedVet.setExperience(10);
@@ -148,7 +148,7 @@ public class AdminServiceImplTest {
     verify(adminPostVetRepository, times(1)).save(any(Vet.class));
 
     assertNotNull(vetDto);
-    assertEquals(vetDto.getName(), "New Name");
+    assertEquals(vetDto.getFirstName(), "New Name");
     assertEquals(vetDto.getLicenseNumber(), "654321");
     assertEquals(vetDto.getClinicAddress(), "New Address");
     assertEquals(vetDto.getQualification(), "New Qualification");

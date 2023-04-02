@@ -42,3 +42,15 @@ export const getAllPets = async () => {
       : ''
   }));
 };
+
+export const getAllPetsForUser = async (userName) => {
+  const response = await getAllPetsApiCall({ownerUserId: userName});
+  const body = response?.data?.body || [];
+
+  return body.map((item) => ({
+    ...item,
+    photoUrl: item.photoUrl
+      ? getImageUrlFromBytes({ bytes: item.photoUrl })
+      : ''
+  }));
+};
