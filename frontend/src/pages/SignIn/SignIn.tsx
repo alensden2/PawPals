@@ -1,5 +1,5 @@
 // react
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material ui
@@ -24,7 +24,7 @@ import {
 } from '@src/constants';
 
 // context
-import { ToastContext } from '@src/context';
+import { ToastContext, HeaderContext } from '@src/context';
 
 // hooks
 import { useNavigate } from '@src/hooks';
@@ -37,6 +37,16 @@ const SignIn: React.FC = () => {
 
   // context
   const { setToast } = useContext(ToastContext);
+
+  const { setHeader } = useContext(HeaderContext);
+
+  // useEffect
+  useEffect(() => {
+    setHeader({
+      shouldShowHeader: false
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // state
   const [userName, setUserName] = useState('');
