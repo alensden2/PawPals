@@ -85,6 +85,34 @@ public class VetServiceImpl implements VetService {
     }
 
     @Override
+    public List<VetAvailabilityDto> postVetAvailability(List<VetAvailabilityDto> availability) throws InvalidObjectException, UsernameNotFoundException, UserNameNotFound{
+        List<VetAvailabilityDto> returnAvailability = null;
+        if(availability != null && !availability.isEmpty()){
+            String vetUserId = availability.get(0).getVetUserId();
+            Boolean allVetUserIdSame = availability.stream().allMatch(avl->avl.getVetUserId().equals(vetUserId));
+            if(allVetUserIdSame){
+                Optional<User> uOptional = userRepository.findById(vetUserId);
+                Optional<Vet> vet = vetRepository.findByUser_UserId(vetUserId);
+                if(uOptional.isPresent() && vet.isPresent()){
+                    List<VetAvailability> vetAvailabilities = availability.stream().map(Transformations.DTO_TO_MODEL_CONVERTER::vetAvailability).map(avl->{
+                        avl.setVet(vet.get());
+                        return avl;
+                    }).collect(Collectors.toList());
+                    vetAvailabilities = vetAvailabilityRepository.saveAll(vetAvailabilities);
+                    returnAvailability = vetAvailabilities.stream().map(Transformations.MODEL_TO_DTO_CONVERTER::vetAvailability).collect(Collectors.toList());
+                }
+                else{
+                    throw new UsernameNotFoundException("Please provide a valid username");
+                }
+            }
+            else{
+                throw new InvalidObjectException("Vet User id should match for all availabilities");
+            }
+        }
+        return returnAvailability;
+    }
+
+    @Override
     public List<VetAvailabilityDto> getVetAvailability(Long vetId) {
         List<VetAvailability> availability = vetAvailabilityRepository.findByVetId(vetId);
         List<VetAvailabilityDto> availabilityDto = null;

@@ -1,5 +1,27 @@
 package com.asdc.pawpals.controller;
 
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.asdc.pawpals.dto.AppointmentDto;
 import com.asdc.pawpals.dto.VetAvailabilityDto;
 import com.asdc.pawpals.dto.VetDto;
@@ -13,18 +35,6 @@ import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.util.Map;
 
 @RestController()
 @RequestMapping("/unauth/vet")
@@ -86,6 +96,24 @@ public class VetController {
             response = ResponseEntity.badRequest().build();
         }
         return response;
+    }
+
+
+    @PostMapping("/availability/post")
+    public ResponseEntity<ApiResponse> postAvailability(@RequestBody Object requestBody) throws InvalidObjectException, UsernameNotFoundException, UserNameNotFound{
+        logger.debug("Posting availability");
+        if(CommonUtils.isStrictTypeOf(requestBody, new TypeReference<List<VetAvailabilityDto>>(){})){
+            List<VetAvailabilityDto> vetAvailability = ObjectMapperWrapper.getInstance().convertValue(requestBody, new TypeReference<List<VetAvailabilityDto>>(){});
+            vetAvailability = vetService.postVetAvailability(vetAvailability);
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+            apiResponse.setBody(vetAvailability);
+            apiResponse.setMessage("Vet availability added successfully");
+        }
+        else{
+            throw new InvalidObjectException("Invalid availability provided");
+        }
+        return ResponseEntity.ok(apiResponse);
     }
 
     @PostMapping("/schedule/{id}")
