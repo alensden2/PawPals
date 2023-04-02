@@ -40,6 +40,19 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     fontSize: 36
+  },
+  emptyStateContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  },
+  gif: {
+    width: '400px',
+    height: '300px'
+    // borderRadius: '50%'
+  },
+  emptyStateText: {
+    color: '#3c3f65'
   }
 }));
 
