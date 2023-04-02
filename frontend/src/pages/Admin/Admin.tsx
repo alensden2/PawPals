@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 const Admin: React.FC = () => {
   return (
     <div>
-      <div>{'Admin'}</div>
+      <div>{'Admin Home Page'}</div>
       <Outlet />
     </div>
   );
