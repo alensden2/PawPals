@@ -4,7 +4,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Loader, EmptyState } from '@src/components';
 import { HeaderContext, ToastContext } from '@src/context';
-import { getAllPendingVets } from '@src/api';
+import { getAllPendingVets, updateProfileStatusVet } from '@src/api';
 import ManageVetsTable from './ManageVetsTable';
 import useStyles from './AdminManageVets.styles';
 
@@ -40,43 +40,76 @@ const AdminManageVets = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleApproveVet = (vet) => {
+  const handleApproveVet = async (vet) => {
     const userName = vet.userName;
 
-    setPendingVets((prevState) => {
-      return prevState.map((item) =>
-        item.userName === userName
-          ? {
-              ...item,
-              profileStatus: 'APPROVED'
-            }
-          : item
-      );
+    const input = {
+      profileStatus: 'APPROVED'
+    };
+
+    const isSuccess = await updateProfileStatusVet({
+      input,
+      vetUserId: userName
     });
 
-    setToast({
-      type: 'success',
-      message: 'Approval Successful. Vet can now sign in.'
-    });
+    if (isSuccess) {
+      setPendingVets((prevState) => {
+        return prevState.map((item) =>
+          item.userName === userName
+            ? {
+                ...item,
+                profileStatus: 'APPROVED'
+              }
+            : item
+        );
+      });
+
+      setToast({
+        type: 'success',
+        message: 'Approval Successful. Vet can now sign in.'
+      });
+    } else {
+      setToast({
+        type: 'error',
+        message: 'Something went wrong'
+      });
+    }
   };
 
-  const handleRejectVet = (vet) => {
+  const handleRejectVet = async (vet) => {
     const userName = vet.userName;
-    setPendingVets((prevState) => {
-      return prevState.map((item) =>
-        item.userName === userName
-          ? {
-              ...item,
-              profileStatus: 'REJECTED'
-            }
-          : item
-      );
+
+    const input = {
+      profileStatus: 'REJECTED'
+    };
+
+    const isSuccess = await updateProfileStatusVet({
+      input,
+      vetUserId: userName
     });
 
-    setToast({
-      type: 'error',
-      message: 'Vet Request Rejected'
-    });
+    if (isSuccess) {
+      setPendingVets((prevState) => {
+        return prevState.map((item) =>
+          item.userName === userName
+            ? {
+                ...item,
+                profileStatus: 'REJECTED'
+              }
+            : item
+        );
+      });
+
+      setToast({
+        type: 'error',
+        message: 'Vet Request Rejected'
+      });
+    } else {
+      setToast({
+        type: 'error',
+        message: 'Something went wrong'
+      });
+    }
   };
 
   const render = () => {
