@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import useStyles from './DiagnoseModal.styles';
 
-const DiagnoseModal = ({ isOpen, handleClose }) => {
+const DiagnoseModal = ({ isOpen, handleClose, onDiagnoseModalSubmitClick }) => {
   const classes = useStyles();
   const [ailmentName, setAilmentName] = useState('');
   const [prescription, setPrescription] = useState('');
@@ -25,8 +25,12 @@ const DiagnoseModal = ({ isOpen, handleClose }) => {
     setVaccines(event.target.value);
   };
 
-  const handleSubmit = () => {
-    handleClose();
+  const handleSubmit = async () => {
+    await onDiagnoseModalSubmitClick({
+      ailmentName,
+      prescription,
+      vaccines
+    });
   };
 
   return (

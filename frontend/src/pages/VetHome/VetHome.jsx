@@ -1,20 +1,26 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import React, { useContext, useEffect, useState } from 'react';
-import { HeaderContext } from '@src/context';
+import { HeaderContext, ToastContext } from '@src/context';
 
 import useStyles from './VetHome.styles';
-import { vetAppointments } from '@src/data';
 import HorizontalList from './HorizontalList';
 import AppointmentDetailsModal from './AppointmentDetailsModal';
 import DiagnoseModal from './DiagnoseModal';
+import {
+  getAllAppointmentsOfVet,
+  updateStatusOfAppointment,
+  createMedicalRecord
+} from '@src/api';
+import { Loader } from '@src/components';
+import { localStorageUtil, getTodayDate } from '@src/utils';
 
 const VetHome = () => {
   const { setHeader } = useContext(HeaderContext);
   const classes = useStyles();
-  const [allAppointments, setAllAppointments] = useState(
-    vetAppointments.allAppointments
-  );
+  const { setToast } = useContext(ToastContext);
+
+  const [allAppointments, setAllAppointments] = useState([]);
   const [appointmentDetailsModal, setAppointmentDetailsModal] = useState({
     isOpen: false,
     appointment: {}
@@ -26,6 +32,23 @@ const VetHome = () => {
     }
   };
   const [diagnoseModal, setDiagnoseModal] = useState(initialDiagnoseModalState);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const result = await getAllAppointmentsOfVet();
+
+        setAllAppointments(result);
+        setIsLoading(false);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const onDiagnoseButtonClick = ({ petId, openModal }) => {
     setDiagnoseModal((prevState) => {
@@ -44,37 +67,80 @@ const VetHome = () => {
     setDiagnoseModal(initialDiagnoseModalState);
   };
 
-  const onApproveAppointmentClick = ({ appointmentId }) => {
-    setAllAppointments((prevState) => {
-      return prevState.map((appointment) => {
-        if (appointment.appointment.id === appointmentId) {
-          return {
-            ...appointment,
-            appointment: {
-              ...appointment.appointment,
-              status: 'CONFIRMED'
-            }
-          };
-        }
-        return appointment;
-      });
+  const onApproveAppointmentClick = async ({ appointmentId }) => {
+    const isSuccess = await updateStatusOfAppointment({
+      appointmentId,
+      input: {
+        status: 'CONFIRMED'
+      }
     });
+
+    if (isSuccess) {
+      setAllAppointments((prevState) => {
+        return prevState.map((appointment) => {
+          if (appointment.appointment.id === appointmentId) {
+            return {
+              ...appointment,
+              appointment: {
+                ...appointment.appointment,
+                status: 'CONFIRMED'
+              }
+            };
+          }
+          return appointment;
+        });
+      });
+    } else {
+      setToast({ type: 'error', message: 'Something went wrong!' });
+    }
   };
 
-  const onDeclineAppointmentClick = ({ appointmentId }) => {
-    setAllAppointments((prevState) => {
-      return prevState.map((appointment) => {
-        if (appointment.appointment.id === appointmentId) {
-          return {
-            ...appointment,
-            appointment: {
-              ...appointment.appointment,
-              status: 'REJECTED'
-            }
-          };
-        }
-        return appointment;
+  const onDeclineAppointmentClick = async ({ appointmentId }) => {
+    const isSuccess = await updateStatusOfAppointment({
+      appointmentId,
+      input: {
+        status: 'REJECTED'
+      }
+    });
+
+    if (isSuccess) {
+      setAllAppointments((prevState) => {
+        return prevState.map((appointment) => {
+          if (appointment.appointment.id === appointmentId) {
+            return {
+              ...appointment,
+              appointment: {
+                ...appointment.appointment,
+                status: 'REJECTED'
+              }
+            };
+          }
+          return appointment;
+        });
       });
+    } else {
+      setToast({ type: 'error', message: 'Something went wrong!' });
+    }
+  };
+
+  const onDiagnoseModalSubmitClick = async ({
+    ailmentName,
+    prescription,
+    vaccines
+  }) => {
+    const petId = diagnoseModal.data.petId;
+    const user = localStorageUtil.getItem('user');
+    const vetUserId = user.userName;
+
+    await createMedicalRecord({
+      input: {
+        ailmentName,
+        prescription,
+        vaccines,
+        animalId: petId,
+        vetUserId,
+        dateDiagnosed: getTodayDate()
+      }
     });
   };
 
@@ -141,23 +207,32 @@ const VetHome = () => {
     );
   };
 
-  return (
-    <div className={classes.root}>
-      {renderAppointments()}
-      {appointmentDetailsModal.isOpen ? (
-        <AppointmentDetailsModal
-          appointmentDetailsModal={appointmentDetailsModal}
-          closeAppointmentDetailsModal={closeAppointmentDetailsModal}
-        />
-      ) : null}
-      {diagnoseModal.isOpen ? (
-        <DiagnoseModal
-          handleClose={onDiagnoseModalCancelButtonClick}
-          isOpen={diagnoseModal.isOpen}
-        />
-      ) : null}
-    </div>
-  );
+  const render = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    return (
+      <>
+        {renderAppointments()}
+        {appointmentDetailsModal.isOpen ? (
+          <AppointmentDetailsModal
+            appointmentDetailsModal={appointmentDetailsModal}
+            closeAppointmentDetailsModal={closeAppointmentDetailsModal}
+          />
+        ) : null}
+        {diagnoseModal.isOpen ? (
+          <DiagnoseModal
+            handleClose={onDiagnoseModalCancelButtonClick}
+            isOpen={diagnoseModal.isOpen}
+            onDiagnoseModalSubmitClick={onDiagnoseModalSubmitClick}
+          />
+        ) : null}
+      </>
+    );
+  };
+
+  return <div className={classes.root}>{render()}</div>;
 };
 
 export default VetHome;

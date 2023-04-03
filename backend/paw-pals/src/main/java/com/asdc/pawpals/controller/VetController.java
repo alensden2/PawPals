@@ -49,9 +49,16 @@ public class VetController {
     ApiResponse apiResponse;
 
     @GetMapping("/{id}")
-    public String getVetById(@PathVariable Integer id) {
-        logger.info("VetController :: getVetById :: Entering with Id {}", id);
-        return "Hello " + id;
+    public ResponseEntity<ApiResponse> getVetById(@PathVariable String id) throws UserNameNotFound {
+        logger.info("Get vet By user Id", id);
+        if (vetService != null && id != null) {
+            apiResponse.setBody(vetService.getVetByUserId(id));
+            apiResponse.setMessage("successfully retrieve list");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -188,5 +195,18 @@ public class VetController {
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
+    @PutMapping({"profile_status/{id}"})
+    public ResponseEntity<ApiResponse> updateVetStatus(@RequestBody Object requestBody, @PathVariable String id) throws UserNameNotFound, IOException {
+        logger.info("Updating Vet Profile Status:", requestBody.toString());
+        VetDto vetDto = null;
+        if (CommonUtils.isStrictTypeOf(id, String.class)) {
+            vetDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, VetDto.class);
+            apiResponse.setBody(vetService.updateProfileStatus(vetDto, id));
+            apiResponse.setMessage("Successful update profile status for Vet ");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
 
 }
