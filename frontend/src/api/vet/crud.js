@@ -35,11 +35,14 @@ export const getAllAppointmentsOfVetApiCall = async ({
 };
 
 export const getAvailabilityOnSpecificDatApiCall = async ({
-  date = "01-01-2023",
-  vetUserId = ""
+  date = '01-01-2023',
+  vetUserId = ''
 }) => {
-  return await axiosJSON.post(`/unauth/vet/availability/${vetUserId}`, JSON.stringify({date}));
-}
+  return await axiosJSON.post(
+    `/unauth/vet/availability/${vetUserId}`,
+    JSON.stringify({ date })
+  );
+};
 
 export const postAvailabilityApiCall =  async (vetAvailability) => {
   return await axiosJSON.post(`/unauth/vet/availability/post`, vetAvailability);
@@ -50,4 +53,20 @@ export const updateStatusOfAppointmentApiCall = async ({
   input
 } = {}) => {
   return await axiosJSON.put(`/unauth/vet/status/${appointmentId}`, input);
+};
+
+export const getVetByUserIdApiCall = async ({ vetUserId } = {}) => {
+  return await axiosJSON.get(`/unauth/vet/${vetUserId}`);
+};
+
+export const getAllPendingVetsApiCall = async () => {
+  return await axiosJSON.get(`/unauth/vet/pending/vets`);
+};
+
+export const updateProfileStatusVetApiCall = async ({ vetUserId, input }) => {
+  return await axiosJSON.put(`/unauth/vet/profile_status/${vetUserId}`, input);
+};
+
+export const getVetByIdApiCall = async ({ vetUserId }) => {
+  return await axiosJSON.get(`/unauth/vet/${vetUserId}`);
 };

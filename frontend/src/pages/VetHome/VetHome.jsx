@@ -173,7 +173,7 @@ const VetHome = () => {
   useEffect(() => {
     setHeader({
       shouldShowHeader: true,
-      title: 'Home',
+      title: 'Vet Home',
       shouldShowLogoutButton: true,
       shouldShowBackButton: true
     });
