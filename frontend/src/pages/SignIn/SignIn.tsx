@@ -13,7 +13,7 @@ import useStyles from './SignIn.styles';
 import { TextField, Button } from '@src/components';
 
 // api
-import { authenticateUser } from '@src/api';
+import { authenticateUser, getVetById } from '@src/api';
 import { AuthenticateUserType } from '@src/api/type';
 
 // constants
@@ -30,6 +30,16 @@ import { ToastContext, HeaderContext } from '@src/context';
 import { useNavigate } from '@src/hooks';
 
 import { localStorageUtil } from '@src/utils';
+
+interface UserSignIn {
+  vetUserId: string;
+}
+
+const checkIfUserCanSignIn = async ({ vetUserId }: UserSignIn) => {
+  const vet = await getVetById({ vetUserId });
+
+  return vet?.profileStatus === 'APPROVED' ? true : false;
+};
 
 const SignIn: React.FC = () => {
   // styles
@@ -65,11 +75,24 @@ const SignIn: React.FC = () => {
     const jwtToken = response.jwtToken;
     const role = response.role;
 
-    localStorageUtil.setItem('user', {
-      userName: uName,
-      jwtToken,
-      role
-    });
+    if (role === 'ROLE_VET') {
+      const vetIsAllowed = await checkIfUserCanSignIn({ vetUserId: userName });
+
+      if (vetIsAllowed) {
+        localStorageUtil.setItem('user', {
+          userName: uName,
+          jwtToken,
+          role
+        });
+      } else {
+        setToast({
+          type: 'error',
+          message:
+            'Your request is in a pending state, you will receive an email as soon as the admin approves or rejects it.'
+        });
+        return;
+      }
+    }
 
     const hasError = response.error;
     if (hasError) {
