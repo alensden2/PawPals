@@ -58,3 +58,7 @@ export const getVetByUserIdApiCall = async ({ vetUserId } = {}) => {
 export const getAllPendingVetsApiCall = async () => {
   return await axiosJSON.get(`/unauth/vet/pending/vets`);
 };
+
+export const updateProfileStatusVetApiCall = async ({ vetUserId, input }) => {
+  return await axiosJSON.put(`/unauth/vet/profile_status/${vetUserId}`, input);
+};

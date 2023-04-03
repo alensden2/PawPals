@@ -7,6 +7,7 @@ import {
   updateStatusOfAppointmentApiCall,
   getVetByUserIdApiCall,
   getAvailabilityOnSpecificDatApiCall,
+  updateProfileStatusVetApiCall,
   getAllPendingVetsApiCall
 } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';
@@ -89,4 +90,12 @@ export const getAllPendingVets = async () => {
         : ''
     };
   });
+};
+
+export const updateProfileStatusVet = async ({ vetUserId, input }) => {
+  const response = await updateProfileStatusVetApiCall({ vetUserId, input });
+
+  const isSuccess = response?.data?.success;
+
+  return isSuccess;
 };
