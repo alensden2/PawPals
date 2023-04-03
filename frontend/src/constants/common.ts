@@ -1,6 +1,6 @@
 export const ROLE_TO_ROUTE_MAPPING = {
-  VET: '/vet',
-  PET_OWNER: '/pet-owner',
+  ROLE_VET: '/vet',
+  ROLE_PET_OWNER: '/pet-owner',
   ROLE_ADMIN: '/admin',
   NONE: ''
 };
