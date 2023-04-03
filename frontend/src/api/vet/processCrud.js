@@ -9,7 +9,9 @@ import {
   getAvailabilityOnSpecificDatApiCall,
   updateProfileStatusVetApiCall,
   getAllPendingVetsApiCall,
-  getVetByIdApiCall
+  getVetByIdApiCall,
+  getAvailabilityOnSpecificDatApiCall,
+  postAvailabilityApiCall
 } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';
 
@@ -18,6 +20,12 @@ export const registerVet = async (vet) => {
   return response;
 };
 
+export const postAvailability = async (vetAvailability) => {
+  const response = await postAvailabilityApiCall(vetAvailability);
+  return response;
+};
+
+// TODO: remove vet1 as default param
 export const getAllAppointmentsOfVet = async ({ vetUserId = 'vet1' } = {}) => {
   const response = await getAllAppointmentsOfVetApiCall({ vetUserId });
 

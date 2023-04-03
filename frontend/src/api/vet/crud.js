@@ -44,6 +44,10 @@ export const getAvailabilityOnSpecificDatApiCall = async ({
   );
 };
 
+export const postAvailabilityApiCall =  async (vetAvailability) => {
+  return await axiosJSON.post(`/unauth/vet/availability/post`, vetAvailability);
+}
+
 export const updateStatusOfAppointmentApiCall = async ({
   appointmentId,
   input

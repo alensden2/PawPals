@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     transition: ' max-height 0.8s',
 
     '&.expanded.vet': {
-      maxHeight: '40em'
+      maxHeight: '80em'
     },
     '&.expanded.petowner': {
       maxHeight: '25em'
@@ -53,6 +53,25 @@ const useStyles = makeStyles((theme) => ({
   },
   dropdown: {
     marginTop: theme.spacing(1)
+  },
+  slotContainer: {
+    display: "flex",
+    "& input:read-only":{
+      backgroundColor: "#eee",
+      cursor: "not-allowed"
+    }
+  },
+  rootSlotsContainer:{
+    marginTop:"0.5em",
+  },
+  customLabel:{
+    color: "rgba(0, 0, 0, 0.54)"
+  },
+  slotContainerStart:{
+    marginRight:"0.5em !important"
+  },
+  slotContainerEnd:{
+
   }
 }));
 

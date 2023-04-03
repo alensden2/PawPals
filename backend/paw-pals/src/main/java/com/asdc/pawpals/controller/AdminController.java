@@ -1,6 +1,7 @@
 package com.asdc.pawpals.controller;
 
 import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
@@ -59,6 +60,15 @@ public class AdminController {
             vetDetails = adminReadService.getAllVetRecords();
         }
         return ResponseEntity.ok().body(vetDetails);
+    }
+
+    @GetMapping("/all-pet-owners")
+    public ResponseEntity<List<PetOwnerDto>> getAllPetOwnerRecords() {
+        List<PetOwnerDto> petOwnerRecords = null;
+        if (adminReadService != null) {
+            petOwnerRecords = adminReadService.getAllPetOwnerRecords();
+        }
+        return ResponseEntity.ok().body(petOwnerRecords);
     }
 
     /**

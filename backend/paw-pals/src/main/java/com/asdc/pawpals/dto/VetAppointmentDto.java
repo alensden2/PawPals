@@ -20,7 +20,7 @@ public class VetAppointmentDto {
 
     PetOwnerDto petOwnerDto;
 
-    List<MedicalHistoryDto> medicalHistoryDtos;
+    List<MedicalHistoryDtoInline> medicalHistoryDtos;
 
 
 }
