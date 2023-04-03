@@ -10,7 +10,6 @@ import {
   updateProfileStatusVetApiCall,
   getAllPendingVetsApiCall,
   getVetByIdApiCall,
-  getAvailabilityOnSpecificDatApiCall,
   postAvailabilityApiCall
 } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';
