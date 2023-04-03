@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from '@src/hooks';
+import useStyles from './Admin.styles';
 
 const Admin = () => {
   const navigate = useNavigate();
+  const classes = useStyles();
 
   useEffect(() => {
     navigate('home');
@@ -11,7 +13,7 @@ const Admin = () => {
   }, []);
 
   return (
-    <div>
+    <div className={classes.root}>
       <Outlet />
     </div>
   );

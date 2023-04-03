@@ -53,6 +53,7 @@ const RoutesComp = () => {
           </Route>
           <Route path="admin" element={<Admin />}>
             <Route path="home" element={<AdminHome />} />
+            <Route path="manage-vets" element={<PetOwnerManagePets />} />
           </Route>
         </Route>
       </Routes>

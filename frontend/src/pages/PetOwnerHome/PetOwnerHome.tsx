@@ -57,7 +57,7 @@ const PetOwnerHome: React.FC = () => {
   useEffect(() => {
     setHeader({
       shouldShowHeader: true,
-      title: 'Home',
+      title: 'Pet Owner Home',
       shouldShowLogoutButton: true,
       shouldShowBackButton: true
     });
