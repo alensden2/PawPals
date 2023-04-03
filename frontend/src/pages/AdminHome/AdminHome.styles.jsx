@@ -19,7 +19,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     height: '100%',
     flexDirection: 'row',
-    overflowY: 'auto',
     justifyContent: 'center',
     gap: 20
   }
