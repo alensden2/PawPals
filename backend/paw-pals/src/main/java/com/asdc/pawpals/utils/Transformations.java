@@ -90,7 +90,7 @@ public class Transformations {
         dto.setQualification(dao.getQualification());
         dto.setClinicAddress(dao.getClinicAddress());
         dto.setClinicUrl(dao.getClinicUrl());
-        dto.setProfileStatus(dto.getProfileStatus());
+        dto.setProfileStatus(dao.getProfileStatus());
         dto.setPhoneNo(dao.getPhoneNo());
         if(dao.getUser() != null){
           dto.setEmail(dao.getUser().getEmail());

@@ -187,7 +187,7 @@ public class VetServiceImpl implements VetService {
     @Override
     public List<VetDto> retrieveAllVets() {
         return vetRepository.findAll().stream().
-                filter(v -> v.getProfileStatus().equals(Status.PENDING)).
+                filter(v -> v.getProfileStatus().equals(Status.PENDING.getLabel())).
                 map(v -> Transformations.MODEL_TO_DTO_CONVERTER.vet(v)).
                 collect(Collectors.toList());
     }
@@ -200,12 +200,12 @@ public class VetServiceImpl implements VetService {
     @Override
     public VetDto updateVet(VetDto vetDto, String id, MultipartFile image) throws UserNameNotFound, IOException, InvalidImage {
 
-        if (null != id && !id.isEmpty() && vetDto != null && image != null) {
+        if (null != id && !id.isEmpty() && vetDto != null) {
             Vet vet = vetRepository.findByUser_UserId(id).orElseThrow(UserNameNotFound::new);
             if (vetDto.getClinicAddress() != null) {
                 vet.setClinicAddress(vetDto.getClinicAddress());
             }
-            if (vetDto.getClinicUrl() != null) {
+            if (null != image && vetDto.getClinicUrl() != null) {
                 vet.setClinicUrl(CommonUtils.getBytes(image));
             }
             if (vetDto.getExperience() != null) {
@@ -220,7 +220,7 @@ public class VetServiceImpl implements VetService {
                 } else if (vetDto.getProfileStatus().equals(Status.REJECTED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Profile Decline", "Unfortunately your profile has been rejected by Admin");
                 }
-                vet.setQualification(vetDto.getProfileStatus());
+                vet.setProfileStatus(vetDto.getProfileStatus());
             }
             if (vetDto.getLicenseNumber() != null) {
                 vet.setLicenseNumber(vetDto.getLicenseNumber());
@@ -236,6 +236,51 @@ public class VetServiceImpl implements VetService {
             }
 
             vetRepository.saveAndFlush(vet);
+            return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
+
+        } else if (vetDto == null) {
+            throw new InvalidObjectException("Invalid pet owner object body");
+        } else {
+            throw new UserNameNotFound("User name is not found for " + id);
+        }
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    @Override
+    public VetDto getVetByUserId(String id) throws UserNameNotFound {
+
+        if (null != id && !id.isEmpty()) {
+            Vet vet = vetRepository.findByUser_UserId(id).get();
+            return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
+        } else {
+            throw new UserNameNotFound("No vet exist by id: " + id);
+        }
+
+    }
+
+    /**
+     * @param vetDto
+     * @param id
+     * @return
+     */
+    @Override
+    public VetDto updateProfileStatus(VetDto vetDto, String id) throws UserNameNotFound, InvalidObjectException {
+        if (null != id && !id.isEmpty() && vetDto != null) {
+            Vet vet = vetRepository.findByUser_UserId(id).orElseThrow(UserNameNotFound::new);
+
+            if (vetDto.getProfileStatus() != null) {
+                if (vetDto.getProfileStatus().equals(Status.CONFIRMED.getLabel())) {
+                    mailService.sendMail(vet.getUser().getEmail(), "Successfully Approved", "your profile is successfully approved by Admin");
+                } else if (vetDto.getProfileStatus().equals(Status.REJECTED.getLabel())) {
+                    mailService.sendMail(vet.getUser().getEmail(), "Profile Decline", "Unfortunately your profile has been rejected by Admin");
+                }
+                vet.setProfileStatus(vetDto.getProfileStatus());
+            }
+
+            vet = vetRepository.saveAndFlush(vet);
             return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
 
         } else if (vetDto == null) {
