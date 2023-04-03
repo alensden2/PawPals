@@ -5,13 +5,19 @@ import {
   registerVetApiCall,
   getAllAppointmentsOfVetApiCall,
   updateStatusOfAppointmentApiCall,
-  getAvailabilityOnSpecificDatApiCall
+  getAvailabilityOnSpecificDatApiCall,
+  postAvailabilityApiCall
 } from './crud';
 
 export const registerVet = async (vet) => {
   const response = await registerVetApiCall(vet);
   return response;
 };
+
+export const postAvailability =  async (vetAvailability) => {
+  const response = await postAvailabilityApiCall(vetAvailability);
+  return response;
+}
 
 // TODO: remove vet1 as default param
 export const getAllAppointmentsOfVet = async ({ vetUserId = 'vet1' } = {}) => {
