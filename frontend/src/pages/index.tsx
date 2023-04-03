@@ -16,6 +16,7 @@ import PetOwnerAllVets from './PetOwnerAllVets';
 import PetOwnerManagePets from './PetOwnerManagePets';
 import AboutUs from './AboutUs';
 import ContactUs from './ContactUs';
+import AdminManageVets from './AdminManageVets';
 
 export {
   Landing,
@@ -35,5 +36,6 @@ export {
   PetOwnerAllVets,
   AboutUs,
   ContactUs,
+  AdminManageVets,
   PetOwnerManagePets
 };
