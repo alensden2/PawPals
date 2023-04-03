@@ -6,7 +6,8 @@ import {
   getAllAppointmentsOfVetApiCall,
   updateStatusOfAppointmentApiCall,
   getVetByUserIdApiCall,
-  getAvailabilityOnSpecificDatApiCall
+  getAvailabilityOnSpecificDatApiCall,
+  getAllPendingVetsApiCall
 } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';
 
@@ -73,4 +74,19 @@ export const getVetByUserId = async ({ vetUserId } = {}) => {
   });
 
   return response;
+};
+
+export const getAllPendingVets = async () => {
+  const response = await getAllPendingVetsApiCall();
+
+  const body = response?.data?.body || [];
+
+  return body.map((item) => {
+    return {
+      ...item,
+      clinicUrl: item.clinicUrl
+        ? getImageUrlFromBytes({ bytes: item.clinicUrl })
+        : ''
+    };
+  });
 };
