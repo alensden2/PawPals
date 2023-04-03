@@ -1,10 +1,12 @@
 package com.asdc.pawpals.service.implementation;
 
 import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
 import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.AdminPostAnimalRepository;
@@ -92,6 +94,27 @@ public class AdminServiceImpl implements AdminService {
           .collect(Collectors.toList());
     }
     return vetsDto;
+  }
+
+   /**
+   * fetches all the vet records
+   */
+  @Override
+  public List<PetOwnerDto> getAllPetOwnerRecords() {
+    List<PetOwner> petOwner = petOwnerRepository.findAll();
+    logger.debug(
+      "AdminReadService :: getAllVets :: petOwnerRecordsAre are : {}",
+      petOwner
+    );
+    List<PetOwnerDto> PetOwnerDto = null;
+    if (!petOwner.isEmpty()) {
+      PetOwnerDto =
+        petOwner
+          .stream()
+          .map(Transformations.MODEL_TO_DTO_CONVERTER::petOwner)
+          .collect(Collectors.toList());
+    }
+    return PetOwnerDto;
   }
 
   /**
