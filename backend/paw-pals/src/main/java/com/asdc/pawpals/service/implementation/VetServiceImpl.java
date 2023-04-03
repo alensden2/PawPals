@@ -203,7 +203,7 @@ public class VetServiceImpl implements VetService {
             vetAppointmentDto.setAnimalDto(Transformations.MODEL_TO_DTO_CONVERTER.animal(appointment.getAnimal()));
             vetAppointmentDto.setPetOwnerDto(Transformations.MODEL_TO_DTO_CONVERTER.petOwner(appointment.getAnimal().getOwner()));
             vetAppointmentDto.setMedicalHistoryDtos(appointment.getAnimal().getMedicalHistories().stream().map(m ->
-                    Transformations.MODEL_TO_DTO_CONVERTER.medicalHistory(m)).collect(Collectors.toList())
+                    Transformations.MODEL_TO_DTO_CONVERTER.medicalHistoryInline(m)).collect(Collectors.toList())
             );
             return vetAppointmentDto;
         }).collect(Collectors.toList());

@@ -80,6 +80,23 @@ public class Transformations {
       return dto;
     }
 
+    public static MedicalHistoryDtoInline medicalHistoryInline(MedicalHistory dao) {
+      MedicalHistoryDtoInline dto = new MedicalHistoryDtoInline();
+      if (dao != null) {
+        dto.setDateDiagnosed(dao.getDateDiagnosed());
+        dto.setAilmentName(dao.getAilmentName());
+        dto.setPrescription(dao.getPrescription());
+        dto.setVaccines(dao.getVaccines());
+        if(dao.getVet() != null){
+            dto.setVet(MODEL_TO_DTO_CONVERTER.vet(dao.getVet()));
+        }
+        if(dao.getAnimal() != null){
+          dto.setAnimalId(dao.getAnimal().getId());
+        }
+      }
+      return dto;
+    }
+
     public static VetDto vet(Vet dao) {
       VetDto dto = new VetDto();
       if (dao != null) {
