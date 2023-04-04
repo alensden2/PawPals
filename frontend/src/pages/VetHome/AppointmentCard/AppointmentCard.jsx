@@ -69,6 +69,7 @@ const AppointmentCard = ({
           onClick={() =>
             onDiagnoseButtonClick({
               petId: appointment.pet.id,
+              appointmentId: appointment.appointment.id,
               openModal: true
             })
           }

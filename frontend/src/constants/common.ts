@@ -66,7 +66,7 @@ export const VET_HOME_APPOINTMENT_CONSTANT = {
     shouldShowViewDetailsButton: false,
     shouldShowInfoButton: true
   },
-  DIAGNOSED: {
+  COMPLETED: {
     headerText: 'Completed Appointments',
     shouldShowApproveDeclineButtons: false,
     shouldShowDiagnoseButton: false,
