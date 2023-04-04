@@ -75,7 +75,7 @@ const SignIn: React.FC = () => {
     const jwtToken = response.jwtToken;
     const role = response.role;
 
-    if (role === 'ROLE_VET') {
+    if (['ROLE_VET', 'VET'].includes(role)) {
       const vetIsAllowed = await checkIfUserCanSignIn({ vetUserId: userName });
 
       if (vetIsAllowed) {
