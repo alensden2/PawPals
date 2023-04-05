@@ -27,7 +27,7 @@ export type AuthenticateUserApiInputType = {
 };
 
 interface Authority {
-  authority: 'VET' | 'PET_OWNER' | 'ROLE_ADMIN';
+  authority: 'ROLE_VET' | 'ROLE_ADMIN' | 'ROLE_PET_OWNER';
 }
 
 export type AuthenticateUserApiResponseType = {
@@ -52,7 +52,7 @@ export type AuthenticateUserType = {
   email: string;
   userName: string;
   jwtToken: string;
-  role: 'VET' | 'PET_OWNER' | 'ROLE_ADMIN' | 'NONE';
+  role: 'ROLE_VET' | 'ROLE_ADMIN' | 'ROLE_PET_OWNER' | 'NONE';
   error: boolean;
   errorMessage: string;
 };

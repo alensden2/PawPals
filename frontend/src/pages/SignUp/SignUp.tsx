@@ -28,7 +28,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
 // components
-import { Button, TextField,Select as CustomSelect } from '@src/components';
+import { Button, TextField, Select as CustomSelect } from '@src/components';
 
 // styles
 import useStyles from './SignUp.styles';
@@ -40,7 +40,7 @@ import {
 } from '@src/constants';
 
 // context
-import { ToastContext } from '@src/context';
+import { ToastContext, HeaderContext } from '@src/context';
 
 // api
 import { registerUser } from '@src/api/auth';
@@ -50,7 +50,6 @@ import { registerPetOwner } from '@src/api/petowner';
 
 // hooks
 import { useNavigate } from '@src/hooks';
-
 
 const SignUp: React.FC = () => {
   // styles
@@ -72,7 +71,25 @@ const SignUp: React.FC = () => {
   const [profilePhoto, setProfilePhoto] = useState(null as unknown as File);
   const [loader, setLoader] = useState(false);
   const [defaultAvl, setDefaultAvl] = useState(false);
-  const [availability, setAvailability] = useState({MONDAY: {start: "", end: ""}, TUESDAY: {start: "", end: ""}, WEDNESDAY: {start: "", end: ""}, THURSDAY: {start: "", end: ""}, FRIDAY: {start: "", end: ""}, SATURDAY: {start: "", end: ""}, SUNDAY: {start: "", end: ""}});
+  const [availability, setAvailability] = useState({
+    MONDAY: { start: '', end: '' },
+    TUESDAY: { start: '', end: '' },
+    WEDNESDAY: { start: '', end: '' },
+    THURSDAY: { start: '', end: '' },
+    FRIDAY: { start: '', end: '' },
+    SATURDAY: { start: '', end: '' },
+    SUNDAY: { start: '', end: '' }
+  });
+
+  const { setHeader } = useContext(HeaderContext);
+
+  // useEffect
+  useEffect(() => {
+    setHeader({
+      shouldShowHeader: false
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClose = () => {
     setLoader(false);
@@ -116,14 +133,15 @@ const SignUp: React.FC = () => {
           phoneNo: phoneNumber,
           qualification: qualifications.join(', '),
           clinicPhoto,
+          profileStatus: 'PENDING',
           email
         });
         success = response === userName;
         //post vet availability
-        if(success){
+        if (success) {
           const vetAvailabilityObj = [];
-          if(availability){
-            Object.entries(availability).forEach(([dayOfWeek, avl])=>{
+          if (availability) {
+            Object.entries(availability).forEach(([dayOfWeek, avl]) => {
               const avlObj = {
                 dayOfWeek,
                 vetUserId: userName,
@@ -166,25 +184,46 @@ const SignUp: React.FC = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     handleVetAvlChange();
   }, [defaultAvl]);
 
   const handleVetAvlChange = (event, type) => {
     const finalUpdatedValue = JSON.parse(JSON.stringify(availability));
-    if(event){
-      finalUpdatedValue["MONDAY"] = {...finalUpdatedValue["MONDAY"], [type]: event};
+    if (event) {
+      finalUpdatedValue['MONDAY'] = {
+        ...finalUpdatedValue['MONDAY'],
+        [type]: event
+      };
     }
-    if(defaultAvl){
-      finalUpdatedValue["TUESDAY"] = { start: finalUpdatedValue["MONDAY"].start, end: finalUpdatedValue["MONDAY"].end};
-      finalUpdatedValue["WEDNESDAY"] = { start: finalUpdatedValue["MONDAY"].start, end: finalUpdatedValue["MONDAY"].end};
-      finalUpdatedValue["THURSDAY"] = { start: finalUpdatedValue["MONDAY"].start, end: finalUpdatedValue["MONDAY"].end};
-      finalUpdatedValue["FRIDAY"] = { start: finalUpdatedValue["MONDAY"].start, end: finalUpdatedValue["MONDAY"].end};
-      finalUpdatedValue["SATURDAY"] = { start: finalUpdatedValue["MONDAY"].start, end: finalUpdatedValue["MONDAY"].end};
-      finalUpdatedValue["SUNDAY"] = { start: finalUpdatedValue["MONDAY"].start, end: finalUpdatedValue["MONDAY"].end};
+    if (defaultAvl) {
+      finalUpdatedValue['TUESDAY'] = {
+        start: finalUpdatedValue['MONDAY'].start,
+        end: finalUpdatedValue['MONDAY'].end
+      };
+      finalUpdatedValue['WEDNESDAY'] = {
+        start: finalUpdatedValue['MONDAY'].start,
+        end: finalUpdatedValue['MONDAY'].end
+      };
+      finalUpdatedValue['THURSDAY'] = {
+        start: finalUpdatedValue['MONDAY'].start,
+        end: finalUpdatedValue['MONDAY'].end
+      };
+      finalUpdatedValue['FRIDAY'] = {
+        start: finalUpdatedValue['MONDAY'].start,
+        end: finalUpdatedValue['MONDAY'].end
+      };
+      finalUpdatedValue['SATURDAY'] = {
+        start: finalUpdatedValue['MONDAY'].start,
+        end: finalUpdatedValue['MONDAY'].end
+      };
+      finalUpdatedValue['SUNDAY'] = {
+        start: finalUpdatedValue['MONDAY'].start,
+        end: finalUpdatedValue['MONDAY'].end
+      };
     }
     setAvailability(finalUpdatedValue);
-  }
+  };
 
   const handleSelectChange = (event: any) => {
     setSelectedOption(event.target.value);
@@ -334,192 +373,295 @@ const SignUp: React.FC = () => {
                   {/* Vet availability container */}
                   <div className={classes.rootSlotsContainer}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <Typography className={classes.customLabel} variant="h6" align="left" gutterBottom>
+                      <Typography
+                        className={classes.customLabel}
+                        variant="h6"
+                        align="left"
+                        gutterBottom
+                      >
                         Provide your weekly availability
                       </Typography>
-                      <FormControlLabel onChange={(event)=>{
-                        setDefaultAvl(event.target.checked);
-                      }} control={<Checkbox />} label="check this to default for every input" />
+                      <FormControlLabel
+                        onChange={(event) => {
+                          setDefaultAvl(event.target.checked);
+                        }}
+                        control={<Checkbox />}
+                        label="check this to default for every input"
+                      />
                       <Typography align="left" gutterBottom>
-                        Monday: 
+                        Monday:
                       </Typography>
                       <div className={classes.slotContainer}>
                         <TimePicker
-                            label="Start Time"
-                            
-                            value={availability["MONDAY"].start}
-                            className={classes.slotContainerStart}
-                            onChange={(event) => {
-                              handleVetAvlChange(event, "start");
-                            }}
-                            format="HH:mm"
-                          /> 
-                          <TimePicker
-                            label="End Time"
-                            
-                            value={availability["MONDAY"].end}
-                            className={classes.slotContainerEnd}
-                            onChange={(event) => {
-                              handleVetAvlChange(event, "end");
-                            }}
-                            format="HH:mm"
-                          />
+                          label="Start Time"
+                          value={availability['MONDAY'].start}
+                          className={classes.slotContainerStart}
+                          onChange={(event) => {
+                            handleVetAvlChange(event, 'start');
+                          }}
+                          format="HH:mm"
+                        />
+                        <TimePicker
+                          label="End Time"
+                          value={availability['MONDAY'].end}
+                          className={classes.slotContainerEnd}
+                          onChange={(event) => {
+                            handleVetAvlChange(event, 'end');
+                          }}
+                          format="HH:mm"
+                        />
                       </div>
 
                       <Typography align="left" gutterBottom>
-                        Tuesday: 
+                        Tuesday:
                       </Typography>
                       <div className={classes.slotContainer}>
                         <TimePicker
-                            label="Start Time"
-                            readOnly={defaultAvl}
-                            value={availability["TUESDAY"].start}
-                            className={classes.slotContainerStart}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "TUESDAY":{...availability["TUESDAY"], start: event!}}
-                            })}
-                            format="HH:mm"
-                          /> 
-                          <TimePicker
-                            label="End Time"
-                            readOnly={defaultAvl}
-                            value={availability["TUESDAY"].end}
-                            className={classes.slotContainerEnd}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "TUESDAY":{...availability["TUESDAY"], end: event!}}
-                            })}
-                            format="HH:mm"
-                          />
+                          label="Start Time"
+                          readOnly={defaultAvl}
+                          value={availability['TUESDAY'].start}
+                          className={classes.slotContainerStart}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                TUESDAY: {
+                                  ...availability['TUESDAY'],
+                                  start: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
+                        <TimePicker
+                          label="End Time"
+                          readOnly={defaultAvl}
+                          value={availability['TUESDAY'].end}
+                          className={classes.slotContainerEnd}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                TUESDAY: {
+                                  ...availability['TUESDAY'],
+                                  end: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
                       </div>
 
                       <Typography align="left" gutterBottom>
-                        Wednesday: 
+                        Wednesday:
                       </Typography>
                       <div className={classes.slotContainer}>
                         <TimePicker
-                            label="Start Time"
-                            readOnly={defaultAvl}
-                            value={availability["WEDNESDAY"].start}
-                            className={classes.slotContainerStart}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "WEDNESDAY":{...availability["WEDNESDAY"], start: event!}}
-                            })}
-                            format="HH:mm"
-                          /> 
-                          <TimePicker
-                            label="End Time"
-                            readOnly={defaultAvl}
-                            value={availability["WEDNESDAY"].end}
-                            className={classes.slotContainerEnd}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "WEDNESDAY":{...availability["WEDNESDAY"], end: event!}}
-                            })}
-                            format="HH:mm"
-                          />
+                          label="Start Time"
+                          readOnly={defaultAvl}
+                          value={availability['WEDNESDAY'].start}
+                          className={classes.slotContainerStart}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                WEDNESDAY: {
+                                  ...availability['WEDNESDAY'],
+                                  start: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
+                        <TimePicker
+                          label="End Time"
+                          readOnly={defaultAvl}
+                          value={availability['WEDNESDAY'].end}
+                          className={classes.slotContainerEnd}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                WEDNESDAY: {
+                                  ...availability['WEDNESDAY'],
+                                  end: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
                       </div>
 
                       <Typography align="left" gutterBottom>
-                        Thursday: 
+                        Thursday:
                       </Typography>
                       <div className={classes.slotContainer}>
                         <TimePicker
-                            label="Start Time"
-                            readOnly={defaultAvl}
-                            value={availability["THURSDAY"].start}
-                            className={classes.slotContainerStart}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "THURSDAY":{...availability["THURSDAY"], start: event!}}
-                            })}
-                            format="HH:mm"
-                          /> 
-                          <TimePicker
-                            label="End Time"
-                            readOnly={defaultAvl}
-                            value={availability["THURSDAY"].end}
-                            className={classes.slotContainerEnd}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "THURSDAY":{...availability["THURSDAY"], end: event!}}
-                            })}
-                            format="HH:mm"
-                          />
+                          label="Start Time"
+                          readOnly={defaultAvl}
+                          value={availability['THURSDAY'].start}
+                          className={classes.slotContainerStart}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                THURSDAY: {
+                                  ...availability['THURSDAY'],
+                                  start: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
+                        <TimePicker
+                          label="End Time"
+                          readOnly={defaultAvl}
+                          value={availability['THURSDAY'].end}
+                          className={classes.slotContainerEnd}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                THURSDAY: {
+                                  ...availability['THURSDAY'],
+                                  end: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
                       </div>
 
                       <Typography align="left" gutterBottom>
-                        Friday: 
+                        Friday:
                       </Typography>
                       <div className={classes.slotContainer}>
                         <TimePicker
-                            label="Start Time"
-                            readOnly={defaultAvl}
-                            value={availability["FRIDAY"].start}
-                            className={classes.slotContainerStart}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "FRIDAY":{...availability["FRIDAY"], start: event!}}
-                            })}
-                            format="HH:mm"
-                          /> 
-                          <TimePicker
-                            label="End Time"
-                            readOnly={defaultAvl}
-                            value={availability["FRIDAY"].end}
-                            className={classes.slotContainerEnd}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "FRIDAY":{...availability["FRIDAY"], end: event!}}
-                            })}
-                            format="HH:mm"
-                          />
+                          label="Start Time"
+                          readOnly={defaultAvl}
+                          value={availability['FRIDAY'].start}
+                          className={classes.slotContainerStart}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                FRIDAY: {
+                                  ...availability['FRIDAY'],
+                                  start: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
+                        <TimePicker
+                          label="End Time"
+                          readOnly={defaultAvl}
+                          value={availability['FRIDAY'].end}
+                          className={classes.slotContainerEnd}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                FRIDAY: {
+                                  ...availability['FRIDAY'],
+                                  end: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
                       </div>
 
                       <Typography align="left" gutterBottom>
-                        Saturday: 
+                        Saturday:
                       </Typography>
                       <div className={classes.slotContainer}>
                         <TimePicker
-                            label="Start Time"
-                            readOnly={defaultAvl}
-                            value={availability["SATURDAY"].start}
-                            className={classes.slotContainerStart}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "SATURDAY":{...availability["SATURDAY"], start: event!}}
-                            })}
-                            format="HH:mm"
-                          /> 
-                          <TimePicker
-                            label="End Time"
-                            readOnly={defaultAvl}
-                            value={availability["SATURDAY"].end}
-                            className={classes.slotContainerEnd}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "SATURDAY":{...availability["SATURDAY"], end: event!}}
-                            })}
-                            format="HH:mm"
-                          />
+                          label="Start Time"
+                          readOnly={defaultAvl}
+                          value={availability['SATURDAY'].start}
+                          className={classes.slotContainerStart}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                SATURDAY: {
+                                  ...availability['SATURDAY'],
+                                  start: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
+                        <TimePicker
+                          label="End Time"
+                          readOnly={defaultAvl}
+                          value={availability['SATURDAY'].end}
+                          className={classes.slotContainerEnd}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                SATURDAY: {
+                                  ...availability['SATURDAY'],
+                                  end: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
                       </div>
 
                       <Typography align="left" gutterBottom>
-                        Sunday: 
+                        Sunday:
                       </Typography>
                       <div className={classes.slotContainer}>
                         <TimePicker
-                            label="Start Time"
-                            readOnly={defaultAvl}
-                            value={availability["SUNDAY"].start}
-                            className={classes.slotContainerStart}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "SUNDAY":{...availability["SUNDAY"], start: event!}}
-                            })}
-                            format="HH:mm"
-                          /> 
-                          <TimePicker
-                            label="End Time"
-                            readOnly={defaultAvl}
-                            value={availability["SUNDAY"].end}
-                            className={classes.slotContainerEnd}
-                            onChange={(event) => setAvailability((prev)=>{
-                              return {...prev, "SUNDAY":{...availability["SUNDAY"], end: event!}}
-                            })}
-                            format="HH:mm"
-                          />
+                          label="Start Time"
+                          readOnly={defaultAvl}
+                          value={availability['SUNDAY'].start}
+                          className={classes.slotContainerStart}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                SUNDAY: {
+                                  ...availability['SUNDAY'],
+                                  start: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
+                        <TimePicker
+                          label="End Time"
+                          readOnly={defaultAvl}
+                          value={availability['SUNDAY'].end}
+                          className={classes.slotContainerEnd}
+                          onChange={(event) =>
+                            setAvailability((prev) => {
+                              return {
+                                ...prev,
+                                SUNDAY: {
+                                  ...availability['SUNDAY'],
+                                  end: event!
+                                }
+                              };
+                            })
+                          }
+                          format="HH:mm"
+                        />
                       </div>
                     </LocalizationProvider>
                   </div>

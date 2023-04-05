@@ -10,3 +10,11 @@ export const getAllVetsApiCall = async () => {
     console.error(e);
   }
 };
+
+export const getAllPetOwnersApiCall = async () => {
+  try {
+    return await axiosJSON.get(`/unauth/admin/all-pet-owners`);
+  } catch (e) {
+    console.error(e);
+  }
+};
