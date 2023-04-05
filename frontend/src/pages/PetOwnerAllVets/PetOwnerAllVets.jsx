@@ -93,8 +93,20 @@ const PetOwnerAllVets = () => {
 
       bookAppointment(appointmentObj).then(()=>{
         setToast({ type: 'success', message: 'Appointment is requested, please wait for confirmation email from the vet' });
+        setModalState((prevState)=>{
+          return {...prevState, isOpen: false, vet: undefined};
+        });
+        setPetSelected("");
+        setDateSelected("");
+        setTimeSelected("");
       }).catch(()=>{
         setToast({ type: 'error', message: 'There was an error booking the appointment, please try again' });
+        setModalState((prevState)=>{
+          return {...prevState, isOpen: false, vet: undefined};
+        });
+        setPetSelected("");
+        setDateSelected("");
+        setTimeSelected("");
       });
     }
   }
