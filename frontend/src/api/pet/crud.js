@@ -27,7 +27,7 @@ export const createPetApiCall = async ({ input = {} } = {}) => {
       formData.append('image', input.photoUrl);
     }
 
-    return await axiosFORM.post('/unauth/animal/register', formData);
+    return await axiosFORM.post('/auth/animal/register', formData);
   } catch (e) {
     console.error(e);
   }
@@ -56,9 +56,7 @@ export const updatePetApiCall = async ({ petId, input }) => {
       formData.append('image', input.photoUrl);
     }
 
-    return await axiosFORM.put(`/unauth/animal/${petId}`, formData);
-
-    // return await axiosFORM.put(`/unauth/animal/${petId}`, input);
+    return await axiosFORM.put(`/auth/animal/${petId}`, formData);
   } catch (e) {
     console.error(e);
   }
@@ -66,7 +64,7 @@ export const updatePetApiCall = async ({ petId, input }) => {
 
 export const deletePetApiCall = async ({ petId }) => {
   try {
-    return await axiosJSON.delete(`/unauth/animal/${petId}`);
+    return await axiosJSON.delete(`/auth/animal/${petId}`);
   } catch (e) {
     console.error(e);
   }
