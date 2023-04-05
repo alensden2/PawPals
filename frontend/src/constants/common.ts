@@ -6,6 +6,7 @@ export const ROLE_TO_ROUTE_MAPPING = {
   ROLE_VET: '/vet',
   VET: '/vet',
   ROLE_PET_OWNER: '/pet-owner',
+  PET_OWNER: '/pet-owner',
   ROLE_ADMIN: '/admin',
   NONE: ''
 };
