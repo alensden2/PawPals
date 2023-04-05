@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 
 @RestController
-@CrossOrigin
+ 
 @RequestMapping("/unauth/pet-owner")
 public class PetOwnerController {
 

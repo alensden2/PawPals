@@ -30,19 +30,19 @@ public class UserServiceImpl implements UserService {
         user1.setUserId("admin1");
         user1.setPassword(passwordEncoder.encode("admin123"));
         user1.setEmail("abcAdmin@gmail.com");
-        user1.setRole("ROLE_ADMIN");
+        user1.setRole("ADMIN");
 
         User user2 = new User();
         user2.setUserId("pet_owner1");
         user2.setPassword(passwordEncoder.encode("pet123"));
         user2.setEmail("abcPet@gmail.com");
-        user2.setRole("ROLE_PET_OWNER");
+        user2.setRole("PET_OWNER");
 
         User user3 = new User();
         user3.setUserId("vet1");
         user3.setPassword(passwordEncoder.encode("vet123"));
         user3.setEmail("abcVet@gmail.com");
-        user3.setRole("ROLE_VET");
+        user3.setRole("VET");
 
         userRepository.save(user1);
         userRepository.save(user2);
