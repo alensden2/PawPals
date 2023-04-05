@@ -12,8 +12,6 @@ import {
 } from '@material-ui/core';
 import { Button } from '@src/components';
 
-import { getImageUrlFromBytes } from '@src/utils';
-
 const VetCard = ({
   userName,
   firstName,
@@ -28,16 +26,11 @@ const VetCard = ({
   handleBookClick
 }) => {
   const classes = useStyles();
-  // console.log("userName is: ", userName);
-  // console.log("typeof clinicUrl is: ",clinicUrl instanceof Array);
-  const clinicUrlB64 = clinicUrl ? getImageUrlFromBytes({ bytes: clinicUrl }) : '';
-  // const base64String = btoa(String.fromCharCode(...new Uint8Array(clinicUrl)));
-  // console.log("base64",base64String);
 
   const handleButtonClick = (e) => {
     e.preventDefault();
     handleBookClick(userName);
-  }
+  };
 
   return (
     <>
@@ -45,7 +38,7 @@ const VetCard = ({
         {/* Header Section */}
         <div className={classes.headerContainer}>
           <Typography variant="h6" align="center">
-            {firstName?.toUpperCase()+" "+lastName?.toUpperCase()}
+            {firstName?.toUpperCase() + ' ' + lastName?.toUpperCase()}
           </Typography>
 
           {/* Action Buttons */}
@@ -64,11 +57,7 @@ const VetCard = ({
         </div>
 
         {/* Image Section */}
-        <CardMedia
-          className={classes.media}
-          image={clinicUrlB64}
-          title={name}
-        />
+        <CardMedia className={classes.media} image={clinicUrl} title={name} />
 
         {/* Content Section */}
         <CardContent>
