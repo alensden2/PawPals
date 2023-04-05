@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @RestController
  
-@RequestMapping("/unauth/animal")
+@RequestMapping("/auth/animal")
 public class AnimalController {
 
     @Autowired

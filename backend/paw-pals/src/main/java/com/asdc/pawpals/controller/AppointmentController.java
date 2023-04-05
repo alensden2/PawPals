@@ -26,7 +26,7 @@ import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
 
 @RestController()
-@RequestMapping("/unauth/appointment")
+@RequestMapping("/auth/appointment")
 public class AppointmentController {
     private static final Logger logger = LogManager.getLogger(AppointmentController.class);
 

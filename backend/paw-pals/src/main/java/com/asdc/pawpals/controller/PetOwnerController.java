@@ -20,7 +20,7 @@ import java.io.InvalidObjectException;
 
 @RestController
  
-@RequestMapping("/unauth/pet-owner")
+@RequestMapping("/auth/pet-owner")
 public class PetOwnerController {
 
     @Autowired
