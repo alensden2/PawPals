@@ -6,13 +6,15 @@ import { axiosFORM, axiosJSON } from '@src/lib';
 export const createPetApiCall = async ({ input = {} } = {}) => {
   try {
     const formData = new FormData();
+    const user = localStorageUtil.getItem('user');
+    const petOwnerId = user.userName;
 
     const animal = {
       name: input.name,
       type: input.type,
       age: input.age,
       gender: input.gender,
-      ownerId: 'ishan' //  TODO: get this ownerId from localStorage
+      ownerId: petOwnerId
     };
 
     formData.append(
@@ -33,13 +35,15 @@ export const createPetApiCall = async ({ input = {} } = {}) => {
 export const updatePetApiCall = async ({ petId, input }) => {
   try {
     const formData = new FormData();
+    const user = localStorageUtil.getItem('user');
+    const petOwnerId = user.userName;
 
     const animal = {
       name: input.name,
       type: input.type,
       age: input.age,
       gender: input.gender,
-      ownerId: 'ishan' //  TODO: get this ownerId from localStorage
+      ownerId: petOwnerId
     };
 
     formData.append(
