@@ -27,9 +27,7 @@ const PetMedicalRecord = () => {
     async function fetchData() {
       try {
         setIsLoading(true);
-        const result = await getAllMedicalHistoryOfPet({
-          petOwnerUserId: 'ishan'
-        });
+        const result = await getAllMedicalHistoryOfPet();
         setIsLoading(false);
 
         setPetMedicalRecord(result);

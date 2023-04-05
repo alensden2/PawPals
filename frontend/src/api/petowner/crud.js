@@ -3,6 +3,7 @@
 
 import axios from 'axios';
 import { axiosJSON } from '@src/lib';
+import { localStorageUtil } from '@src/utils';
 
 export const registerPetOwnerApiCall = async (petOwner) => {
   let response;
@@ -32,7 +33,10 @@ export const registerPetOwnerApiCall = async (petOwner) => {
   return response;
 };
 
-export const getAllMedicalHistoryOfPetApiCall = async ({ petOwnerUserId }) => {
+export const getAllMedicalHistoryOfPetApiCall = async () => {
+  const user = localStorageUtil.getItem('user');
+  const petOwnerUserId = user.userName;
+
   try {
     return await axiosJSON.get(
       `/unauth/pet-owner/pets/medicalHistory/${petOwnerUserId}`
@@ -42,9 +46,12 @@ export const getAllMedicalHistoryOfPetApiCall = async ({ petOwnerUserId }) => {
   }
 };
 
-export const getAllPetsApiCall = async ({ ownerUserId = 'ishan' } = {}) => {
+export const getAllPetsApiCall = async () => {
+  const user = localStorageUtil.getItem('user');
+  const petOwnerUserId = user.userName;
+
   try {
-    return await axiosJSON.get(`/unauth/pet-owner/pets/${ownerUserId}`);
+    return await axiosJSON.get(`/unauth/pet-owner/pets/${petOwnerUserId}`);
   } catch (e) {
     console.error(e);
   }
