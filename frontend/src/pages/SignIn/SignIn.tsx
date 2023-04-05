@@ -94,15 +94,19 @@ const SignIn: React.FC = () => {
     const role = response.role;
 
     if (['ROLE_VET', 'VET'].includes(role)) {
+      setUserInLocalStorage({
+        userName: uName,
+        jwtToken,
+        role
+      });
       const vetIsAllowed = await checkIfUserCanSignIn({ vetUserId: userName });
 
-      if (vetIsAllowed) {
+      if (!vetIsAllowed) {
         setUserInLocalStorage({
           userName: uName,
           jwtToken,
           role
         });
-      } else {
         setToast({
           type: 'error',
           message:
