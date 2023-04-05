@@ -2,6 +2,7 @@
 // @ts-nocheck
 import axios from 'axios';
 import { axiosJSON } from '@src/lib';
+import { localStorageUtil } from '@src/utils';
 
 export const registerVetApiCall = async (vet) => {
   let response;
@@ -28,10 +29,16 @@ export const registerVetApiCall = async (vet) => {
   return response;
 };
 
-export const getAllAppointmentsOfVetApiCall = async ({
-  vetUserId = 'vet1'
-} = {}) => {
-  return await axiosJSON.get(`/unauth/vet/appointments/${vetUserId}`);
+export const getAllAppointmentsOfVetApiCall = async () => {
+  const user = localStorageUtil.getItem('user');
+  const vetUserId = user.userName;
+  let response;
+  try {
+    response = await axiosJSON.get(`/unauth/vet/appointments/${vetUserId}`);
+  } catch (e) {
+    response = e.errorReponse;
+  }
+  return response;
 };
 
 export const getAvailabilityOnSpecificDatApiCall = async ({
@@ -44,9 +51,9 @@ export const getAvailabilityOnSpecificDatApiCall = async ({
   );
 };
 
-export const postAvailabilityApiCall =  async (vetAvailability) => {
+export const postAvailabilityApiCall = async (vetAvailability) => {
   return await axiosJSON.post(`/unauth/vet/availability/post`, vetAvailability);
-}
+};
 
 export const updateStatusOfAppointmentApiCall = async ({
   appointmentId,
