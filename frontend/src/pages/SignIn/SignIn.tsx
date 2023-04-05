@@ -35,6 +35,12 @@ interface UserSignIn {
   vetUserId: string;
 }
 
+interface LocalStorageSetInput {
+  userName: string;
+  jwtToken: string;
+  role: string;
+}
+
 const checkIfUserCanSignIn = async ({ vetUserId }: UserSignIn) => {
   const vet = await getVetById({ vetUserId });
 
@@ -63,6 +69,18 @@ const SignIn: React.FC = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const setUserInLocalStorage = ({
+    userName,
+    jwtToken,
+    role
+  }: LocalStorageSetInput): void => {
+    localStorageUtil.setItem('user', {
+      userName,
+      jwtToken,
+      role
+    });
+  };
+
   // submit click
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -79,7 +97,7 @@ const SignIn: React.FC = () => {
       const vetIsAllowed = await checkIfUserCanSignIn({ vetUserId: userName });
 
       if (vetIsAllowed) {
-        localStorageUtil.setItem('user', {
+        setUserInLocalStorage({
           userName: uName,
           jwtToken,
           role
@@ -92,6 +110,12 @@ const SignIn: React.FC = () => {
         });
         return;
       }
+    } else {
+      setUserInLocalStorage({
+        userName: uName,
+        jwtToken,
+        role
+      });
     }
 
     const hasError = response.error;
