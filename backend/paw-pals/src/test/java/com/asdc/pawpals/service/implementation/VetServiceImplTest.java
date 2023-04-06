@@ -8,8 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +44,8 @@ public class VetServiceImplTest {
     VetAvailabilityRepository vetAvailabilityRepoMock;
     AppointmentRepository aptRepoMock;
 
+    MailServiceImpl mailServiceMock;
+
     @BeforeEach
     public void setup(){
         vetRepoMock = mock(VetRepository.class);
@@ -58,6 +59,10 @@ public class VetServiceImplTest {
 
         aptRepoMock = mock(AppointmentRepository.class);
         vetService.appointmentRepository = aptRepoMock;
+
+        mailServiceMock=mock(MailServiceImpl.class);
+        vetService.mailService=mailServiceMock;
+
     }
 
     @Test
@@ -73,12 +78,13 @@ public class VetServiceImplTest {
         when(vetRepoMock.save(any(Vet.class))).thenReturn(vet);
         when(vetRepoMock.count()).thenReturn(1L).thenReturn(2L);
         when(userRepoMock.findById(anyString())).thenReturn(Optional.of(new User()));
+        doNothing().when(mailServiceMock).sendMail(eq(""), eq(""), eq(""));
+
         vetToRegister.setUserName("jDoe");
 
         //Act
         Boolean saved = vetService.registerVet(vetToRegister);
-
-        //Assert
+         //Assert
         assertTrue(saved);
     }
 

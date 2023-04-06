@@ -41,6 +41,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     VetRepository vetRepository;
 
     public Boolean updateAppointmentStatus(Integer appointmentId, String action) throws InvalidObjectException, InvalidAppointmentId{
+        logger.debug("Update Appointment status for pet owner from vet side %s", appointmentId + action);
         Boolean statusUpdated = false;
         if(appointmentId != null && action != null && !action.isEmpty() && AppointmentValidators.isValidStatus(action)){
             Optional<Appointment> apt = appointmentRepository.findById(appointmentId);
