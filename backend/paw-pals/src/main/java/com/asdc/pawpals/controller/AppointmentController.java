@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.InvalidObjectException;
 
 @RestController()
-@RequestMapping("/unauth/appointment")
+@RequestMapping("/auth/appointment")
 public class AppointmentController {
     private static final Logger logger = LogManager.getLogger(AppointmentController.class);
 

@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 
 @RestController
-@CrossOrigin
-@RequestMapping("/unauth/pet-owner")
+ 
+@RequestMapping("/auth/pet-owner")
 public class PetOwnerController {
 
     @Autowired

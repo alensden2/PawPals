@@ -4,8 +4,11 @@ import PET_OWNER_IMAGE from '@src/assets/images/admin_pet_owners.jpg';
 
 export const ROLE_TO_ROUTE_MAPPING = {
   ROLE_VET: '/vet',
+  VET: '/vet',
   ROLE_PET_OWNER: '/pet-owner',
+  PET_OWNER: '/pet-owner',
   ROLE_ADMIN: '/admin',
+  ADMIN: '/admin',
   NONE: ''
 };
 
@@ -65,7 +68,7 @@ export const VET_HOME_APPOINTMENT_CONSTANT = {
     shouldShowViewDetailsButton: false,
     shouldShowInfoButton: true
   },
-  DIAGNOSED: {
+  COMPLETED: {
     headerText: 'Completed Appointments',
     shouldShowApproveDeclineButtons: false,
     shouldShowDiagnoseButton: false,

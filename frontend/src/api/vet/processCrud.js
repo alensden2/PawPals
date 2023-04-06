@@ -24,10 +24,12 @@ export const postAvailability = async (vetAvailability) => {
   return response;
 };
 
-// TODO: remove vet1 as default param
-export const getAllAppointmentsOfVet = async ({ vetUserId = 'vet1' } = {}) => {
-  const response = await getAllAppointmentsOfVetApiCall({ vetUserId });
+export const getAllAppointmentsOfVet = async () => {
+  const response = await getAllAppointmentsOfVetApiCall();
 
+  if (!response?.data?.success) {
+    return [];
+  }
   const body = response?.data?.body || [];
 
   return body.map((item) => {

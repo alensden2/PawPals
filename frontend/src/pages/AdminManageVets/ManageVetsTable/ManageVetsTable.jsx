@@ -41,6 +41,7 @@ const ManageVetsTable = ({
         <Table className={classes.table} aria-label="vet table">
           <TableHead>
             <TableRow className={classes.headerRow}>
+              <TableCell className={classes.headerCell}>User Name</TableCell>
               <TableCell className={classes.headerCell}>First Name</TableCell>
               <TableCell className={classes.headerCell}>Last Name</TableCell>
               <TableCell className={classes.headerCell}>Phone Number</TableCell>
@@ -55,6 +56,9 @@ const ManageVetsTable = ({
           <TableBody>
             {filteredData.map((vet) => (
               <TableRow key={vet.firstName}>
+                <TableCell component="th" scope="row">
+                  {vet.userName}
+                </TableCell>
                 <TableCell component="th" scope="row">
                   {vet.firstName}
                 </TableCell>
