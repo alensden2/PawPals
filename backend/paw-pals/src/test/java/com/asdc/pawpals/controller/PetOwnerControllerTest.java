@@ -1,10 +1,5 @@
 package com.asdc.pawpals.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.exception.InvalidPetOwnerObject;
@@ -13,10 +8,6 @@ import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.service.implementation.PetOwnerImpl;
 import com.asdc.pawpals.utils.ApiResponse;
-import java.io.IOException;
-import java.util.Collections;
-import net.bytebuddy.agent.VirtualMachine.ForHotSpot.Connection.Response;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,9 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Collections;
+import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class PetOwnerControllerTest {
