@@ -45,14 +45,11 @@ public class UserControllerTest {
         userDto.setUserName("");
         userDto.setPassword("");
         Object requestBody = userDto;
-
         when(userServiceImplMock.registerUser(userDto)).thenReturn(userDto);
         ResponseEntity<ApiResponse> response = userController.registerUser(requestBody);
         ApiResponse apiResponse = response.getBody();
-
         assertTrue(apiResponse.isSuccess());
         assertFalse(apiResponse.isError());
-
     }
 
 
@@ -73,11 +70,11 @@ public class UserControllerTest {
     public void createJwtTokenWithUserNUll() throws Exception {
         AuthenticationRequest authenticationRequest=new AuthenticationRequest();
         AuthenticationResponse authenticationResponse=new AuthenticationResponse();
-        authenticationResponse.setToken("Abc");
+        authenticationResponse.setToken("");
         authenticationResponse.setUser(null);
         when(jwtService.authenticate(authenticationRequest)).thenReturn(authenticationResponse);
         ResponseEntity<AuthenticationResponse> response = userController.createJwtToken(authenticationRequest);
-        assertEquals("Abc",response.getBody().getToken());
+        assertEquals("",response.getBody().getToken());
         assertNull(response.getBody().getUser());
 
     }
