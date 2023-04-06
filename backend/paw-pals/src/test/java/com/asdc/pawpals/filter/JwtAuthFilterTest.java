@@ -45,10 +45,6 @@ public class JwtAuthFilterTest {
         String username = "testUser";
         UserDetails userDetails = mock(UserDetails.class);
 
-
-        
-
-
         SecurityContextHolder.getContext().setAuthentication(null);
 
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
