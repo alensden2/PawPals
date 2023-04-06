@@ -32,9 +32,6 @@ public class AnimalController {
 
     private static final Logger logger = LogManager.getLogger(AnimalController.class);
 
-    // post animal // pet owner user id
-    // put animal 
-    // delete animal
 
     @PostMapping({"/register"})
     public ResponseEntity<ApiResponse> registerAnimal(@RequestPart("animal") Object requestBody, @RequestPart("image") MultipartFile image) throws IOException, UserNameNotFound, InvalidImage, InvalidAnimalObject {

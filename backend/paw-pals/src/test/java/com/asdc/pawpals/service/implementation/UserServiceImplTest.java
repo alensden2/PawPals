@@ -39,10 +39,6 @@ public class UserServiceImplTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        userRepositoryMock = mock(UserRepository.class);
-        userServiceImpl.userRepository = userRepositoryMock;
-        mailServiceMock = mock(MailServiceImpl.class);
-        userServiceImpl.mailService = mailServiceMock;
     }
 
 
