@@ -19,11 +19,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.AppointmentDto;
+import com.asdc.pawpals.dto.MedicalHistoryDto;
 import com.asdc.pawpals.dto.PetAppointmentsDto;
+import com.asdc.pawpals.dto.PetMedicalHistoryDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.service.implementation.PetOwnerImpl;
 import com.asdc.pawpals.utils.ApiResponse;
@@ -291,6 +294,48 @@ public void testGetPetsAppointmentsByOwnerId() throws Exception {
     assertTrue(apiResponse.isSuccess());
     assertFalse(apiResponse.isError());
 }
+
+@Test
+public void testGetPetMedicalHistoryByOwnerId() throws Exception {
+    // Arrange
+    String ownerId = "1";
+    List<MedicalHistoryDto> medicalHistoryList = new ArrayList<>();
+    MedicalHistoryDto medicalHistory1 = new MedicalHistoryDto();
+    medicalHistory1.setDateDiagnosed("2022-04-07");
+    medicalHistory1.setAilmentName("checkup");
+    medicalHistory1.setPrescription("some prescription");
+    medicalHistory1.setVaccines("some vaccines");
+    medicalHistory1.setVetUserId("vet123");
+    medicalHistory1.setAnimalId(1L);
+    medicalHistoryList.add(medicalHistory1);
+
+    PetMedicalHistoryDto p1 = new PetMedicalHistoryDto();
+    p1.setAnimalDto(null);
+    p1.setMedicalHistoryDto(medicalHistory1);
+    p1.setVetDto(null);
+
+    
+    List<PetMedicalHistoryDto> petAppointments = new ArrayList<>();
+    
+    
+
+    when(petOwnerServiceMock.retrievePetsMedicalHistory(ownerId)).thenReturn(petAppointments);
+    when(apiResponseMock.getBody()).thenReturn(medicalHistoryList);
+    when(apiResponseMock.isSuccess()).thenReturn(true);
+    when(apiResponseMock.isError()).thenReturn(false);
+
+    // Act
+    ResponseEntity<ApiResponse> response = petOwnerController.getPetMedicalHistoryByOwnerId(ownerId);
+    ApiResponse apiResponse = response.getBody();
+
+    // Assert
+    assertNotNull(response.getBody().getBody());
+    assertEquals(medicalHistoryList, response.getBody().getBody());
+    assertTrue(apiResponse.isSuccess());
+    assertFalse(apiResponse.isError());
+}
+
+
 
 
 }
