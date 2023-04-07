@@ -1,6 +1,7 @@
 package com.asdc.pawpals.service.implementation;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,4 +88,16 @@ public class PetOwnerImplTest {
     assertEquals(petOwnerDto.getPhoneNo(), response.getPhoneNo());
     assertEquals(petOwnerDto.getAddress(), response.getAddress());
   }
+
+  @Test
+public void testInvalidUserDetails() {
+// Arrange
+PetOwnerDto petOwnerDto = new PetOwnerDto();
+petOwnerDto.setUserName("testUser");
+
+when(userRepository.findById("testUser")).thenReturn(Optional.empty());
+
+// Act and Assert
+assertThrows(InvalidUserDetails.class, () -> petOwnerImpl.registerPetOwner(petOwnerDto));
+}
 }
