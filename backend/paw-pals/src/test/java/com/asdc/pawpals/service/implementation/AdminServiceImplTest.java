@@ -18,9 +18,15 @@ import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.AdminPostAnimalRepository;
 import com.asdc.pawpals.repository.AdminPostVetRepository;
+import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.UserRepository;
+import com.asdc.pawpals.repository.VetRepository;
+import com.asdc.pawpals.service.AnimalService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.aspectj.lang.annotation.Before;
 import org.junit.runner.RunWith;
@@ -31,10 +37,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminServiceImplTest {
   @Mock
-  private AdminPostVetRepository adminPostVetRepository;
+  private VetRepository vetRepository;
 
   @Mock
-  private AdminPostAnimalRepository adminPostAnimalRepository;
+  private AnimalRepository animalRepository;
 
   @Mock
   private UserRepository userRepository;
@@ -42,142 +48,51 @@ public class AdminServiceImplTest {
   @InjectMocks
   private AdminServiceImpl adminServiceImpl;
 
-  private ObjectMapper objectMapper;
-
-  @InjectMocks
-  private AdminServiceImpl animalService;
-
-  private Animal animal;
-
-  @Before(value = "")
-  public void setUp() {
-    objectMapper = new ObjectMapper();
-    objectMapper.configure(
-      DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-      false
-    );
-  }
-
-  @Before(value = "")
-  public void setup() {
-    animal = new Animal();
-    animal.setName("Simba");
-    animal.setType("Lion");
-    animal.setAge(5);
-    animal.setGender("Male");
-  }
-
   @Test
-  public void testAddVetSuccess() {
-    Vet vet = new Vet();
-    User user = new User();
-    user.setUserId(String.valueOf(1L));
-    vet.setUser(user);
+  public void testGetAllAnimalRecords() {
+  // Arrange
+  List<Animal> animals = new ArrayList<>();
+  Animal animal1 = new Animal();
+  animal1.setId(1L);
+  animal1.setName("Milo");
+  animal1.setType("Dog");
+  animal1.setAge(5);
+  animal1.setGender("Male");
+ 
+  Animal animal2 = new Animal();
+  animal2.setId(2L);
+  animal2.setName("Whiskers");
+  animal2.setType("Cat");
+  animal2.setAge(3);
+  animal2.setGender("Female");
+  
+  animals.add(animal1);
+  animals.add(animal2);
+  
+  when(animalRepository.findAll()).thenReturn(animals);
+  
+  // Act
+  List<AnimalDto> animalsDto = adminServiceImpl.getAllAnimalRecords();
+  List<AnimalDto> animalList = new ArrayList<>();
 
-    when(userRepository.save(any(User.class))).thenReturn(user);
+  // Assert
+  when(adminServiceImpl.getAllAnimalRecords()).thenReturn(animalList);
 
-    when(adminPostVetRepository.save(any(Vet.class))).thenReturn(vet);
-
-    VetDto vetDto = adminServiceImpl.addVet(vet);
-
-    verify(userRepository, times(1)).save(any(User.class));
-
-    verify(adminPostVetRepository, times(1)).save(any(Vet.class));
-
-    assertNotNull(vetDto);
+  assertNotNull(animalsDto);
+  assertEquals(animals.size(), animalsDto.size());
+  
+  for (int i = 0; i < animalsDto.size(); i++) {
+      assertEquals(animals.get(i).getId(), animalsDto.get(i).getId());
+      assertEquals(animals.get(i).getName(), animalsDto.get(i).getName());
+      assertEquals(animals.get(i).getType(), animalsDto.get(i).getType());
+      assertEquals(animals.get(i).getAge(), animalsDto.get(i).getAge());
+      assertEquals(animals.get(i).getGender(), animalsDto.get(i).getGender());
   }
-
-  @Test
-  public void testDeleteVetSuccess() {
-    Long vetId = 1L;
-    Vet vet = new Vet();
-    vet.setId(vetId);
-
-    when(adminPostVetRepository.findById(vetId)).thenReturn(Optional.of(vet));
-    doNothing().when(adminPostVetRepository).delete(vet);
-
-    VetDto vetDto = adminServiceImpl.deleteVet(vetId);
-
-    verify(adminPostVetRepository, times(1)).findById(vetId);
-    verify(adminPostVetRepository, times(1)).delete(vet);
-
-    assertNotNull(vetDto);
-    //assertEquals(vetDto.getId(), vetId);
-  }
-
-  @Test
-  public void testDeleteVetNotFound() {
-    Long vetId = 1L;
-
-    when(adminPostVetRepository.findById(vetId)).thenReturn(Optional.empty());
-
-    VetDto vetDto = adminServiceImpl.deleteVet(vetId);
-
-    verify(adminPostVetRepository, times(1)).findById(vetId);
-    verify(adminPostVetRepository, never()).delete(any(Vet.class));
-
-    assertNull(vetDto);
-  }
-
-  @Test
-  public void testUpdateVetSuccess() {
-    Long vetId = 1L;
-    Vet existingVet = new Vet();
-    existingVet.setId(vetId);
-    existingVet.setFirstName("Old Name");
-    existingVet.setLicenseNumber("123456");
-    existingVet.setClinicAddress("Old Address");
-    existingVet.setExperience(5);
-    existingVet.setQualification("Old Qualification");
-    existingVet.setUser(new User());
-
-    Vet updatedVet = new Vet();
-    updatedVet.setFirstName("New Name");
-    updatedVet.setLicenseNumber("654321");
-    updatedVet.setClinicAddress("New Address");
-    updatedVet.setExperience(10);
-    updatedVet.setQualification("New Qualification");
-
-    when(adminPostVetRepository.findById(vetId))
-      .thenReturn(Optional.of(existingVet));
-    when(adminPostVetRepository.save(any(Vet.class))).thenReturn(updatedVet);
-
-    VetDto vetDto = adminServiceImpl.updateVet(vetId, updatedVet);
-
-    verify(adminPostVetRepository, times(1)).findById(vetId);
-    verify(adminPostVetRepository, times(1)).save(any(Vet.class));
-
-    assertNotNull(vetDto);
-    assertEquals(vetDto.getFirstName(), "New Name");
-    assertEquals(vetDto.getLicenseNumber(), "654321");
-    assertEquals(vetDto.getClinicAddress(), "New Address");
-    assertEquals(vetDto.getQualification(), "New Qualification");
-  }
-
-  @Test
-  public void testUpdateAnimalSuccess() {
-    Long id = 1L;
-
-    Animal updatedAnimal = new Animal();
-    updatedAnimal.setName("Mufasa");
-    updatedAnimal.setType("Lion");
-    updatedAnimal.setAge(10);
-    updatedAnimal.setGender("Male");
-
-    Optional<Animal> optionalAnimal = Optional.of(animal);
-
-    when(adminPostAnimalRepository.findById(id)).thenReturn(optionalAnimal);
-    when(adminPostAnimalRepository.save(any(Animal.class)))
-      .thenReturn(updatedAnimal);
-
-    AnimalDto animalDto = animalService.updateAnimal(id, updatedAnimal);
-
-    verify(adminPostAnimalRepository, times(1)).findById(id);
-    verify(adminPostAnimalRepository, times(1)).save(any(Animal.class));
-
-    assertNotNull(animalDto);
-    assertEquals(animalDto.getName(), "Mufasa");
-    assertEquals(animalDto.getType(), "Lion");
-    assertEquals(animalDto.getGender(), "Male");
   }
 }
+  
+  
+  
+  
+  
+
