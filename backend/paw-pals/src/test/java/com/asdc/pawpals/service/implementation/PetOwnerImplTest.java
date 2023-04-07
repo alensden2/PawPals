@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.dto.PetAppointmentsDto;
+import com.asdc.pawpals.dto.PetMedicalHistoryDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.exception.InvalidUserDetails;
@@ -16,11 +17,13 @@ import com.asdc.pawpals.exception.UserAlreadyExist;
 import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.Appointment;
+import com.asdc.pawpals.model.MedicalHistory;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
+import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.Constants;
 import com.asdc.pawpals.utils.Transformations;
@@ -195,4 +198,31 @@ public class PetOwnerImplTest {
     // Assert
     assertEquals(0, petAppointmentsDtos.size());
   }
+  @Test
+  public void testRetrievePetsMedicalHistory() throws UserNameNotFound, NoPetRegisterUnderPetOwner {
+      // Setup
+      String ownerId = "123";
+      PetOwner petOwner = new PetOwner();
+      petOwner.setFirstName("John");
+      petOwner.setLastName("Doe");
+      User user = new User();
+      user.setUserId(ownerId);
+      petOwner.setUser(user);
+      Animal animal = new Animal();
+      MedicalHistory medicalHistory = new MedicalHistory();
+      medicalHistory.setVet(new Vet());
+      animal.setOwner(petOwner);
+      animal.setMedicalHistories(List.of(medicalHistory));
+      petOwner.setAnimals(List.of(animal));
+      when(petOwnerRepository.findByUser_UserId(ownerId)).thenReturn(Optional.of(petOwner));
+  
+      // Execution
+      List<PetMedicalHistoryDto> result = petOwnerImpl.retrievePetsMedicalHistory(ownerId);
+  
+      // Verification
+      assert !result.isEmpty();
+      PetMedicalHistoryDto dto = result.get(0);
+      assert dto.getAnimalDto().getId() == animal.getId();
+  }
+  
 }
