@@ -123,6 +123,22 @@ public void testRegisterAnimalForInvalidPetOwner() throws UserNameNotFound, Inva
   });
 }
 
+@Test
+public void testRegisterAnimalForInvalidObject() {
+    // Arrange
+    AnimalDto animalDto = new AnimalDto();
+    animalDto.setName("Fluffy");
+    animalDto.setType("");
+    animalDto.setAge(3);
+    animalDto.setGender("Female");
+    animalDto.setOwnerId("123456");
+
+    // Act & Assert
+    assertThrows(InvalidAnimalObject.class, () -> {
+        animalServiceImpl.registerPet(animalDto);
+    });
+}
+
 
 
 }
