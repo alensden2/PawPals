@@ -1,5 +1,6 @@
 package com.asdc.pawpals.service.implementation;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,6 +27,7 @@ import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.Transformations;
+
 
 public class AnimalServiceImplTest {
   @Mock
@@ -90,6 +92,37 @@ public class AnimalServiceImplTest {
     
     
   }
+
+@Test
+public void testRegisterAnimalForInvalidPetOwner() throws UserNameNotFound, InvalidAnimalObject, InvalidImage, IOException {
+    // Arrange
+    AnimalDto animalDto = new AnimalDto();
+    animalDto.setName("Fluffy");
+    animalDto.setType("Cat");
+    animalDto.setAge(3);
+    animalDto.setGender("Female");
+    animalDto.setOwnerId("123456");
+    MockMultipartFile image = new MockMultipartFile(
+      "image.jpg",
+      "image.jpg",
+      "image/jpeg",
+      new byte[] { 12 }
+    );
+    Byte[] result = CommonUtils.getBytes(image);
+    try {
+      animalDto.setPhotoUrl(CommonUtils.getBytes(image));
+    } catch (java.io.IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    when(petOwnerRepositoryMock.findByUser_UserId(any(String.class))).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(UserNameNotFound.class, () -> {
+      animalServiceImpl.registerPet(animalDto);
+  });
+}
+
 
 
 }
