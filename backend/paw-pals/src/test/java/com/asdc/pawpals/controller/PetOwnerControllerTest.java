@@ -207,5 +207,33 @@ public void testUpdatePetOwner() throws Exception {
     assertFalse(apiResponse.isError());
 }
 
+@Test
+public void testDeletePetOwner() throws Exception {
+    // Arrange
+    String ownerId = "1";
+    PetOwnerDto petOwnerDto = new PetOwnerDto();
+    petOwnerDto.setFirstName("John");
+    petOwnerDto.setLastName("Doe");
+    petOwnerDto.setEmail("john.doe@example.com");
+    petOwnerDto.setPassword("password");
+    petOwnerDto.setPhoneNo("1234567890");
+    petOwnerDto.setAddress("1223 South St");
+    petOwnerDto.setPets(null);
+    // Act
+    when(petOwnerServiceMock.deletePetOwner(ownerId)).thenReturn(petOwnerDto);
+    when(apiResponseMock.getBody()).thenReturn(true);
+    when(apiResponseMock.isSuccess()).thenReturn(true);
+    when(apiResponseMock.isError()).thenReturn(false);
+
+    ResponseEntity<ApiResponse> response = petOwnerController.deletePetOwner(ownerId);
+    ApiResponse apiResponse = response.getBody();
+
+    // Assert
+    assertNotNull(response.getBody().getBody());
+    assertTrue((Boolean)response.getBody().getBody());
+    assertTrue(apiResponse.isSuccess());
+    assertFalse(apiResponse.isError());
+}
+
 
 }
