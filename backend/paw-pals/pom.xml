@@ -107,7 +107,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
+	<finalName>pawpals-backend-services</finalName>
 	<build>
 		<plugins>
 			<plugin>

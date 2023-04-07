@@ -111,23 +111,4 @@ public class AnimalServiceImpl implements AnimalService {
             throw new InvalidAnimalId("Id is null");
         }
     }
-
-
-    @Test
-public void testDeleteAnimal() throws InvalidAnimalId {
-    // Arrange
-    Long id = 1L;
-    Animal animal = new Animal();
-    animal.setId(id);
-    when(animalRepositoryMock.findById(id)).thenReturn(Optional.of(animal));
-
-    // Act
-    AnimalDto deletedAnimalDto = animalServiceImpl.deleteAnimal(id);
-
-    // Assert
-    assertEquals(animal.getId(), deletedAnimalDto.getId());
-    verify(animalRepositoryMock, times(1)).delete(animal);
-    verify(animalRepositoryMock, times(1)).flush();
-}
-
 }
