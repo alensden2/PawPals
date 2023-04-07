@@ -17,6 +17,8 @@ import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.utils.CommonUtils;
+import com.asdc.pawpals.utils.Transformations;
+
 import java.io.IOException;
 import java.util.Optional;
 import org.junit.Before;
@@ -45,7 +47,7 @@ public class PetOwnerImplTest {
   }
 
   @Test
-  public void registerPetOwner() // fix
+  public void registerPetOwner()  // fix
     throws UserNameNotFound, InvalidUserDetails, UserAlreadyExist, IOException {
     // Arrange
     PetOwnerDto petOwnerDto = new PetOwnerDto();
@@ -90,14 +92,52 @@ public class PetOwnerImplTest {
   }
 
   @Test
-public void testInvalidUserDetails() {
-// Arrange
-PetOwnerDto petOwnerDto = new PetOwnerDto();
-petOwnerDto.setUserName("testUser");
+  public void testInvalidUserDetails() {
+    // Arrange
+    PetOwnerDto petOwnerDto = new PetOwnerDto();
+    petOwnerDto.setUserName("testUser");
 
-when(userRepository.findById("testUser")).thenReturn(Optional.empty());
+    when(userRepository.findById("testUser")).thenReturn(Optional.empty());
+
+    // Act and Assert
+    assertThrows(
+      InvalidUserDetails.class,
+      () -> petOwnerImpl.registerPetOwner(petOwnerDto)
+    );
+  }
+
+  @Test
+public void testDeletePetOwnerWithValidId() throws UserNameNotFound {
+// Arrange
+String userId = "testUser";
+PetOwner petOwner = new PetOwner();
+petOwner.setId(1L);
+User user = new User();
+user.setUserId(userId);
+petOwner.setUser(user);
+when(petOwnerRepository.findByUser_UserId(userId)).thenReturn(Optional.of(petOwner));
+PetOwnerDto expectedResponse = Transformations.MODEL_TO_DTO_CONVERTER.petOwner(petOwner);
+
+// Act
+PetOwnerDto response = petOwnerImpl.deletePetOwner(userId);
+
+// Assert
+assertNotNull(response);
+assertEquals(expectedResponse.getUsername(), response.getUsername());
+assertEquals(expectedResponse.getPhotoUrl(), response.getPhotoUrl());
+assertEquals(expectedResponse.getPhoneNo(), response.getPhoneNo());
+assertEquals(expectedResponse.getAddress(), response.getAddress());
+}
+
+@Test
+public void testDeletePetOwnerWithInvalidId() throws UserNameNotFound {
+// Arrange
+String userId = "invalidUser";
+when(petOwnerRepository.findByUser_UserId(userId)).thenReturn(Optional.empty());
+
 
 // Act and Assert
-assertThrows(InvalidUserDetails.class, () -> petOwnerImpl.registerPetOwner(petOwnerDto));
+assertThrows(UserNameNotFound.class, () -> petOwnerImpl.deletePetOwner(userId));
 }
+
 }
