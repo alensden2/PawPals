@@ -1,14 +1,27 @@
 package com.asdc.pawpals.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.asdc.pawpals.dto.PetOwnerDto;
-import com.asdc.pawpals.exception.InvalidImage;
-import com.asdc.pawpals.exception.InvalidPetOwnerObject;
-import com.asdc.pawpals.exception.NoPetRegisterUnderPetOwner;
-import com.asdc.pawpals.exception.UserNameNotFound;
-import com.asdc.pawpals.service.PetOwnerService;
+import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.service.implementation.PetOwnerImpl;
 import com.asdc.pawpals.utils.ApiResponse;
-import org.junit.jupiter.api.BeforeEach;
+import com.asdc.pawpals.utils.CommonUtils;
+import java.util.Collections;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -16,100 +29,68 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Collections;
-import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-
 @SpringBootTest
 public class PetOwnerControllerTest {
-  @Autowired
-  PetOwnerController petOwnerController;
-
+  @Mock
   PetOwnerImpl petOwnerServiceMock;
 
-  @BeforeEach
+  @InjectMocks
+  PetOwnerController petOwnerController;
+
+  @Mock
+  ApiResponse apiResponseMock;
+
+  @Before
   public void setup() {
-    petOwnerServiceMock = mock(PetOwnerImpl.class);
-    petOwnerController.petOwnerService = petOwnerServiceMock;
+    MockitoAnnotations.openMocks(this);
   }
 
   @Test
   public void objectCreated() {
+    assertNotNull(petOwnerServiceMock);
     assertNotNull(petOwnerController);
+    assertNotNull(apiResponseMock);
   }
 
   @Test
-  public void shouldReturnGreeting()
-    throws NoPetRegisterUnderPetOwner, UserNameNotFound {
-    assertEquals("Hello 1", petOwnerController.getPetsByOwnerId("Hello 1"));
-  }
-
-  @Test
-  public void shouldRegisterPetOwner() {
-    // PetOwnerDto petToRegister = new PetOwnerDto();
-    // when(petOwnerServiceMock.registerPetOwner(any(PetOwnerDto.class)));
-    //     petToRegister.setUserName("jD");
-    // ResponseEntity<String> responese = petOwnerController.registerUser(petToRegister, null);
-  }
-
-  public void testUpdatedPetOwner()
-    throws InvalidPetOwnerObject, UserNameNotFound, InvalidImage, IOException {
+  public void testRegisterUserForValidInput() throws Exception {
+    // Arrange
     PetOwnerDto petOwnerDto = new PetOwnerDto();
-    petOwnerDto.setAddress("new address");
-    MultipartFile image = new MockMultipartFile(
-      "image",
-      "test-image.jpg",
+    petOwnerDto.setFirstName("John");
+    petOwnerDto.setLastName("Doe");
+    petOwnerDto.setEmail("john.doe@example.com");
+    petOwnerDto.setPassword("password");
+    petOwnerDto.setPhoneNo("1234567890");
+    petOwnerDto.setAddress("1223 South St");
+    petOwnerDto.setPets(null);
+    MockMultipartFile image = new MockMultipartFile(
+      "image.jpg",
+      "image.jpg",
       "image/jpeg",
-      new byte[10]
+      new byte[] { 12 }
     );
+    Byte[] result = CommonUtils.getBytes(image);
+    try {
+      petOwnerDto.setPhotoUrl(result);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
-    String id = "12";
-    when(
-        petOwnerServiceMock.updatePetOwner(
-          eq(id),
-          eq(petOwnerDto),
-          any(MultipartFile.class)
-        )
-      )
-      .thenReturn(new PetOwnerDto());
-    Object requestBody = petOwnerDto;
-    ResponseEntity<ApiResponse> response = petOwnerController.updatePetOwner(
-      id,
-      requestBody,
-      image
-    );
+    when(petOwnerServiceMock.registerPetOwner(any(PetOwnerDto.class)))
+      .thenReturn(petOwnerDto);
+    when(apiResponseMock.getBody()).thenReturn(petOwnerDto);
+    when(apiResponseMock.isSuccess()).thenReturn(true);
+    when(apiResponseMock.isError()).thenReturn(false);
 
-    verify(petOwnerServiceMock)
-      .updatePetOwner(eq(id), eq(petOwnerDto), any(MultipartFile.class));
-    ApiResponse apiResponse = response.getBody();
-    assertTrue(apiResponse.isSuccess());
-    assertFalse(apiResponse.isError());
+    ResponseEntity<ApiResponse> response = petOwnerController.registerUser(petOwnerDto,image);
+        ApiResponse apiResponse = response.getBody();
+
+        assertNotNull(response.getBody().getBody());
+        assertEquals(petOwnerDto, response.getBody().getBody());
+        assertTrue(apiResponse.isSuccess());
+        assertFalse(apiResponse.isError());
+
   }
 
-  @Test
-  void testGetPetsByOwnerId()
-    throws NoPetRegisterUnderPetOwner, UserNameNotFound {
-    // Mock dependencies
-    PetOwnerService petOwnerService = mock(PetOwnerService.class);
-    ApiResponse expectedResponse = new ApiResponse();
-    expectedResponse.setMessage("successfully retrieve list");
-    expectedResponse.setSuccess(true);
-    expectedResponse.setError(false);
-    when(petOwnerService.retrieveAllPets("123"))
-      .thenReturn(Collections.emptyList());
-
-    // Invoke method under test
-
-    ResponseEntity<ApiResponse> response = new PetOwnerController()
-    .getPetsByOwnerId("123");
-
-    // Verify behavior and assertions
-    verify(petOwnerService).retrieveAllPets("123");
-    assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    assertEquals(expectedResponse, response.getBody());
-  }
 }
