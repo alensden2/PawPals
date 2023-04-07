@@ -10,7 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.asdc.pawpals.controller.Test;
+import org.junit.Test;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;

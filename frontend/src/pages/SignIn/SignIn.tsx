@@ -1,5 +1,5 @@
 // react
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material ui
@@ -13,7 +13,7 @@ import useStyles from './SignIn.styles';
 import { TextField, Button } from '@src/components';
 
 // api
-import { authenticateUser } from '@src/api';
+import { authenticateUser, getVetById } from '@src/api';
 import { AuthenticateUserType } from '@src/api/type';
 
 // constants
@@ -24,12 +24,28 @@ import {
 } from '@src/constants';
 
 // context
-import { ToastContext } from '@src/context';
+import { ToastContext, HeaderContext } from '@src/context';
 
 // hooks
 import { useNavigate } from '@src/hooks';
 
 import { localStorageUtil } from '@src/utils';
+
+interface UserSignIn {
+  vetUserId: string;
+}
+
+interface LocalStorageSetInput {
+  userName: string;
+  jwtToken: string;
+  role: string;
+}
+
+const checkIfUserCanSignIn = async ({ vetUserId }: UserSignIn) => {
+  const vet = await getVetById({ vetUserId });
+
+  return vet?.profileStatus === 'APPROVED' ? true : false;
+};
 
 const SignIn: React.FC = () => {
   // styles
@@ -38,10 +54,32 @@ const SignIn: React.FC = () => {
   // context
   const { setToast } = useContext(ToastContext);
 
+  const { setHeader } = useContext(HeaderContext);
+
+  // useEffect
+  useEffect(() => {
+    setHeader({
+      shouldShowHeader: false
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // state
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
+  const setUserInLocalStorage = ({
+    userName,
+    jwtToken,
+    role
+  }: LocalStorageSetInput): void => {
+    localStorageUtil.setItem('user', {
+      userName,
+      jwtToken,
+      role
+    });
+  };
 
   // submit click
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -55,11 +93,34 @@ const SignIn: React.FC = () => {
     const jwtToken = response.jwtToken;
     const role = response.role;
 
-    localStorageUtil.setItem('user', {
-      userName: uName,
-      jwtToken,
-      role
-    });
+    if (['ROLE_VET', 'VET'].includes(role)) {
+      setUserInLocalStorage({
+        userName: uName,
+        jwtToken,
+        role
+      });
+      const vetIsAllowed = await checkIfUserCanSignIn({ vetUserId: userName });
+
+      if (!vetIsAllowed) {
+        setUserInLocalStorage({
+          userName: uName,
+          jwtToken,
+          role
+        });
+        setToast({
+          type: 'error',
+          message:
+            'Your request is in a pending state, you will receive an email as soon as the admin approves or rejects it.'
+        });
+        return;
+      }
+    } else {
+      setUserInLocalStorage({
+        userName: uName,
+        jwtToken,
+        role
+      });
+    }
 
     const hasError = response.error;
     if (hasError) {

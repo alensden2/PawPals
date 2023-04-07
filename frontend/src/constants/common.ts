@@ -1,7 +1,14 @@
+import APPROVE_REJECT_IMAGE from '@src/assets/images/admin_approve_reject.png';
+import VETS_IMAGE from '@src/assets/images/admin_vets.jpg';
+import PET_OWNER_IMAGE from '@src/assets/images/admin_pet_owners.jpg';
+
 export const ROLE_TO_ROUTE_MAPPING = {
+  ROLE_VET: '/vet',
   VET: '/vet',
+  ROLE_PET_OWNER: '/pet-owner',
   PET_OWNER: '/pet-owner',
   ROLE_ADMIN: '/admin',
+  ADMIN: '/admin',
   NONE: ''
 };
 
@@ -61,7 +68,7 @@ export const VET_HOME_APPOINTMENT_CONSTANT = {
     shouldShowViewDetailsButton: false,
     shouldShowInfoButton: true
   },
-  DIAGNOSED: {
+  COMPLETED: {
     headerText: 'Completed Appointments',
     shouldShowApproveDeclineButtons: false,
     shouldShowDiagnoseButton: false,
@@ -82,5 +89,32 @@ export const QUALIFICATION_OPTIONS: Array<{ value: string }> = [
   },
   {
     value: 'DO'
+  }
+];
+
+export const ADMIN_HOME_PAGE_CARDS = [
+  {
+    key: 1,
+    image: APPROVE_REJECT_IMAGE,
+    altImage: '"Manage Vets',
+    title: 'Manage Vets',
+    description: 'Approve or reject veterinarian.',
+    route: '/admin/manage-vets'
+  },
+  {
+    key: 2,
+    image: VETS_IMAGE,
+    altImage: 'All Vets',
+    title: 'All Vets',
+    description: 'Show a list of all veterinarians',
+    route: '/admin/all-vets'
+  },
+  {
+    key: 3,
+    image: PET_OWNER_IMAGE,
+    altImage: 'All Pet Owners',
+    title: 'All Pet Owners',
+    description: 'Display a list of all pet owners',
+    route: '/admin/all-pet-owners'
   }
 ];

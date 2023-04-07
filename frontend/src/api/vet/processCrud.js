@@ -5,7 +5,11 @@ import {
   registerVetApiCall,
   getAllAppointmentsOfVetApiCall,
   updateStatusOfAppointmentApiCall,
+  getVetByUserIdApiCall,
   getAvailabilityOnSpecificDatApiCall,
+  updateProfileStatusVetApiCall,
+  getAllPendingVetsApiCall,
+  getVetByIdApiCall,
   postAvailabilityApiCall
 } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';
@@ -15,15 +19,17 @@ export const registerVet = async (vet) => {
   return response;
 };
 
-export const postAvailability =  async (vetAvailability) => {
+export const postAvailability = async (vetAvailability) => {
   const response = await postAvailabilityApiCall(vetAvailability);
   return response;
-}
+};
 
-// TODO: remove vet1 as default param
-export const getAllAppointmentsOfVet = async ({ vetUserId = 'vet1' } = {}) => {
-  const response = await getAllAppointmentsOfVetApiCall({ vetUserId });
+export const getAllAppointmentsOfVet = async () => {
+  const response = await getAllAppointmentsOfVetApiCall();
 
+  if (!response?.data?.success) {
+    return [];
+  }
   const body = response?.data?.body || [];
 
   return body.map((item) => {
@@ -51,12 +57,15 @@ export const getAllAppointmentsOfVet = async ({ vetUserId = 'vet1' } = {}) => {
 };
 
 export const getVetAvailabilityOnSpecificDay = async (
-  date = "01-01-2023",
-  vetUserId = ""
-) =>{
-  const response = await getAvailabilityOnSpecificDatApiCall({date, vetUserId});
+  date = '01-01-2023',
+  vetUserId = ''
+) => {
+  const response = await getAvailabilityOnSpecificDatApiCall({
+    date,
+    vetUserId
+  });
   return response.data;
-}
+};
 
 export const updateStatusOfAppointment = async ({
   appointmentId,
@@ -68,4 +77,42 @@ export const updateStatusOfAppointment = async ({
   });
 
   return response?.data?.success || false;
+};
+
+export const getVetByUserId = async ({ vetUserId } = {}) => {
+  const response = await getVetByUserIdApiCall({
+    vetUserId
+  });
+
+  return response;
+};
+
+export const getAllPendingVets = async () => {
+  const response = await getAllPendingVetsApiCall();
+
+  const body = response?.data?.body || [];
+
+  return body.map((item) => {
+    return {
+      ...item,
+      clinicUrl: item.clinicUrl
+        ? getImageUrlFromBytes({ bytes: item.clinicUrl })
+        : ''
+    };
+  });
+};
+
+export const updateProfileStatusVet = async ({ vetUserId, input }) => {
+  const response = await updateProfileStatusVetApiCall({ vetUserId, input });
+
+  const isSuccess = response?.data?.success;
+
+  return isSuccess;
+};
+
+export const getVetById = async ({ vetUserId }) => {
+  const response = await getVetByIdApiCall({ vetUserId });
+
+  const body = response?.data?.body || {};
+  return body;
 };

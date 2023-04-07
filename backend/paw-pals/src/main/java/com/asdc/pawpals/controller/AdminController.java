@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("unauth/admin")
+@RequestMapping("auth/admin")
 public class AdminController {
     // private static final Logger logger = LogManager.getLogger(AdminController.class);
     private static final Logger logger = LogManager.getLogger(

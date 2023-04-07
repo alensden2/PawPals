@@ -1,16 +1,5 @@
 package com.asdc.pawpals.controller;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
@@ -20,8 +9,6 @@ import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.Transformations;
-import com.asdc.pawpals.utils.Transformations.MODEL_TO_DTO_CONVERTER;
-import java.util.Collections;
 import org.hibernate.service.spi.ServiceException;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -31,6 +18,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import org.junit.Test;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminControllerTest {
   @InjectMocks

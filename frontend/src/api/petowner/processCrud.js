@@ -13,8 +13,8 @@ export const registerPetOwner = async (petOwner) => {
   return response;
 };
 
-export const getAllMedicalHistoryOfPet = async ({ petOwnerUserId }) => {
-  const response = await getAllMedicalHistoryOfPetApiCall({ petOwnerUserId });
+export const getAllMedicalHistoryOfPet = async () => {
+  const response = await getAllMedicalHistoryOfPetApiCall();
   const body = response?.data?.body;
 
   if (body) {
@@ -44,7 +44,7 @@ export const getAllPets = async () => {
 };
 
 export const getAllPetsForUser = async (userName) => {
-  const response = await getAllPetsApiCall({ownerUserId: userName});
+  const response = await getAllPetsApiCall({ ownerUserId: userName });
   const body = response?.data?.body || [];
 
   return body.map((item) => ({

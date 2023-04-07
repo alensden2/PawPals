@@ -6,7 +6,7 @@ import { axiosJSON } from '@src/lib';
 export const createMedicalRecordApiCall = async ({ input = {} } = {}) => {
   try {
     return await axiosJSON.post(
-      'unauth/medical-history-management/create',
+      '/auth/medical-history-management/create',
       input
     );
   } catch (e) {

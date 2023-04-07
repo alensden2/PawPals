@@ -19,6 +19,9 @@ import {
   PetOwnerAllVets,
   AboutUs,
   ContactUs,
+  AdminManageVets,
+  AdminAllPetOwners,
+  AdminAllVets,
   PetOwnerManagePets
 } from '@src/pages';
 
@@ -53,6 +56,9 @@ const RoutesComp = () => {
           </Route>
           <Route path="admin" element={<Admin />}>
             <Route path="home" element={<AdminHome />} />
+            <Route path="manage-vets" element={<AdminManageVets />} />
+            <Route path="all-vets" element={<AdminAllVets />} />
+            <Route path="all-pet-owners" element={<AdminAllPetOwners />} />
           </Route>
         </Route>
       </Routes>

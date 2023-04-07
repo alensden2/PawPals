@@ -26,7 +26,7 @@ import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import jakarta.annotation.PostConstruct;
 
 @RestController
-@CrossOrigin
+ 
 @RequestMapping("/unauth/user")
 public class UserController {
 
@@ -46,24 +46,6 @@ public class UserController {
     AuthenticationRequest authenticationRequest) throws Exception {
     return ResponseEntity.ok(jwtService.authenticate(authenticationRequest));
     }
-
-    // @GetMapping({"/auth/forAdmin"})
-    // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    // public String forAdmin() {
-    // return "This URL is only accessible by admin";
-    // }
-
-    // @GetMapping({"/auth/forPetOwner"})
-    // @PreAuthorize("hasAuthority('ROLE_PET_OWNER')")
-    // public String forPetOwner() {
-    // return "This URL is only accessible by pet owner";
-    // }
-
-    // @GetMapping({"/auth/forVet"})
-    // @PreAuthorize("hasAuthority('ROLE_VET')")
-    // public String forVet() {
-    // return "This URL is only accessible by vet";
-    // }
 
     @PostConstruct
     public void initRolesAndUsers() {

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
-
+import { localStorageUtil } from '@src/utils';
 class API {
   private apiClient: AxiosInstance;
 
@@ -13,11 +13,24 @@ class API {
       }
     });
 
+    this.apiClient.interceptors.request.use(
+      (config) => {
+        const token = localStorageUtil.getItem('user')?.jwtToken;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+
     // By adding interceptors to the Axios instance, we can customize the behavior of our API calls globally, without having to modify each function individually
     this.apiClient.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response?.status === 400 || error.response?.status === 403) {
+        if ([400, 403, 406].includes(error.response?.status)) {
           // added response to errorReponse, otherwise axios was not giving response property for rejected promise
           // Issue reference: https://github.com/axios/axios/issues/960
           error.errorReponse = error.response;

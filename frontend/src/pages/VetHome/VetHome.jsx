@@ -50,14 +50,15 @@ const VetHome = () => {
     fetchData();
   }, []);
 
-  const onDiagnoseButtonClick = ({ petId, openModal }) => {
+  const onDiagnoseButtonClick = ({ petId, openModal, appointmentId }) => {
     setDiagnoseModal((prevState) => {
       return {
         ...prevState,
         isOpen: openModal,
         data: {
           ...prevState.data,
-          petId
+          petId,
+          appointmentId
         }
       };
     });
@@ -90,6 +91,11 @@ const VetHome = () => {
           return appointment;
         });
       });
+
+      setToast({
+        type: 'success',
+        message: 'The appointment was approved successfully.'
+      });
     } else {
       setToast({ type: 'error', message: 'Something went wrong!' });
     }
@@ -118,6 +124,10 @@ const VetHome = () => {
           return appointment;
         });
       });
+      setToast({
+        type: 'success',
+        message: 'The appointment was declined successfully.'
+      });
     } else {
       setToast({ type: 'error', message: 'Something went wrong!' });
     }
@@ -129,10 +139,13 @@ const VetHome = () => {
     vaccines
   }) => {
     const petId = diagnoseModal.data.petId;
+    const appointmentId = diagnoseModal.data.appointmentId;
     const user = localStorageUtil.getItem('user');
     const vetUserId = user.userName;
 
-    await createMedicalRecord({
+    let isSuccess = false;
+
+    isSuccess = await createMedicalRecord({
       input: {
         ailmentName,
         prescription,
@@ -140,6 +153,47 @@ const VetHome = () => {
         animalId: petId,
         vetUserId,
         dateDiagnosed: getTodayDate()
+      }
+    });
+
+    if (isSuccess) {
+      isSuccess = await updateStatusOfAppointment({
+        appointmentId,
+        input: {
+          status: 'COMPLETED'
+        }
+      });
+
+      if (isSuccess) {
+        setAllAppointments((prevState) => {
+          return prevState.map((appointment) => {
+            if (appointment.appointment.id === appointmentId) {
+              return {
+                ...appointment,
+                appointment: {
+                  ...appointment.appointment,
+                  status: 'COMPLETED'
+                }
+              };
+            }
+            return appointment;
+          });
+        });
+
+        setToast({
+          type: 'success',
+          message: 'The pet has been diagnosed successfully.'
+        });
+      } else {
+        setToast({ type: 'error', message: 'Something went wrong!' });
+      }
+    }
+
+    setDiagnoseModal({
+      isOpen: false,
+      data: {
+        petId: null,
+        appointmentId: null
       }
     });
   };
@@ -173,7 +227,7 @@ const VetHome = () => {
   useEffect(() => {
     setHeader({
       shouldShowHeader: true,
-      title: 'Home',
+      title: 'Vet Home',
       shouldShowLogoutButton: true,
       shouldShowBackButton: true
     });
@@ -202,7 +256,7 @@ const VetHome = () => {
       <>
         {renderHorizontalList('PENDING')}
         {renderHorizontalList('CONFIRMED')}
-        {renderHorizontalList('DIAGNOSED')}
+        {renderHorizontalList('COMPLETED')}
       </>
     );
   };
