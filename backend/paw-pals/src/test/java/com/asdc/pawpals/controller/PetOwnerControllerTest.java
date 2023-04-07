@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
@@ -168,5 +170,42 @@ public void testGetPetsByOwnerId() throws Exception {
     assertTrue(apiResponse.isSuccess());
     assertFalse(apiResponse.isError());
 }
+
+@Test
+public void testUpdatePetOwner() throws Exception {
+    // Arrange
+    String id = "1";
+    PetOwnerDto updatedPetOwner = new PetOwnerDto();
+    updatedPetOwner.setFirstName("Jane");
+    updatedPetOwner.setLastName("Doe");
+    updatedPetOwner.setEmail("jane.doe@example.com");
+    updatedPetOwner.setPassword("newpassword");
+    updatedPetOwner.setPhoneNo("1234567890");
+    updatedPetOwner.setAddress("1234 North St");
+    updatedPetOwner.setPets(null);
+    MockMultipartFile image = new MockMultipartFile(
+      "image.jpg",
+      "image.jpg",
+      "image/jpeg",
+      new byte[] { 12 }
+    );
+
+    // Act
+    when(petOwnerServiceMock.updatePetOwner(eq(id), any(PetOwnerDto.class), any(MultipartFile.class)))
+      .thenReturn(updatedPetOwner);
+    when(apiResponseMock.getBody()).thenReturn(updatedPetOwner);
+    when(apiResponseMock.isSuccess()).thenReturn(true);
+    when(apiResponseMock.isError()).thenReturn(false);
+
+    ResponseEntity<ApiResponse> response = petOwnerController.updatePetOwner(id, updatedPetOwner, image);
+    ApiResponse apiResponse = response.getBody();
+
+    // Assert
+    assertNotNull(response.getBody().getBody());
+    assertEquals(updatedPetOwner, response.getBody().getBody());
+    assertTrue(apiResponse.isSuccess());
+    assertFalse(apiResponse.isError());
+}
+
 
 }
