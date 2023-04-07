@@ -7,19 +7,26 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import com.asdc.pawpals.dto.PetAppointmentsDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.exception.InvalidUserDetails;
+import com.asdc.pawpals.exception.NoPetRegisterUnderPetOwner;
 import com.asdc.pawpals.exception.UserAlreadyExist;
 import com.asdc.pawpals.exception.UserNameNotFound;
+import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.Appointment;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
+import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.utils.CommonUtils;
+import com.asdc.pawpals.utils.Constants;
 import com.asdc.pawpals.utils.Transformations;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,37 +114,85 @@ public class PetOwnerImplTest {
   }
 
   @Test
-public void testDeletePetOwnerWithValidId() throws UserNameNotFound {
-// Arrange
-String userId = "testUser";
-PetOwner petOwner = new PetOwner();
-petOwner.setId(1L);
-User user = new User();
-user.setUserId(userId);
-petOwner.setUser(user);
-when(petOwnerRepository.findByUser_UserId(userId)).thenReturn(Optional.of(petOwner));
-PetOwnerDto expectedResponse = Transformations.MODEL_TO_DTO_CONVERTER.petOwner(petOwner);
+  public void testDeletePetOwnerWithValidId() throws UserNameNotFound {
+    // Arrange
+    String userId = "testUser";
+    PetOwner petOwner = new PetOwner();
+    petOwner.setId(1L);
+    User user = new User();
+    user.setUserId(userId);
+    petOwner.setUser(user);
+    when(petOwnerRepository.findByUser_UserId(userId))
+      .thenReturn(Optional.of(petOwner));
+    PetOwnerDto expectedResponse = Transformations.MODEL_TO_DTO_CONVERTER.petOwner(
+      petOwner
+    );
 
-// Act
-PetOwnerDto response = petOwnerImpl.deletePetOwner(userId);
+    // Act
+    PetOwnerDto response = petOwnerImpl.deletePetOwner(userId);
 
-// Assert
-assertNotNull(response);
-assertEquals(expectedResponse.getUsername(), response.getUsername());
-assertEquals(expectedResponse.getPhotoUrl(), response.getPhotoUrl());
-assertEquals(expectedResponse.getPhoneNo(), response.getPhoneNo());
-assertEquals(expectedResponse.getAddress(), response.getAddress());
-}
+    // Assert
+    assertNotNull(response);
+    assertEquals(expectedResponse.getUsername(), response.getUsername());
+    assertEquals(expectedResponse.getPhotoUrl(), response.getPhotoUrl());
+    assertEquals(expectedResponse.getPhoneNo(), response.getPhoneNo());
+    assertEquals(expectedResponse.getAddress(), response.getAddress());
+  }
 
-@Test
-public void testDeletePetOwnerWithInvalidId() throws UserNameNotFound {
-// Arrange
-String userId = "invalidUser";
-when(petOwnerRepository.findByUser_UserId(userId)).thenReturn(Optional.empty());
+  @Test
+  public void testDeletePetOwnerWithInvalidId() throws UserNameNotFound {
+    // Arrange
+    String userId = "invalidUser";
+    when(petOwnerRepository.findByUser_UserId(userId))
+      .thenReturn(Optional.empty());
 
+    // Act and Assert
+    assertThrows(
+      UserNameNotFound.class,
+      () -> petOwnerImpl.deletePetOwner(userId)
+    );
+  }
 
-// Act and Assert
-assertThrows(UserNameNotFound.class, () -> petOwnerImpl.deletePetOwner(userId));
-}
+  @Test
+  public void testRetrievePetsAppointmentsWithValidInput()
+    throws UserNameNotFound, NoPetRegisterUnderPetOwner {
+    // Arrange
+    String ownerId = "testUser";
+    PetOwner petOwner = new PetOwner();
+    List<Animal> animals = new ArrayList<>();
+    Animal animal1 = new Animal();
+    animal1.setId(1L);
+    Vet vet = new Vet();
+    vet.setFirstName("John");
+    vet.setLastName("Doe");
+    vet.setLicenseNumber("123456");
+    vet.setClinicAddress("123 Main St.");
+    vet.setExperience(5);
+    vet.setQualification("DVM");
+    vet.setProfileStatus("ACTIVE");
+    vet.setPhoneNo("555-1234");
+    Appointment appointment1 = new Appointment();
+    appointment1.setId(1);
+    appointment1.setAnimal(animal1);
+    appointment1.setVet(vet);
+    appointment1.setDate("09/12/2021");
+    appointment1.setStartTime("09:34");
+    appointment1.setEndTime("23:23");
+    appointment1.setStatus(Constants.STATUS[2]);
+    List<Appointment> appointments = new ArrayList<>();
+    animal1.setAppointment(appointments);
+    animals.add(animal1);
+    petOwner.setAnimals(animals);
 
+    when(petOwnerRepository.findByUser_UserId(ownerId))
+      .thenReturn(Optional.of(petOwner));
+
+    // Act
+    List<PetAppointmentsDto> petAppointmentsDtos = petOwnerImpl.retrievePetsAppointments(
+      ownerId
+    );
+
+    // Assert
+    assertEquals(0, petAppointmentsDtos.size());
+  }
 }
