@@ -22,6 +22,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.AppointmentDto;
+import com.asdc.pawpals.dto.PetAppointmentsDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.service.implementation.PetOwnerImpl;
 import com.asdc.pawpals.utils.ApiResponse;
@@ -231,6 +233,61 @@ public void testDeletePetOwner() throws Exception {
     // Assert
     assertNotNull(response.getBody().getBody());
     assertTrue((Boolean)response.getBody().getBody());
+    assertTrue(apiResponse.isSuccess());
+    assertFalse(apiResponse.isError());
+}
+
+@Test
+public void testGetPetsAppointmentsByOwnerId() throws Exception {
+    // Arrange
+    String ownerId = "1";
+    List<AppointmentDto> appointments = new ArrayList<>();
+    AppointmentDto appointment1 = new AppointmentDto();
+    appointment1.setId(1);
+    appointment1.setDate("2023-05-01");
+    appointment1.setStartTime("10:00");
+    appointment1.setEndTime("Appointment 1");
+    appointment1.setAnimalId(1L);
+    appointment1.setVetUserId(ownerId);
+    appointments.add(appointment1);
+    
+    AppointmentDto appointment2 = new AppointmentDto();
+    appointment2.setId(2);
+    appointment2.setDate("2023-05-05");
+    appointment2.setStartTime("14:00");
+    appointment2.setEndTime("Appointment 2");
+    appointment2.setAnimalId(2L);
+    appointment2.setVetUserId(ownerId);
+    appointments.add(appointment2);
+
+    PetAppointmentsDto ap1 = new PetAppointmentsDto();
+    PetAppointmentsDto ap2 = new PetAppointmentsDto();
+
+    ap1.setAnimalDto(null);
+    ap1.setAppointmentDto(appointment1);
+    ap1.setVetDto(null);
+
+    ap2.setAnimalDto(null);
+    ap2.setAppointmentDto(appointment2);
+    ap2.setVetDto(null);
+
+    List<PetAppointmentsDto> petAppointments = new ArrayList<>();
+
+    petAppointments.add(ap2);
+    petAppointments.add(ap1);
+
+    when(petOwnerServiceMock.retrievePetsAppointments(ownerId)).thenReturn(petAppointments);
+    when(apiResponseMock.getBody()).thenReturn(appointments);
+    when(apiResponseMock.isSuccess()).thenReturn(true);
+    when(apiResponseMock.isError()).thenReturn(false);
+
+    // Act
+    ResponseEntity<ApiResponse> response = petOwnerController.getPetsAppointmentsByOwnerId(ownerId);
+    ApiResponse apiResponse = response.getBody();
+
+    // Assert
+    assertNotNull(response.getBody().getBody());
+    assertEquals(appointments, response.getBody().getBody());
     assertTrue(apiResponse.isSuccess());
     assertFalse(apiResponse.isError());
 }
