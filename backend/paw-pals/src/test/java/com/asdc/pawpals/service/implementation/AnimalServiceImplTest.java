@@ -5,9 +5,11 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.exception.InvalidAnimalId;
 import com.asdc.pawpals.exception.InvalidAnimalObject;
 import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.exception.UserNameNotFound;
@@ -19,6 +21,7 @@ import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.Transformations;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +47,7 @@ public class AnimalServiceImplTest {
   }
 
   @Test
-  public void testUpdateAppointmentStatus()
+  public void testUpdateAppointmentStatus() //fixx
     throws UserNameNotFound, InvalidAnimalObject, InvalidImage, IOException {
     // Arrange
     AnimalDto animalDto = new AnimalDto();
@@ -169,4 +172,80 @@ public class AnimalServiceImplTest {
     // Set the invalid image to the animal DTO
     animalDto.setPhotoUrl(new Byte[0]);
   }
+
+  @Test //fixx
+  public void testUpdateAnimal() throws InvalidImage, IOException, InvalidAnimalId, InvalidAnimalObject {
+      // Arrange
+      AnimalDto animalDto = new AnimalDto();
+      animalDto.setName("Fluffy");
+      animalDto.setType("Cat");
+      animalDto.setAge(3);
+      animalDto.setGender("Female");
+      animalDto.setOwnerId("123456");
+      MultipartFile invalidImage = null;
+      try {
+          CommonUtils.getBytes(invalidImage);
+      } catch (IOException e) {
+          e.printStackTrace();
+      } catch (InvalidImage e) {
+          // Assert that InvalidImage is thrown
+          assertEquals("invalid image uploaded", e.getMessage());
+      }
+  
+      // Set the invalid image to the animal DTO
+      animalDto.setPhotoUrl(new Byte[1]);
+  
+      Animal animal = new Animal();
+      animal.setName("Fluffy");
+      animal.setType("Cat");
+      animal.setAge(3);
+      animal.setGender("Female");
+      animal.setId(1L);
+      MultipartFile image = new MockMultipartFile("test.jpg", "test.jpg", "image/jpeg", "test".getBytes());
+      Byte[] byteArray = new Byte[] { 0x01, 0x02, 0x03 };
+  
+      CommonUtils commonUtilsMock = mock(CommonUtils.class);
+      when(commonUtilsMock.getBytes(image)).thenReturn(byteArray); // set a non-empty byte array
+  
+      when(animalRepositoryMock.findById(1L)).thenReturn(Optional.of(animal));
+  
+      // Act
+      AnimalDto updatedAnimalDto = animalServiceImpl.updateAnimal(animalDto, 1L, image);
+  
+      // Assert
+      assertEquals(animalDto.getName(), updatedAnimalDto.getName());
+      assertEquals(animalDto.getType(), updatedAnimalDto.getType());
+      assertEquals(animalDto.getAge(), updatedAnimalDto.getAge());
+      assertEquals(animalDto.getGender(), updatedAnimalDto.getGender());
+      assertEquals(animalDto.getOwnerId(), updatedAnimalDto.getOwnerId());
+      assertNotNull(updatedAnimalDto.getPhotoUrl());
+  }
+  
+  @Test
+  public void testDeleteAnimal() throws InvalidAnimalId {
+      // Arrange
+      Animal animal = new Animal();
+      animal.setName("Fluffy");
+      animal.setType("Cat");
+      animal.setAge(3);
+      animal.setGender("Female");
+      animal.setId(1L);
+      PetOwner owner = new PetOwner();
+      owner.setUser(new User());
+      animal.setOwner(owner);
+  
+      when(animalRepositoryMock.findById(1L)).thenReturn(Optional.of(animal));
+  
+      // Act
+      AnimalDto deletedAnimalDto = animalServiceImpl.deleteAnimal(1L);
+  
+      // Assert
+      assertEquals(animal.getName(), deletedAnimalDto.getName());
+      assertEquals(animal.getType(), deletedAnimalDto.getType());
+      assertEquals(animal.getAge(), deletedAnimalDto.getAge());
+      assertEquals(animal.getGender(), deletedAnimalDto.getGender());
+  }
+  
+
+
 }
