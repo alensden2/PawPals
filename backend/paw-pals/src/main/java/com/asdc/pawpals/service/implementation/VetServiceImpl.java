@@ -280,7 +280,7 @@ public class VetServiceImpl implements VetService {
     @Override
     public VetDto getVetByUserId(String id) throws UserNameNotFound {
 
-        if (null != id && !id.isEmpty()) {
+        if (null != id && !id.isEmpty() && vetRepository.findByUser_UserId(id).isPresent() ) {
             Vet vet = vetRepository.findByUser_UserId(id).get();
             return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
         } else {

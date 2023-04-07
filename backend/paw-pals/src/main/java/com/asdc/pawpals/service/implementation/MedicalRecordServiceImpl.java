@@ -2,6 +2,7 @@ package com.asdc.pawpals.service.implementation;
 
 import java.io.InvalidObjectException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.asdc.pawpals.exception.InvalidAnimalId;
@@ -61,14 +62,15 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
         if(medicalHistoryDto!=null && medicalHistoryDto.getAilmentName()!=null && medicalHistoryDto.getPrescription()!=null &&
         medicalHistoryDto.getDateDiagnosed()!=null && medicalHistoryDto.getVaccines()!=null)
         {
-            if(!vetRepository.findByUser_UserId(medicalHistoryDto.getVetUserId()).isPresent()){
+            Optional<Vet> optionalVetRepository=vetRepository.findByUser_UserId(medicalHistoryDto.getVetUserId());
+            if(!optionalVetRepository.isPresent()){
                 throw new UserNameNotFound("Vet does not exist");
             }
             if(!animalRepository.findById(medicalHistoryDto.getAnimalId()).isPresent()){
                 throw new InvalidAnimalId("Animal does not exist");
             }
             MedicalHistory medicalHistory=Transformations.DTO_TO_MODEL_CONVERTER.medicalHistory(medicalHistoryDto);
-            medicalHistory.setVet(vetRepository.findByUser_UserId(medicalHistoryDto.getVetUserId()).get()); // this needs to be done because CascadeType.MERGE is not working with vet->USer->userId
+            medicalHistory.setVet(optionalVetRepository.get()); // this needs to be done because CascadeType.MERGE is not working with vet->USer->userId
             medicalHistory=medicalRecordRepository.save(medicalHistory);
             return Transformations.MODEL_TO_DTO_CONVERTER.medicalHistory(medicalHistory);
         } else {
