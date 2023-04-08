@@ -130,14 +130,26 @@ public class VetController {
   ) {
     VetAvailabilityDto availability = null;
     ResponseEntity<VetAvailabilityDto> response = null;
-    if (
+
+    boolean isRequestBodyValid = CommonUtils.isStrictTypeOf(
+      requestBody,
+      new TypeReference<Map<String, String>>() {}
+    );
+    boolean isUserIdValid = userId != null && !userId.isEmpty();
+
+    /** 
+     * Old Code - 
+     * 
+     * if (
       CommonUtils.isStrictTypeOf(
         requestBody,
         new TypeReference<Map<String, String>>() {}
       ) &&
       userId != null &&
       !userId.isEmpty()
-    ) {
+    )
+     */
+    if (isRequestBodyValid && isUserIdValid) {
       Map<String, String> request = ObjectMapperWrapper
         .getInstance()
         .convertValue(requestBody, new TypeReference<Map<String, String>>() {});
