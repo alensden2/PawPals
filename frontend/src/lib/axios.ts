@@ -30,6 +30,11 @@ class API {
     this.apiClient.interceptors.response.use(
       (response) => response,
       (error) => {
+        if (error?.code === 'ERR_NETWORK') {
+          localStorageUtil.clear();
+          window.location.href = '/';
+        }
+
         if ([400, 403, 406].includes(error.response?.status)) {
           // added response to errorReponse, otherwise axios was not giving response property for rejected promise
           // Issue reference: https://github.com/axios/axios/issues/960

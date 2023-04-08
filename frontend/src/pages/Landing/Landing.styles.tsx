@@ -30,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     '&:hover': {
-      textDecoration: 'none'
+      textDecoration: 'none',
+      cursor: 'pointer'
     }
   },
   menuButton: {
