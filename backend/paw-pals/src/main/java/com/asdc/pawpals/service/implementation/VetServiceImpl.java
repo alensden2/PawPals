@@ -456,11 +456,18 @@ Retrieves all the vets with their profiles in "pending" status and maps them to 
    */
   @Override
   public VetDto getVetByUserId(String id) throws UserNameNotFound {
-    if (
+    boolean isIdNotNull = (id != null);
+    boolean isIdNotEmpty = (!id.isEmpty());
+    boolean isVetExist = vetRepository.findByUser_UserId(id).isPresent();
+    /**
+     * Old code 
+     * if (
       null != id &&
       !id.isEmpty() &&
       vetRepository.findByUser_UserId(id).isPresent()
-    ) {
+    )
+     */
+    if (isIdNotNull && isIdNotEmpty && isVetExist) {
       Vet vet = vetRepository.findByUser_UserId(id).get();
       return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
     } else {
@@ -487,7 +494,14 @@ their profile has been rejected by an administrator.
   @Override
   public VetDto updateProfileStatus(VetDto vetDto, String id)
     throws UserNameNotFound, InvalidObjectException {
-    if (null != id && !id.isEmpty() && vetDto != null) {
+      /**
+       * Old 
+       *  if (null != id && !id.isEmpty() && vetDto != null)
+       */
+      boolean isIdNotNullOrEmpty = null != id && !id.isEmpty();
+boolean isVetDtoNotNull = vetDto != null;
+boolean isConditionMet = isIdNotNullOrEmpty && isVetDtoNotNull;
+    if (isConditionMet) {
       Vet vet = vetRepository
         .findByUser_UserId(id)
         .orElseThrow(UserNameNotFound::new);
