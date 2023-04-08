@@ -115,13 +115,23 @@ public class UserServiceImpl implements UserService {
     throws UserAlreadyExist, InvalidUserDetails {
     UserDto returnedDto = null;
 
-    if (
+    boolean isEmailValid = userDto != null && userDto.getEmail() != null;
+    boolean isUsernameValid = userDto != null && userDto.getUsername() != null;
+    boolean isPasswordValid = userDto != null && userDto.getPassword() != null;
+    boolean isRoleValid = userDto != null && userDto.getRole() != null;
+
+    /**
+ * Old code - 
+ * if (
       userDto != null &&
       userDto.getEmail() != null &&
       userDto.getUsername() != null &&
       userDto.getPassword() != null &&
       userDto.getRole() != null
-    ) {
+    )
+ */
+
+    if (isEmailValid && isUsernameValid && isPasswordValid && isRoleValid) {
       User user = Transformations.DTO_TO_MODEL_CONVERTER.user(userDto);
       if (userRepository.existsById(user.getUserId())) {
         throw new UserAlreadyExist("user exist in the system");
