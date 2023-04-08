@@ -210,4 +210,68 @@ public class AdminServiceImplTest {
     assertNotNull(returnedDto);
     assertEquals("Fluffy", returnedDto.getName());
   }
+
+
+  @Test
+  public void testAddVet() {
+    Vet vet = new Vet();
+    User user = new User();
+    user.setUserId("vet@example.com");
+    user.setRole("Vet");
+    user.setEmail("vet@example.com");
+    user.setPassword("password");
+    vet.setUser(user);
+    vet.setFirstName("John");
+    vet.setLastName("Doe");
+    vet.setLicenseNumber("1234567890");
+    vet.setClinicAddress("123 Main St");
+    vet.setExperience(5);
+    vet.setQualification("DVM");
+    vet.setProfileStatus("Active");
+    vet.setPhoneNo("555-555-5555");
+    VetDto vetDto = null;
+
+    vetDto = adminServiceImpl.addVet(vet);
+
+    assertEquals(
+      "VetDto first name is incorrect",
+      vet.getFirstName(),
+      vetDto.getFirstName()
+    );
+    assertEquals(
+      "VetDto last name is incorrect",
+      vet.getLastName(),
+      vetDto.getLastName()
+    );
+    assertEquals(
+      "VetDto license number is incorrect",
+      vet.getLicenseNumber(),
+      vetDto.getLicenseNumber()
+    );
+    assertEquals(
+      "VetDto clinic address is incorrect",
+      vet.getClinicAddress(),
+      vetDto.getClinicAddress()
+    );
+    assertEquals(
+      "VetDto experience is incorrect",
+      vet.getExperience(),
+      vetDto.getExperience()
+    );
+    assertEquals(
+      "VetDto qualification is incorrect",
+      vet.getQualification(),
+      vetDto.getQualification()
+    );
+    assertEquals(
+      "VetDto profile status is incorrect",
+      vet.getProfileStatus(),
+      vetDto.getProfileStatus()
+    );
+    assertEquals(
+      "VetDto phone number is incorrect",
+      vet.getPhoneNo(),
+      vetDto.getPhoneNo()
+    );
+  }
 }
