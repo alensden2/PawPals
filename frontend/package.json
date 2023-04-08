@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\" --list-different",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production --env env=production"
   },
   "author": "",
   "license": "ISC",
