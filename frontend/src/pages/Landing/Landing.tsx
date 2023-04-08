@@ -45,10 +45,6 @@ const Landing: React.FC = () => {
     navigate('/about-us');
   };
 
-  const onContactUsClick = () => {
-    navigate('/contact-us');
-  };
-
   return (
     <>
       <AppBar className={classes.header}>
@@ -87,13 +83,6 @@ const Landing: React.FC = () => {
               onClick={onAboutUsClick}
             >
               {'About Us'}
-            </Link>
-            <Link
-              color="inherit"
-              className={classes.navLink}
-              onClick={onContactUsClick}
-            >
-              {'Contact Us'}
             </Link>
             <Button
               variant="outlined"
@@ -140,7 +129,7 @@ const Landing: React.FC = () => {
             </Typography>
             <Typography variant="h4" className={classes.bottomImageSubtitle}>
               {
-                'At PawPals, we provide the best care possible to ensure your pets are healthy and happy. Our team of expert veterinarians and pet care professionals are dedicated to making sure your pets receive the attention and care they deserve.'
+                'We are dedicated to ensuring the well-being and happiness of your pets at PawPals, with our team of skilled veterinarians and pet care specialists providing exceptional care.'
               }
             </Typography>
           </Grid>
