@@ -1,5 +1,8 @@
-package com.asdc.pawpals.model;
+/**
 
+The Vet class represents a veterinary doctor who can perform medical treatments on animals.
+*/
+package com.asdc.pawpals.model;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -21,30 +24,51 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Vet {
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Long id;
 
-  private String firstName;
-  private String lastName;
-  private String licenseNumber;
-  private String clinicAddress;
-  private Integer experience;
-  private String qualification;
-  private String profileStatus;
-  private String phoneNo;
+/** The unique ID of this vet */
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE)
+private Long id;
 
-  @Column(name = "clinic_url", length = 10485760)
-  @Lob
-  private Byte[] clinicUrl;
+/** The first name of this vet */
+private String firstName;
 
-  @OneToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "user_userId")
-  private User user;
+/** The last name of this vet */
+private String lastName;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")
-  List<Appointment> appointment;
+/** The license number of this vet */
+private String licenseNumber;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")
-  List<VetAvailability> availability;
+/** The address of this vet's clinic */
+private String clinicAddress;
+
+/** The years of experience of this vet */
+private Integer experience;
+
+/** The qualification of this vet */
+private String qualification;
+
+/** The status of this vet's profile */
+private String profileStatus;
+
+/** The phone number of this vet */
+private String phoneNo;
+
+/** The URL of this vet's clinic */
+@Column(name = "clinic_url", length = 10485760)
+@Lob
+private Byte[] clinicUrl;
+
+/** The user associated with this vet */
+@OneToOne(cascade = CascadeType.MERGE)
+@JoinColumn(name = "user_userId")
+private User user;
+
+/** The list of appointments scheduled for this vet */
+@OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")
+List<Appointment> appointment;
+
+/** The list of available time slots for this vet */
+@OneToMany(cascade = CascadeType.ALL, mappedBy = "vet")
+List<VetAvailability> availability;
 }

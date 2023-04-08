@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @Lazy
@@ -46,10 +47,13 @@ public class AnimalServiceImpl implements AnimalService {
         logger.debug("Register Animal", animalDto);
         if (null != animalDto && null != animalDto.getAge() && null != animalDto.getGender() && null != animalDto.getName() &&
                 null != animalDto.getType() && null != animalDto.getPhotoUrl()) {
-            if (!petOwnerRepository.findByUser_UserId(animalDto.getOwnerId()).isPresent()) {
+
+            Optional<PetOwner> petOwnerOptional = petOwnerRepository.findByUser_UserId(animalDto.getOwnerId());
+
+            if (!petOwnerOptional.isPresent()) {
                 throw new UserNameNotFound("Pet owner not found");
             }
-            PetOwner petOwner = petOwnerRepository.findByUser_UserId(animalDto.getOwnerId()).get();
+            PetOwner petOwner = petOwnerOptional.get();
             Animal animal = Transformations.DTO_TO_MODEL_CONVERTER.animal(animalDto);
             animal.setOwner(petOwner);
             animal = animalRepository.save(animal);
