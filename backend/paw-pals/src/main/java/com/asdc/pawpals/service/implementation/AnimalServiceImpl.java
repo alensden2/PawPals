@@ -75,23 +75,10 @@ public class AnimalServiceImpl implements AnimalService {
 
         if (null != id && null != animalDto) {
             Animal animal = animalRepository.findById(id).orElseThrow(InvalidAnimalId::new);
-
-            if (animalDto.getName() != null) {
-                animal.setName(animalDto.getName());
-            }
-            if (animalDto.getGender() != null) {
-                animal.setGender(animalDto.getGender());
-            }
             if (image != null) {
                 animal.setPhotoUrl(CommonUtils.getBytes(image));
             }
-            if (animalDto.getAge() != null) {
-                animal.setAge(animalDto.getAge());
-            }
-            if (animalDto.getType() != null) {
-                animal.setType(animalDto.getType());
-            }
-
+            updateAnimalData(animalDto, animal);
             animal = animalRepository.saveAndFlush(animal);
             return Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
         } else {
@@ -113,6 +100,38 @@ public class AnimalServiceImpl implements AnimalService {
             return Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
         } else {
             throw new InvalidAnimalId("Id is null");
+        }
+    }
+
+    /**
+     * @param animalDto
+     * @param id
+     * @return
+     */
+    @Override
+    public AnimalDto updateAnimalObject(AnimalDto animalDto, Long id) throws InvalidAnimalObject, InvalidAnimalId {
+        if (null != id && null != animalDto) {
+            Animal animal = animalRepository.findById(id).orElseThrow(InvalidAnimalId::new);
+            updateAnimalData(animalDto, animal);
+            animal = animalRepository.saveAndFlush(animal);
+            return Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
+        } else {
+            throw new InvalidAnimalObject("Null parameter passed in the Animal Object");
+        }
+    }
+
+    private static void updateAnimalData(AnimalDto animalDto, Animal animal) {
+        if (animalDto.getName() != null) {
+            animal.setName(animalDto.getName());
+        }
+        if (animalDto.getGender() != null) {
+            animal.setGender(animalDto.getGender());
+        }
+        if (animalDto.getAge() != null) {
+            animal.setAge(animalDto.getAge());
+        }
+        if (animalDto.getType() != null) {
+            animal.setType(animalDto.getType());
         }
     }
 }

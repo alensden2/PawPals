@@ -17,4 +17,6 @@ public interface AnimalService {
     AnimalDto updateAnimal(AnimalDto animalDto, Long id, MultipartFile image) throws InvalidImage, IOException, InvalidAnimalId, InvalidAnimalObject;
 
     AnimalDto deleteAnimal(Long id) throws InvalidAnimalId;
+
+    AnimalDto updateAnimalObject(AnimalDto animalDto, Long id) throws InvalidAnimalObject, InvalidAnimalId;
 }
