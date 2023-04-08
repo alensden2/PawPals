@@ -494,13 +494,13 @@ their profile has been rejected by an administrator.
   @Override
   public VetDto updateProfileStatus(VetDto vetDto, String id)
     throws UserNameNotFound, InvalidObjectException {
-      /**
-       * Old 
-       *  if (null != id && !id.isEmpty() && vetDto != null)
-       */
-      boolean isIdNotNullOrEmpty = null != id && !id.isEmpty();
-boolean isVetDtoNotNull = vetDto != null;
-boolean isConditionMet = isIdNotNullOrEmpty && isVetDtoNotNull;
+    /**
+     * Old
+     *  if (null != id && !id.isEmpty() && vetDto != null)
+     */
+    boolean isIdNotNullOrEmpty = null != id && !id.isEmpty();
+    boolean isVetDtoNotNull = vetDto != null;
+    boolean isConditionMet = isIdNotNullOrEmpty && isVetDtoNotNull;
     if (isConditionMet) {
       Vet vet = vetRepository
         .findByUser_UserId(id)

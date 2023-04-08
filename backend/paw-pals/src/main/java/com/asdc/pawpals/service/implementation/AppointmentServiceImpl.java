@@ -53,11 +53,19 @@ public class AppointmentServiceImpl implements AppointmentService {
       appointmentId + action
     );
     Boolean statusUpdated = false;
-    if (
+    boolean isAppointmentIdNotNull = appointmentId != null;
+    boolean isActionNotNullOrEmpty = action != null && !action.isEmpty();
+    boolean isActionValidStatus = AppointmentValidators.isValidStatus(action);
+    /**old code 
+     * if (
       appointmentId != null &&
       action != null &&
       !action.isEmpty() &&
       AppointmentValidators.isValidStatus(action)
+    )
+     */
+    if (
+      isAppointmentIdNotNull && isActionNotNullOrEmpty && isActionValidStatus
     ) {
       Optional<Appointment> apt = appointmentRepository.findById(appointmentId);
       if (apt.isPresent()) {
