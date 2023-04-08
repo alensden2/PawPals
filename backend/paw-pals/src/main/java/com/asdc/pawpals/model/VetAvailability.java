@@ -1,5 +1,8 @@
-package com.asdc.pawpals.model;
+/**
 
+The VetAvailability class represents the availability of a vet for appointments.
+*/
+package com.asdc.pawpals.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,13 +17,30 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class VetAvailability {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
-    private String dayOfWeek;
-    private String startTime;
-    private String endTime;
+/**
+* The unique identifier of the vet's availability.
+*/
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE)
+private Integer id;
+/**
+ * The day of the week for which the vet is available.
+ */
+private String dayOfWeek;
 
-    @ManyToOne
-    Vet vet;
+/**
+ * The start time of the vet's availability.
+ */
+private String startTime;
+
+/**
+ * The end time of the vet's availability.
+ */
+private String endTime;
+
+/**
+ * The vet who is available at the specified time.
+ */
+@ManyToOne
+Vet vet;
 }
