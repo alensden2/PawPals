@@ -8,8 +8,12 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Properties;
 
+/**
+ * Configuration class for setting up the email service using JavaMailSender.
+ */
 @Configuration
 public class EmailConfig {
+    
     // Define constants for the email host, port, and username
     private final String host = "smtp.gmail.com";
     private final int port = 587;
@@ -19,7 +23,11 @@ public class EmailConfig {
     @Value("${spring.mail.password}")
     private String password;
 
-    // Create a bean for the JavaMailSender
+    /**
+     * Creates a bean for the JavaMailSender.
+     *
+     * @return A configured instance of the JavaMailSenderImpl class.
+     */
     @Bean
     public JavaMailSender javaMailSender() {
         // Create a new instance of the JavaMailSender implementation
@@ -42,4 +50,3 @@ public class EmailConfig {
         return mailSender;
     }
 }
-
