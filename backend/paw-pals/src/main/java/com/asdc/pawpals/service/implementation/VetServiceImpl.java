@@ -267,7 +267,7 @@ public class VetServiceImpl implements VetService {
             return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
 
         } else if (vetDto == null) {
-            throw new InvalidObjectException("Invalid pet owner object body");
+            throw new InvalidObjectException("Invalid Vet object body");
         } else {
             throw new UserNameNotFound("User name is not found for " + id);
         }
