@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,16 +23,24 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Before;
 import org.junit.Test;
+
+import com.asdc.pawpals.service.implementation.AdminServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class AdminControllerTest {
+  @Mock
+  AdminServiceImpl adminServiceImpl;
+
   @InjectMocks
-  private AdminController adminController;
+  AdminController adminController;
 
   @Mock
   private AdminService adminService;
@@ -82,6 +91,7 @@ public void testGetAllAnimalRecords() {
     validVet = new Vet();
     validVet.setId(1L);
     validVet.setFirstName("John Doe");
+    MockitoAnnotations.openMocks(this);
   }
 
   
@@ -102,4 +112,18 @@ public void testGetAllAnimalRecords() {
 
     assertNotNull(apiResponse);
   }
+  ApiResponse apiResponse;
+
+//   @Before
+//   public void setUp() throws Exception {
+//     MockitoAnnotations.openMocks(this);
+// }
+
+@Test
+public void objectCreated() {
+    assertNotNull(adminServiceImpl);
+    assertNotNull(adminController);
+    assertNotNull(apiResponse);
+}
+  
 }
