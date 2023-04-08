@@ -2,13 +2,14 @@ package com.asdc.pawpals.service.implementation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
@@ -17,9 +18,9 @@ import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
-import io.jsonwebtoken.lang.Arrays;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -98,40 +99,43 @@ public class AdminServiceImplTest {
     }
   }
 
-@Test
-public void testGetAllVetRecords() {
+  @Test
+  public void testGetAllVetRecords() {
     // Arrange
     List<Vet> vets = new ArrayList<>();
     Vet vet1 = new Vet();
     vet1.setId(1L);
     vet1.setFirstName("Dr. Smith");
     vet1.setQualification("Dentistry");
-    
+
     Vet vet2 = new Vet();
     vet2.setId(2L);
     vet2.setFirstName("Dr. Patel");
     vet2.setQualification("Cardiology");
-    
+
     vets.add(vet1);
     vets.add(vet2);
-    
+
     when(vetRepository.findAll()).thenReturn(vets);
-    
+
     // Act
     List<VetDto> vetsDto = adminServiceImpl.getAllVetRecords();
-    
+
     // Assert
     assertNotNull(vetsDto);
     assertEquals(vets.size(), vetsDto.size());
-    
-    for (int i = 0; i < vetsDto.size(); i++) {
-        assertEquals(vets.get(i).getFirstName(), vetsDto.get(i).getFirstName());
-        assertEquals(vets.get(i).getQualification(), vetsDto.get(i).getQualification());
-    }
-}
 
-@Test
-public void testGetAllPetOwnerRecords() {
+    for (int i = 0; i < vetsDto.size(); i++) {
+      assertEquals(vets.get(i).getFirstName(), vetsDto.get(i).getFirstName());
+      assertEquals(
+        vets.get(i).getQualification(),
+        vetsDto.get(i).getQualification()
+      );
+    }
+  }
+
+  @Test
+  public void testGetAllPetOwnerRecords() {
     // Arrange
     List<PetOwner> petOwners = new ArrayList<>();
     PetOwner petOwner1 = new PetOwner();
@@ -141,7 +145,7 @@ public void testGetAllPetOwnerRecords() {
     petOwner1.setAddress("123 Main St");
     petOwner1.setPhoneNo("555-1234");
     petOwner1.setUser(new User());
-    
+
     PetOwner petOwner2 = new PetOwner();
     petOwner2.setId(2L);
     petOwner2.setFirstName("Jane");
@@ -149,26 +153,61 @@ public void testGetAllPetOwnerRecords() {
     petOwner2.setAddress("456 Oak St");
     petOwner2.setPhoneNo("555-5678");
     petOwner2.setUser(new User());
-    
+
     petOwners.add(petOwner1);
     petOwners.add(petOwner2);
-    
+
     when(petOwnerRepository.findAll()).thenReturn(petOwners);
-    
+
     // Act
     List<PetOwnerDto> petOwnerDtos = adminServiceImpl.getAllPetOwnerRecords();
-    
+
     // Assert
     assertNotNull(petOwnerDtos);
     assertEquals(petOwners.size(), petOwnerDtos.size());
-    
+
     for (int i = 0; i < petOwnerDtos.size(); i++) {
-        assertEquals(petOwners.get(i).getFirstName(), petOwnerDtos.get(i).getFirstName());
-        assertEquals(petOwners.get(i).getLastName(), petOwnerDtos.get(i).getLastName());
-        assertEquals(petOwners.get(i).getAddress(), petOwnerDtos.get(i).getAddress());
-        assertEquals(petOwners.get(i).getPhoneNo(), petOwnerDtos.get(i).getPhoneNo());
+      assertEquals(
+        petOwners.get(i).getFirstName(),
+        petOwnerDtos.get(i).getFirstName()
+      );
+      assertEquals(
+        petOwners.get(i).getLastName(),
+        petOwnerDtos.get(i).getLastName()
+      );
+      assertEquals(
+        petOwners.get(i).getAddress(),
+        petOwnerDtos.get(i).getAddress()
+      );
+      assertEquals(
+        petOwners.get(i).getPhoneNo(),
+        petOwnerDtos.get(i).getPhoneNo()
+      );
     }
-}
+  }
 
+  @Test
+  public void testAddAnimal() throws PetOwnerAlreadyDoesNotExists {
+    // Arrange
+    Animal animal = new Animal();
+    animal.setName("Fluffy");
+    PetOwner petOwner = new PetOwner();
+    petOwner.setFirstName("John");
+    petOwner.setLastName("Doe");
+    User user = new User();
+    user.setUserId("johndoe");
+    user.setPassword("password");
+    petOwner.setUser(user);
+    animal.setOwner(petOwner);
+    when(userRepository.findById(anyString())).thenReturn(Optional.of(user));
+    when(petOwnerRepository.count()).thenReturn(1L);
+    when(animalRepository.save(any(Animal.class))).thenReturn(animal);
 
+    // Act
+    AnimalDto returnedDto = adminServiceImpl.addAnimal(animal);
+
+    // Assert
+    assertNotNull(returnedDto);
+    assertEquals("Fluffy", returnedDto.getName());
+  }
 }
