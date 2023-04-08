@@ -29,6 +29,16 @@ public class AppointmentController {
     @Autowired
     ApiResponse apiResponse;
 
+    /**
+     * This method updates the status of an appointment with the given appointment ID and action.
+     * The updated status is returned in the response body.
+     *
+     * @param appointmentId the ID of the appointment to update
+     * @param action        the action to perform on the appointment status
+     * @return a ResponseEntity object containing the updated appointment status in the response body and status code OK
+     * @throws InvalidObjectException if the input appointment ID or action is invalid
+     * @throws InvalidAppointmentId   if the input appointment ID is invalid
+     */
     @GetMapping("/update-status/{appointment_id}")
     public ResponseEntity<ApiResponse> setStatus(
             @PathVariable(value = "appointment_id") Integer appointmentId,
@@ -43,6 +53,16 @@ public class AppointmentController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    /**
+     * Handles a POST request to book an appointment.
+     *
+     * @param requestBody The request body containing the appointment details.
+     * @return A ResponseEntity object with a ApiResponse object in its body and the HTTP status code 201 (CREATED).
+     * @throws InvalidAnimalId        If the animal ID provided in the request body is invalid.
+     * @throws InvalidObjectException If the object provided in the request body is invalid.
+     * @throws InvalidVetID           If the vet ID provided in the request body is invalid.
+     * @throws UserNameNotFound       If the username provided in the request body is not found in the system.
+     */
     @PostMapping({"/book-appointment"})
     public ResponseEntity<ApiResponse> bookAppointment(@RequestBody Object requestBody) throws InvalidAnimalId, InvalidObjectException, InvalidVetID, UserNameNotFound {
         logger.info("Received request as :", requestBody);
