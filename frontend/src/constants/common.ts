@@ -32,14 +32,14 @@ export const PET_OWNER_HOME_PAGE_CARDS = [
     route: '/pet-owner/all-vets'
   },
   {
-    uid: 'HEALTH_AND_DISEASE',
-    title: 'Learn about Pet health and diseases',
+    uid: 'APPOINTMENTS',
+    title: 'My Appointments',
     color: '#8fad88',
-    route: '/pet-owner/pet-health-and-diseases'
+    route: '/pet-owner/my-appointments'
   },
   {
-    uid: 'SUPPORT',
-    title: 'Support/ Contact Us',
+    uid: 'HEALTH_AND_DISEASE',
+    title: 'Learn about Pet health and diseases',
     color: '#cbdf90',
     route: '/pet-owner/pet-health-and-diseases'
   }
@@ -47,6 +47,9 @@ export const PET_OWNER_HOME_PAGE_CARDS = [
 
 export const PLACEHOLDER_PET_IMAGE =
   'https://via.placeholder.com/150x150.png?text=Pet+Image';
+
+export const PLACEHOLDER_APPOINTMENT_IMAGE =
+  'https://via.placeholder.com/150x150.png?text=Appointment+Image';
 
 export const PLACEHOLDER_VET_CLINIC_IMAGE =
   'https://via.placeholder.com/500x500.png?text=Clinic+Image';
