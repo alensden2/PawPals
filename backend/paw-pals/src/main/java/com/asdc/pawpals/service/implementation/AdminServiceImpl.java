@@ -9,14 +9,10 @@ import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
-import com.asdc.pawpals.repository.AdminPostAnimalRepository;
-import com.asdc.pawpals.repository.AdminPostVetRepository;
-import com.asdc.pawpals.repository.AdminReadAllAnimalsRepository;
-import com.asdc.pawpals.repository.AdminReadAllUserRepository;
-import com.asdc.pawpals.repository.AdminReadAllVetsRepository;
-import com.asdc.pawpals.repository.AdminReadRepository;
+import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
+import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.Transformations;
 import java.util.List;
@@ -32,35 +28,24 @@ public class AdminServiceImpl implements AdminService {
   Logger logger = LogManager.getLogger(AdminServiceImpl.class);
 
   @Autowired
-  AdminReadRepository adminReadRepository;
+  VetRepository vetRepository;
 
   @Autowired
-  AdminReadAllVetsRepository adminReadAllVetsRepository;
-
-  @Autowired
-  AdminReadAllUserRepository adminReadAllUserRepository;
-
-  @Autowired
-  AdminReadAllAnimalsRepository adminReadAllAnimalsRepository;
-
-  @Autowired
-  AdminPostAnimalRepository adminPostAnimalRepository;
+  AnimalRepository animalRepository;
 
   @Autowired
   UserRepository userRepository;
 
   @Autowired
-  AdminPostVetRepository adminPostVetRepository;
-
-  @Autowired
   PetOwnerRepository petOwnerRepository;
 
   /**
-   * fetches all the animal records
+   * Returns a list of AnimalDto objects that represent all animal records from the animal repository.
+   * @return A list of AnimalDto objects representing all animal records.
    */
   @Override
   public List<AnimalDto> getAllAnimalRecords() {
-    List<Animal> animals = adminReadAllAnimalsRepository.findAll();
+    List<Animal> animals = animalRepository.findAll();
     logger.debug(
       "AdminReadService :: getAllVets :: userRecordsAre are : {}",
       animals
@@ -77,10 +62,12 @@ public class AdminServiceImpl implements AdminService {
   }
 
   /**
-   * fetches all the vet records
+   * Returns a list of all the VetDto objects from the database.
+   *
+   * @return A list of VetDto objects
    */
   public List<VetDto> getAllVetRecords() {
-    List<Vet> vets = adminReadAllVetsRepository.findAll();
+    List<Vet> vets = vetRepository.findAll();
     logger.debug(
       "AdminReadService :: getAllVets :: userRecordsAre are : {}",
       vets
@@ -96,8 +83,10 @@ public class AdminServiceImpl implements AdminService {
     return vetsDto;
   }
 
-   /**
-   * fetches all the vet records
+  /**
+   * Returns a list of PetOwnerDto objects that represent all pet owner records from the pet owner repository.
+   *
+   * @return A list of PetOwnerDto objects representing all pet owner records.
    */
   @Override
   public List<PetOwnerDto> getAllPetOwnerRecords() {
@@ -118,11 +107,12 @@ public class AdminServiceImpl implements AdminService {
   }
 
   /**
-   * fetches all the user records
+   * Returns a list of UserDto objects that represent all user records from the user repository.
    *
+   * @return A list of UserDto objects representing all user records.
    */
   public List<UserDto> getAllUserRecords() {
-    List<User> userRecords = adminReadAllUserRepository.findAll();
+    List<User> userRecords = userRepository.findAll();
     logger.debug(
       "AdminReadService :: getAllUsers :: userRecordsAre are : {}",
       userRecords
@@ -138,6 +128,13 @@ public class AdminServiceImpl implements AdminService {
     return userRecordsDto;
   }
 
+  /**
+   * Adds a new animal record to the animal repository.
+   *
+   * @param animal The Animal object representing the new animal record to add.
+   * @return An AnimalDto object representing the newly added animal record.
+   * @throws PetOwnerAlreadyDoesNotExists If the pet owner associated with the new animal record does not exist in the user repository.
+   */
   @Override
   public AnimalDto addAnimal(Animal animal)
     throws PetOwnerAlreadyDoesNotExists {
@@ -155,7 +152,7 @@ public class AdminServiceImpl implements AdminService {
         Long countOfPetOwners = petOwnerRepository.count();
         countOfPetOwners = countOfPetOwners + 1;
         animal.setId(countOfPetOwners);
-        animal = adminPostAnimalRepository.save(animal);
+        animal = animalRepository.save(animal);
         returnedDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
       } else {
         throw new PetOwnerAlreadyDoesNotExists( // change name of error
@@ -166,6 +163,15 @@ public class AdminServiceImpl implements AdminService {
 
     return returnedDto;
   }
+
+  /**
+
+* Adds a new Vet to the database and returns the created VetDto object.
+* @param vet The Vet object to be added to the database
+* @return The created VetDto object
+* @throws PetOwnerAlreadyExistsException If the Vet's user already exists in the database
+* @throws UserNotFoundException If the Vet's user is not found in the database
+*/
 
   @Override
   public VetDto addVet(Vet vet) {
@@ -180,7 +186,7 @@ public class AdminServiceImpl implements AdminService {
         User userDetails = null;
         userDetails = user.get();
         vet.setUser(userDetails);
-        vet = adminPostVetRepository.save(vet);
+        vet = vetRepository.save(vet);
         vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
       } else {
         //custom user does not exit create}
@@ -189,10 +195,17 @@ public class AdminServiceImpl implements AdminService {
     return vetDto;
   }
 
+  /**
+   * Updates an existing Vet with the given id with the information from the updatedVet object.
+   *
+   * @param id The id of the Vet to update.
+   * @param updatedVet The updated Vet object containing the new information.
+   * @return The updated VetDto object.
+   */
   @Override
   public VetDto updateVet(Long id, Vet updatedVet) {
     VetDto vetDto = null;
-    Optional<Vet> optionalVet = adminPostVetRepository.findById(id);
+    Optional<Vet> optionalVet = vetRepository.findById(id);
     if (optionalVet.isPresent()) {
       // populating the vet
       Vet vet = optionalVet.get();
@@ -203,7 +216,7 @@ public class AdminServiceImpl implements AdminService {
       vet.setExperience(updatedVet.getExperience());
       vet.setQualification(updatedVet.getQualification());
       vet.setUser(vet.getUser()); // user details remain the same
-      adminPostVetRepository.save(vet);
+      vetRepository.save(vet);
       vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
     } else {
       //throw new EntityNotFoundException("Vet with id " + id + " not found");
@@ -211,13 +224,18 @@ public class AdminServiceImpl implements AdminService {
     return vetDto;
   }
 
+  /**
+   * Returns a list of all user records as UserDto objects.
+   *
+   * @return a list of all user records as UserDto objects
+   */
   @Override
   public VetDto deleteVet(Long id) {
     VetDto vetDto = null;
-    Optional<Vet> optionalVet = adminPostVetRepository.findById(id);
+    Optional<Vet> optionalVet = vetRepository.findById(id);
     if (optionalVet.isPresent()) {
       Vet vet = optionalVet.get();
-      adminPostVetRepository.delete(vet);
+      vetRepository.delete(vet);
       vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
     } else {
       // throw exception user not found
@@ -225,13 +243,20 @@ public class AdminServiceImpl implements AdminService {
     return vetDto;
   }
 
+  /**
+   * Deletes the animal with the specified ID.
+   *
+   * @param id the ID of the animal to delete
+   * @return the DTO representation of the deleted animal
+   * @throws EntityNotFoundException if the animal with the specified ID is not found
+   */
   @Override
   public AnimalDto deleteAnimal(Long id) {
     AnimalDto animalDto = null;
-    Optional<Animal> optionalAnimal = adminPostAnimalRepository.findById(id);
+    Optional<Animal> optionalAnimal = animalRepository.findById(id);
     if (optionalAnimal.isPresent()) {
       Animal animal = optionalAnimal.get();
-      adminPostAnimalRepository.delete(animal);
+      animalRepository.delete(animal);
       animalDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
     } else {
       //throw new EntityNotFoundException("Animal with id " + id + " not found");
@@ -239,17 +264,25 @@ public class AdminServiceImpl implements AdminService {
     return animalDto;
   }
 
+  /**
+   * Updates the animal with the specified id with the provided information.
+   *
+   * @param id the id of the animal to update
+   * @param updatedAnimal the updated information for the animal
+   * @return the updated animal information as a DTO
+   * @throws EntityNotFoundException if the animal with the specified id is not found
+   */
   @Override
   public AnimalDto updateAnimal(Long id, Animal updatedAnimal) {
     AnimalDto animalDto = null;
-    Optional<Animal> optionalAnimal = adminPostAnimalRepository.findById(id);
+    Optional<Animal> optionalAnimal = animalRepository.findById(id);
     if (optionalAnimal.isPresent()) {
       Animal animal = optionalAnimal.get();
       animal.setName(updatedAnimal.getName());
       animal.setType(updatedAnimal.getType());
       animal.setAge(updatedAnimal.getAge());
       animal.setGender(updatedAnimal.getGender());
-      adminPostAnimalRepository.save(animal);
+      animalRepository.save(animal);
       animalDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
     } else {
       // throw new exception

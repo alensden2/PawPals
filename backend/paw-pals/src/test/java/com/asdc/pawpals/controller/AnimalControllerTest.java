@@ -152,6 +152,40 @@ public class AnimalControllerTest {
   }
 
   @Test
+  public void updateAnimalObjectTest()
+          throws IOException, InvalidImage, InvalidAnimalObject, java.io.IOException, InvalidAnimalId {
+    //Arrange
+    AnimalDto animalDto = new AnimalDto();
+    Long _id = 1L;
+    animalDto.setId(1L);
+    animalDto.setName("Chris");
+    animalDto.setType("Dog");
+    animalDto.setAge(4);
+    animalDto.setGender("Male");
+    animalDto.setOwnerId("123");
+    animalDto.setMedicalHistory(null);
+
+    //Act
+    when(animalServiceMock.updateAnimal(any(AnimalDto.class), anyLong(), any(MultipartFile.class)))
+            .thenReturn(animalDto);
+    when(apiResponseMock.getBody()).thenReturn(animalDto);
+    when(apiResponseMock.isSuccess()).thenReturn(true);
+    when(apiResponseMock.isError()).thenReturn(false);
+
+    ResponseEntity<ApiResponse> response = animalController.updateAnimalObject(
+            animalDto,
+            _id
+    );
+    ApiResponse apiResponse = response.getBody();
+
+    //Assert
+    assertNotNull(response.getBody().getBody());
+    assertEquals(animalDto, response.getBody().getBody());
+    assertTrue(apiResponse.isSuccess());
+    assertFalse(apiResponse.isError());
+  }
+
+  @Test
   public void deleteAnimalTest()
     throws InvalidAnimalId {
     //Arrange
