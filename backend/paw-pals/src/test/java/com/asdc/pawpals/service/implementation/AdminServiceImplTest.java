@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.dto.AnimalDto;
@@ -20,6 +22,7 @@ import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
+import com.asdc.pawpals.utils.Transformations;
 import io.jsonwebtoken.lang.Arrays;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +42,14 @@ public class AdminServiceImplTest {
   private AnimalRepository animalRepository;
 
   @Mock
+  private Transformations transformations;
+
+  @Mock
   private UserRepository userRepository;
 
   @Mock
   private PetOwnerRepository petOwnerRepository;
+
 
   @InjectMocks
   private AdminServiceImpl adminServiceImpl;
@@ -368,4 +375,73 @@ public class AdminServiceImplTest {
     Optional<Animal> optionalAnimal = animalRepository.findById(animal.getId());
     assertTrue(optionalAnimal.isEmpty());
   }
+
+  /**
+   * fix
+   */
+  @Test
+  public void testUpdateAnimal() {
+    // create a new animal
+    Animal animal = new Animal();
+    // set the animal properties
+    animal.setName("Fluffy");
+    animal.setType("Cat");
+    animal.setAge(3);
+    animal.setGender("Female");
+    PetOwner petOwner = new PetOwner();
+    petOwner.setId(1L);
+    animal.setOwner(petOwner);
+    animalRepository.save(animal);
+
+    Animal inputAnimal = new Animal();
+    inputAnimal.setName("Fluffy");
+    inputAnimal.setType("Cat");
+    inputAnimal.setAge(3);
+    inputAnimal.setGender("Female");
+    PetOwner petOwner1 = new PetOwner();
+    petOwner.setId(1L);
+    User user = new User();
+    user.setUserId("123");
+petOwner.setUser(user);
+inputAnimal.setOwner(petOwner);
+
+    // update the animal
+    Animal updatedAnimal = new Animal();
+    updatedAnimal.setName("Furry");
+    updatedAnimal.setType("Dog");
+    updatedAnimal.setAge(5);
+    updatedAnimal.setGender("Male");
+
+    AnimalDto updateAnimalDto = new AnimalDto();
+    updateAnimalDto.setName("Furry");
+    updateAnimalDto.setType("Dog");
+    updateAnimalDto.setAge(5);
+    updateAnimalDto.setGender("Male");
+
+    when(animalRepository.findById(eq(animal.getId())))
+      .thenReturn(Optional.of(animal));
+    when(animalRepository.findById(eq(-1L))).thenReturn(Optional.empty()); // add mock response for empty optional
+    when(petOwnerRepository.count()).thenReturn(1L);
+    when(animalRepository.save(any(Animal.class))).thenReturn(animal);
+    when(Transformations.MODEL_TO_DTO_CONVERTER.animal(inputAnimal)).thenReturn(updateAnimalDto);
+
+    AnimalDto animalDto = adminServiceImpl.updateAnimal(
+      animal.getId(),
+      updatedAnimal
+    );
+    // verify that the animal was updated
+    Optional<Animal> optionalAnimal = animalRepository.findById(animal.getId());
+    Animal savedAnimal = optionalAnimal.get();
+    assertEquals(updatedAnimal.getName(), savedAnimal.getName());
+    assertEquals(updatedAnimal.getType(), savedAnimal.getType());
+    assertEquals(updatedAnimal.getAge(), savedAnimal.getAge());
+    assertEquals(updatedAnimal.getGender(), savedAnimal.getGender());
+
+    // verify that the returned AnimalDto matches the updated animal
+    assertEquals(animalDto.getName(), savedAnimal.getName());
+    assertEquals(animalDto.getType(), savedAnimal.getType());
+    assertEquals(animalDto.getAge(), savedAnimal.getAge());
+    assertEquals(animalDto.getGender(), savedAnimal.getGender());
+  }
+  
 }
