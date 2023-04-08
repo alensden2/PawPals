@@ -23,6 +23,8 @@ public class JwtConfig {
  * The secret key for the JWT.
  */
 public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
+private static final int TOKEN_EXPIRATION_TIME_MINUTES = 30;
+private static final long TOKEN_EXPIRATION_TIME_MS = TOKEN_EXPIRATION_TIME_MINUTES * 60 * 1000;
 
 /**
  * Extracts the username from a given JWT token.
@@ -98,7 +100,7 @@ private String createToken(Map<String, Object> claims, String userName) {
             .setClaims(claims)
             .setSubject(userName)
             .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+            .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_TIME_MS))
             .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 }
 
