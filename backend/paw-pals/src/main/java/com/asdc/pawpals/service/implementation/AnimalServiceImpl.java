@@ -82,8 +82,8 @@ public class AnimalServiceImpl implements AnimalService {
             if (animalDto.getGender() != null) {
                 animal.setGender(animalDto.getGender());
             }
-            if (animalDto.getPhotoUrl() != null) {
-                animalDto.setPhotoUrl(CommonUtils.getBytes(image));
+            if (image != null) {
+                animal.setPhotoUrl(CommonUtils.getBytes(image));
             }
             if (animalDto.getAge() != null) {
                 animal.setAge(animalDto.getAge());
