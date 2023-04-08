@@ -73,7 +73,7 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     public AnimalDto updateAnimal(AnimalDto animalDto, Long id, MultipartFile image) throws InvalidImage, IOException, InvalidAnimalId, InvalidAnimalObject {
 
-        if (null != id && null != animalDto && null != image) {
+        if (null != id && null != animalDto) {
             Animal animal = animalRepository.findById(id).orElseThrow(InvalidAnimalId::new);
 
             if (animalDto.getName() != null) {
