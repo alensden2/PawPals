@@ -31,5 +31,13 @@ export const deletePet = async ({ petId }) => {
 };
 
 export const updatePet = async ({ input = {}, petId = null } = {}) => {
-  await updatePetApiCall({ input, petId });
+  const response = await updatePetApiCall({ input, petId });
+
+  const body = response?.data?.body;
+  const photoUrl = body?.photoUrl;
+
+  return {
+    ...body,
+    photoUrl: photoUrl ? getImageUrlFromBytes({ bytes: photoUrl }) : ''
+  };
 };
