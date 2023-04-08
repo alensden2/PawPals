@@ -37,6 +37,8 @@ public class AppointmentServiceImpl implements AppointmentService {
   @Autowired
   VetRepository vetRepository;
 
+  private final int SET_STATUS = 2;
+
   /**
 
     *    Updates the status of a given appointment.
@@ -98,7 +100,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     if (appointmentDto == null) {
       throw new InvalidObjectException("Invalid Appointment Object");
     }
-    appointmentDto.setStatus(Constants.STATUS[2]); //set status to pending manually
+    appointmentDto.setStatus(Constants.STATUS[SET_STATUS]); //set status to pending manually
     boolean isAppointmentDateNotNull = appointmentDto.getDate() != null;
     boolean isStartTimeNotNull = appointmentDto.getStartTime() != null;
     boolean isEndTimeNotNull = appointmentDto.getEndTime() != null;
