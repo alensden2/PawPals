@@ -1,15 +1,22 @@
 package com.asdc.pawpals.service.implementation;
 
+import com.asdc.pawpals.Enums.ProfileStatus;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.exception.InvalidUserDetails;
 import com.asdc.pawpals.exception.UserAlreadyExist;
+import com.asdc.pawpals.exception.UserNameNotFound;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
+import com.asdc.pawpals.model.Vet;
+import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
+import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.UserService;
 import com.asdc.pawpals.utils.Transformations;
 import com.asdc.pawpals.service.MailService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -20,33 +27,75 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Autowired
+    VetRepository vetRepository;
+
+    @Autowired
+    PetOwnerRepository petOwnerRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     MailService mailService;
 
+    @Value("${spring.profiles.active}")
+    String activeProfile;
+
     public void initRolesAndUsers() {
-        User user1 = new User();
-        user1.setUserId("admin1");
-        user1.setPassword(passwordEncoder.encode("admin123"));
-        user1.setEmail("abcAdmin@gmail.com");
-        user1.setRole("ADMIN");
+        if(activeProfile !=null && activeProfile.equals("dev")){
+            User user1 = new User();
+            user1.setUserId("admin1");
+            user1.setPassword(passwordEncoder.encode("admin123"));
+            user1.setEmail("abcAdmin@gmail.com");
+            user1.setRole("ADMIN");
+    
+            User user2 = new User();
+            user2.setUserId("pet_owner1");
+            user2.setPassword(passwordEncoder.encode("pet123"));
+            user2.setEmail("abcPet@gmail.com");
+            user2.setRole("PET_OWNER");
+    
+            User user3 = new User();
+            user3.setUserId("vet1");
+            user3.setPassword(passwordEncoder.encode("vet123"));
+            user3.setEmail("abcVet@gmail.com");
+            user3.setRole("VET");
+    
+            userRepository.save(user1);
+            userRepository.save(user2);
+            userRepository.save(user3);
+            
+            try {
+                if(vetRepository.findByUser_UserId(user3.getUserId()).isEmpty()){
+                    Vet vet = new Vet();
+                    vet.setUser(user3);
+                    vet.setFirstName("John");
+                    vet.setLastName("Doe");
+                    vet.setClinicAddress("19 Inglis St");
+                    vet.setExperience(3);
+                    vet.setPhoneNo("+1-723-443-2343");
+                    vet.setProfileStatus(ProfileStatus.APPROVED.getLabel());
+                    vet.setQualification("MBBS, MD, DO");
+                    vetRepository.save(vet);
+                }
 
-        User user2 = new User();
-        user2.setUserId("pet_owner1");
-        user2.setPassword(passwordEncoder.encode("pet123"));
-        user2.setEmail("abcPet@gmail.com");
-        user2.setRole("PET_OWNER");
+                if(petOwnerRepository.findByUser_UserId(user2.getUserId()).isEmpty()){
+                    PetOwner petOwner = new PetOwner();
+                    petOwner.setUser(user2);
+                    petOwner.setAddress("16 Chris Hampton Rd");
+                    petOwner.setFirstName("James");
+                    petOwner.setLastName("Collin");
+                    petOwner.setPhoneNo("+1-723-453-2343");
+                    petOwnerRepository.save(petOwner);
+                }
 
-        User user3 = new User();
-        user3.setUserId("vet1");
-        user3.setPassword(passwordEncoder.encode("vet123"));
-        user3.setEmail("abcVet@gmail.com");
-        user3.setRole("VET");
+            } catch (UserNameNotFound e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
-        userRepository.save(user1);
-        userRepository.save(user2);
-        userRepository.save(user3);
+        }
+
     }
 
     @Override

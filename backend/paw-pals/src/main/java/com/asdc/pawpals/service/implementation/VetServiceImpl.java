@@ -1,6 +1,7 @@
 package com.asdc.pawpals.service.implementation;
 
-import com.asdc.pawpals.Enums.Status;
+import com.asdc.pawpals.Enums.AppointmentStatus;
+import com.asdc.pawpals.Enums.ProfileStatus;
 import com.asdc.pawpals.dto.*;
 import com.asdc.pawpals.exception.InvalidAppointmentId;
 import com.asdc.pawpals.exception.InvalidImage;
@@ -61,7 +62,7 @@ public class VetServiceImpl implements VetService {
             Optional<User> user = userRepository.findById(vetDto.getUsername());
             if (!user.isEmpty()) {
                 Long oldCount = vetRepository.count();
-                vet.setProfileStatus(Status.PENDING.getLabel());
+                vet.setProfileStatus(AppointmentStatus.PENDING.getLabel());
                 vetRepository.save(vet);
 
                 mailService.sendMail(user.get().getEmail(), "pending for Approval", "your application is under process for admin approval");
@@ -147,7 +148,7 @@ public class VetServiceImpl implements VetService {
                     .filter(apt -> apt.getDate() != null)
                     .filter(apt -> apt.getDate().equals(date))
                     .filter(apt -> apt.getStatus() != null)
-                    .filter(apt -> apt.getStatus().equals(Status.CONFIRMED.getLabel()))
+                    .filter(apt -> apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
                     .forEach(appointment -> {
                         slotsBooked.add(Pair.of(appointment.getStartTime(), appointment.getEndTime()));
                     });
@@ -215,7 +216,7 @@ public class VetServiceImpl implements VetService {
     @Override
     public List<VetDto> retrieveAllVets() {
         return vetRepository.findAll().stream().
-                filter(v -> v.getProfileStatus().equals(Status.PENDING.getLabel())).
+                filter(v -> v.getProfileStatus().equals(AppointmentStatus.PENDING.getLabel())).
                 map(v -> Transformations.MODEL_TO_DTO_CONVERTER.vet(v)).
                 collect(Collectors.toList());
     }
@@ -243,9 +244,9 @@ public class VetServiceImpl implements VetService {
                 vet.setQualification(vetDto.getQualification());
             }
             if (vetDto.getProfileStatus() != null) {
-                if (vetDto.getProfileStatus().equals(Status.CONFIRMED.getLabel())) {
+                if (vetDto.getProfileStatus().equals(ProfileStatus.APPROVED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Successfully Approved", "your profile is successfully approved by Admin");
-                } else if (vetDto.getProfileStatus().equals(Status.REJECTED.getLabel())) {
+                } else if (vetDto.getProfileStatus().equals(ProfileStatus.REJECTED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Profile Decline", "Unfortunately your profile has been rejected by Admin");
                 }
                 vet.setProfileStatus(vetDto.getProfileStatus());
@@ -300,9 +301,9 @@ public class VetServiceImpl implements VetService {
             Vet vet = vetRepository.findByUser_UserId(id).orElseThrow(UserNameNotFound::new);
 
             if (vetDto.getProfileStatus() != null) {
-                if (vetDto.getProfileStatus().equals(Status.CONFIRMED.getLabel())) {
+                if (vetDto.getProfileStatus().equals(AppointmentStatus.CONFIRMED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Successfully Approved", "your profile is successfully approved by Admin");
-                } else if (vetDto.getProfileStatus().equals(Status.REJECTED.getLabel())) {
+                } else if (vetDto.getProfileStatus().equals(AppointmentStatus.REJECTED.getLabel())) {
                     mailService.sendMail(vet.getUser().getEmail(), "Profile Decline", "Unfortunately your profile has been rejected by Admin");
                 }
                 vet.setProfileStatus(vetDto.getProfileStatus());
@@ -338,7 +339,7 @@ public class VetServiceImpl implements VetService {
                             .filter(apt -> apt.getDate() != null)
                             .filter(apt -> apt.getDate().equals(date))
                             .filter(apt -> apt.getStatus() != null)
-                            .filter(apt -> apt.getStatus().equals(Status.CONFIRMED.getLabel()))
+                            .filter(apt -> apt.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel()))
                             .anyMatch(apt -> {
                                 return apt.getStartTime().equals(fCurrSlot);
                             });
