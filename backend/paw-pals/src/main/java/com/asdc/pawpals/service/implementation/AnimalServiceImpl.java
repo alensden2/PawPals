@@ -156,6 +156,12 @@ Deletes an animal with the given ID from the database.
     }
   }
 
+  /**
+
+  *  Updates the data of an Animal entity with values from an AnimalDto
+   * @param animalDto the AnimalDto containing the updated data
+   * @param animal the Animal entity to update
+*/
   private static void updateAnimalData(AnimalDto animalDto, Animal animal) {
     if (animalDto.getName() != null) {
       animal.setName(animalDto.getName());
