@@ -12,6 +12,7 @@ import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
 import com.asdc.pawpals.model.Animal;
+import com.asdc.pawpals.model.MedicalHistory;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
@@ -19,6 +20,7 @@ import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
+import io.jsonwebtoken.lang.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -343,5 +345,27 @@ public class AdminServiceImplTest {
     // verify that the vet was deleted
     Optional<Vet> optionalVet = vetRepository.findById(vet.getId());
     assertTrue(optionalVet.isEmpty());
+  }
+
+  @Test
+  public void testDeleteAnimal() {
+    // create a new animal
+    Animal animal = new Animal();
+    // set the animal properties
+    animal.setName("Fluffy");
+    animal.setType("Cat");
+    animal.setAge(3);
+    animal.setGender("Female");
+    animal.setOwner(null);
+    animal.setPhotoUrl(new Byte[] { 1, 2, 3 });
+
+    animalRepository.save(animal);
+
+    // delete the animal
+    AnimalDto animalDto = adminServiceImpl.deleteAnimal(animal.getId());
+
+    // verify that the animal was deleted
+    Optional<Animal> optionalAnimal = animalRepository.findById(animal.getId());
+    assertTrue(optionalAnimal.isEmpty());
   }
 }
