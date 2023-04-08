@@ -74,11 +74,35 @@ public class AnimalController {
      */
     @PutMapping({"/{id}"})
     public ResponseEntity<ApiResponse> updateAnimal(@RequestPart("animal") Object requestBody, @RequestPart("image") MultipartFile image, @PathVariable("id") Long id) throws IOException, InvalidImage, InvalidAnimalObject, InvalidAnimalId {
-        logger.info("Received request as :", requestBody.toString());
+        logger.info("Received request as :", requestBody);
         AnimalDto animalDto = null;
         if (CommonUtils.isStrictTypeOf(requestBody, AnimalDto.class)) {
             animalDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, AnimalDto.class);
             apiResponse.setBody(animalService.updateAnimal(animalDto, id, image));
+            apiResponse.setMessage("successfully updated object");
+            apiResponse.setSuccess(true);
+            apiResponse.setError(false);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
+    }
+
+    /**
+     * Handles PUT requests to update an animal object by ID.
+     *
+     * @param requestBody The animal object to update in the request body.
+     * @param id The ID of the animal object to update in the path.
+     * @return A ResponseEntity containing an ApiResponse with updated animal object information and a success message.
+     * @throws IOException If there is an error reading the request body.
+     * @throws InvalidAnimalObject If the animal object is not valid.
+     * @throws InvalidAnimalId If the animal ID is not valid.
+     */
+    @PutMapping({"animal-obj/{id}"})
+    public ResponseEntity<ApiResponse> updateAnimalObject(@RequestBody Object requestBody, @PathVariable("id") Long id) throws IOException, InvalidImage, InvalidAnimalObject, InvalidAnimalId {
+        logger.info("Received animal request as :", requestBody);
+        AnimalDto animalDto = null;
+        if (CommonUtils.isStrictTypeOf(requestBody, AnimalDto.class)) {
+            animalDto = ObjectMapperWrapper.getInstance().convertValue(requestBody, AnimalDto.class);
+            apiResponse.setBody(animalService.updateAnimalObject(animalDto, id));
             apiResponse.setMessage("successfully updated object");
             apiResponse.setSuccess(true);
             apiResponse.setError(false);
