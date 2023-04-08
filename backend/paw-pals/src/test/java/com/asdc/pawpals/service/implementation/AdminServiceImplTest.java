@@ -2,6 +2,7 @@ package com.asdc.pawpals.service.implementation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -274,8 +275,8 @@ public class AdminServiceImplTest {
     );
   }
 
- @Test
- public void testUpdateVet() {
+  @Test
+  public void testUpdateVet() {
     // create a sample Vet object to update with
     Vet updatedVet = new Vet();
     updatedVet.setFirstName("John");
@@ -320,5 +321,27 @@ public class AdminServiceImplTest {
     assertEquals("123456789", result.getLicenseNumber());
     assertEquals("123 Main St", result.getClinicAddress());
     assertEquals("Doctor of Veterinary Medicine", result.getQualification());
+  }
+
+  @Test
+  public void testDeleteVet() {
+    // create a new vet
+    Vet vet = new Vet();
+    // set the vet properties
+    vet.setFirstName("John");
+    vet.setLastName("Doe");
+    vet.setLicenseNumber("12345");
+    vet.setClinicAddress("123 Main St.");
+    vet.setExperience(5);
+    vet.setQualification("DVM");
+    vet.setUser(new User());
+    vetRepository.save(vet);
+
+    // delete the vet
+    VetDto vetDto = adminServiceImpl.deleteVet(vet.getId());
+
+    // verify that the vet was deleted
+    Optional<Vet> optionalVet = vetRepository.findById(vet.getId());
+    assertTrue(optionalVet.isEmpty());
   }
 }
