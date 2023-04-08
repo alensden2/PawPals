@@ -99,7 +99,18 @@ public class AppointmentServiceImpl implements AppointmentService {
       throw new InvalidObjectException("Invalid Appointment Object");
     }
     appointmentDto.setStatus(Constants.STATUS[2]); //set status to pending manually
-    if (
+    boolean isAppointmentDateNotNull = appointmentDto.getDate() != null;
+    boolean isStartTimeNotNull = appointmentDto.getStartTime() != null;
+    boolean isEndTimeNotNull = appointmentDto.getEndTime() != null;
+    boolean isAppointmentValid = AppointmentValidators.isValidAppointment(
+      appointmentDto.getDate(),
+      appointmentDto.getStartTime(),
+      appointmentDto.getEndTime(),
+      appointmentDto.getStatus()
+    );
+
+    /**oldCode 
+     * if (
       appointmentDto.getDate() != null &&
       appointmentDto.getStartTime() != null &&
       appointmentDto.getEndTime() != null &&
@@ -109,6 +120,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentDto.getEndTime(),
         appointmentDto.getStatus()
       )
+    )
+     */
+    if (
+      isAppointmentDateNotNull &&
+      isStartTimeNotNull &&
+      isEndTimeNotNull &&
+      isAppointmentValid
     ) {
       Appointment appointment = Transformations.DTO_TO_MODEL_CONVERTER.appointment(
         appointmentDto
