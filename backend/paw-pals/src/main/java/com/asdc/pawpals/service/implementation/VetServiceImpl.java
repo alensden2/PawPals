@@ -297,18 +297,40 @@ Overrides the base method to change the status of an appointment given by its ID
     if (appointmentDto.getEndTime() != null) {
       appointment.setEndTime(appointmentDto.getEndTime());
     }
-    if (
+    /**
+     * Old Code
+     * 
+     * 
+     if (
       AppointmentValidators.isValidAppointment(
         appointment.getDate(),
         appointment.getStartTime(),
         appointment.getEndTime(),
         appointment.getStatus()
       )
-    ) {
+
+     * Major Modification 
+     * TEST THIS 
+     */
+    if (isAppointmentValid(appointment)) {
       returnedAppointment = appointmentRepository.saveAndFlush(appointment);
     }
     return Transformations.MODEL_TO_DTO_CONVERTER.appointment(
       returnedAppointment
+    );
+  }
+
+  /**
+   * Determines if the given appointment is valid based on its date, start time, end time, and status.
+   * @param appointment the appointment to validate
+   * @return true if the appointment is valid, false otherwise
+   */
+  private boolean isAppointmentValid(Appointment appointment) {
+    return AppointmentValidators.isValidAppointment(
+      appointment.getDate(),
+      appointment.getStartTime(),
+      appointment.getEndTime(),
+      appointment.getStatus()
     );
   }
 
