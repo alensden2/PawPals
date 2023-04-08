@@ -211,9 +211,8 @@ public class AdminServiceImplTest {
     assertEquals("Fluffy", returnedDto.getName());
   }
 
-
   @Test
-  public void testAddVet() {
+  public void testAddVet() { // fix
     Vet vet = new Vet();
     User user = new User();
     user.setUserId("vet@example.com");
@@ -273,5 +272,53 @@ public class AdminServiceImplTest {
       vet.getPhoneNo(),
       vetDto.getPhoneNo()
     );
+  }
+
+ @Test
+ public void testUpdateVet() {
+    // create a sample Vet object to update with
+    Vet updatedVet = new Vet();
+    updatedVet.setFirstName("John");
+    updatedVet.setLastName("Doe");
+    updatedVet.setLicenseNumber("123456789");
+    updatedVet.setClinicAddress("123 Main St");
+    updatedVet.setExperience(5);
+    updatedVet.setQualification("Doctor of Veterinary Medicine");
+    updatedVet.setUser(new User());
+
+    // create a sample Vet object to update
+    Vet existingVet = new Vet();
+    existingVet.setId(1L);
+    existingVet.setFirstName("Jane");
+    existingVet.setLastName("Doe");
+    existingVet.setLicenseNumber("987654321");
+    existingVet.setClinicAddress("456 Elm St");
+    existingVet.setExperience(10);
+    existingVet.setQualification("Doctor of Veterinary Medicine");
+    existingVet.setUser(new User());
+
+    // mock the repository's findById method to return the existing Vet object
+    when(vetRepository.findById(1L)).thenReturn(Optional.of(existingVet));
+
+    // call the updateVet method
+    VetDto result = adminServiceImpl.updateVet(1L, updatedVet);
+
+    // verify that the existing Vet object was updated correctly
+    assertEquals("John", existingVet.getFirstName());
+    assertEquals("Doe", existingVet.getLastName());
+    assertEquals("123456789", existingVet.getLicenseNumber());
+    assertEquals("123 Main St", existingVet.getClinicAddress());
+    assertEquals(
+      "Doctor of Veterinary Medicine",
+      existingVet.getQualification()
+    );
+
+    // verify that the returned VetDto object contains the updated values
+    assertNotNull(result);
+    assertEquals("John", result.getFirstName());
+    assertEquals("Doe", result.getLastName());
+    assertEquals("123456789", result.getLicenseNumber());
+    assertEquals("123 Main St", result.getClinicAddress());
+    assertEquals("Doctor of Veterinary Medicine", result.getQualification());
   }
 }
