@@ -320,11 +320,6 @@ Overrides the base method to change the status of an appointment given by its ID
     );
   }
 
-  /**
-   * Determines if the given appointment is valid based on its date, start time, end time, and status.
-   * @param appointment the appointment to validate
-   * @return true if the appointment is valid, false otherwise
-   */
   private boolean isAppointmentValid(Appointment appointment) {
     return AppointmentValidators.isValidAppointment(
       appointment.getDate(),
@@ -414,7 +409,12 @@ Retrieves all the vets with their profiles in "pending" status and maps them to 
   @Override
   public VetDto updateVet(VetDto vetDto, String id, MultipartFile image)
     throws UserNameNotFound, IOException, InvalidImage {
-    if (null != id && !id.isEmpty() && vetDto != null) {
+    /**
+     * Old code
+     * if (null != id && !id.isEmpty() && vetDto != null)
+     */
+    boolean isValid = (null != id && !id.isEmpty());
+    if (isValid && vetDto != null) {
       Vet vet = vetRepository
         .findByUser_UserId(id)
         .orElseThrow(UserNameNotFound::new);
