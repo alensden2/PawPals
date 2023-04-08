@@ -1,5 +1,8 @@
-package com.asdc.pawpals.model;
+/**
 
+This class represents an animal in the system.
+*/
+package com.asdc.pawpals.model;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -20,25 +23,37 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Animal {
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE)
-  private Long id;
+/** The unique identifier of the animal */
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE)
+private Long id;
 
-  private String name;
-  private String type;
-  private Integer age;
-  private String gender;
+/** The name of the animal */
+private String name;
 
-  @ManyToOne(cascade = CascadeType.PERSIST)
-  private PetOwner owner;
+/** The type of the animal */
+private String type;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
-  private List<MedicalHistory> medicalHistories;
+/** The age of the animal */
+private Integer age;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
-  List<Appointment> appointment;
+/** The gender of the animal */
+private String gender;
 
-  @Column(name = "photo_url", length = 10485760)
-  @Lob
-  private Byte[] photoUrl;
+/** The owner of the animal */
+@ManyToOne(cascade = CascadeType.PERSIST)
+private PetOwner owner;
+
+/** The medical histories of the animal */
+@OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
+private List<MedicalHistory> medicalHistories;
+
+/** The appointments of the animal */
+@OneToMany(cascade = CascadeType.ALL, mappedBy = "animal")
+List<Appointment> appointment;
+
+/** The URL of the photo of the animal */
+@Column(name = "photo_url", length = 10485760)
+@Lob
+private Byte[] photoUrl;
 }

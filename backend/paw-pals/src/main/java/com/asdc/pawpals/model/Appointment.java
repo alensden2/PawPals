@@ -1,5 +1,8 @@
-package com.asdc.pawpals.model;
+/**
 
+This class represents an appointment for an animal with a veterinarian.
+*/
+package com.asdc.pawpals.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,18 +19,44 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Appointment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
-    private String date;
-    private String startTime;
-    private String endTime;
-    @Column
-    private String status="PENDING"; //CONFIRMED, REJECTED, PENDING
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    Animal animal;
+/**
+ * The unique identifier for the appointment.
+ */
+@Id
+@GeneratedValue(strategy = GenerationType.SEQUENCE)
+private Integer id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    Vet vet;
+/**
+ * The date of the appointment.
+ */
+private String date;
+
+/**
+ * The start time of the appointment.
+ */
+private String startTime;
+
+/**
+ * The end time of the appointment.
+ */
+private String endTime;
+
+/**
+ * The status of the appointment. Can be "PENDING", "CONFIRMED", or "REJECTED".
+ */
+@Column
+private String status="PENDING";
+
+/**
+ * The animal associated with the appointment.
+ */
+@ManyToOne(cascade = CascadeType.PERSIST)
+Animal animal;
+
+/**
+ * The veterinarian associated with the appointment.
+ */
+@ManyToOne(cascade = CascadeType.PERSIST)
+Vet vet;
 }
