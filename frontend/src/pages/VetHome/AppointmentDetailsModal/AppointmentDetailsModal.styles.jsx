@@ -43,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
   tabPanelInnerContainer: {
     padding: '20px'
   },
+  medicalRecordContainer: {
+    height: '500px',
+    overflowY: 'auto',
+    padding: '8px'
+  },
   petDetailsContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -51,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
   media: {
     width: 300,
     height: 200
+  },
+  medicalRecordCard: {
+    paddingBottom: '60px'
   }
 }));
 

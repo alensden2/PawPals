@@ -15,8 +15,7 @@ import {
 } from '@material-ui/core';
 import { CloseOutlined } from '@material-ui/icons';
 import useStyles from './AppointmentDetailsModal.styles';
-
-const medicalRecord = 'This is the medical record tab';
+import MedicalRecordCard from '@src/pages/PetMedicalRecord/MedicalRecordCard';
 
 const AppointmentDetailsModal = ({
   appointmentDetailsModal,
@@ -78,7 +77,32 @@ const AppointmentDetailsModal = ({
   };
 
   const renderMedicalRecord = () => {
-    return <Typography>{medicalRecord}</Typography>;
+    const medicalRecord = appointmentDetailsModal.appointment?.medicalRecord;
+
+    if (medicalRecord?.length) {
+      return (
+        <div className={classes.medicalRecordContainer}>
+          {medicalRecord.map((item, idx) => {
+            const medicalRecordObj = {
+              vet: item.vet,
+              animal: appointmentDetailsModal?.appointment?.pet,
+              medicalHistory: item
+            };
+
+            return (
+              <div key={idx} className={classes.medicalRecordCard}>
+                <MedicalRecordCard
+                  medicalRecord={medicalRecordObj}
+                  shouldRenderInModal={true}
+                />
+              </div>
+            );
+          })}
+        </div>
+      );
+    } else {
+      return <div>No Medical Record found</div>;
+    }
   };
 
   const renderTabPanel = () => {
