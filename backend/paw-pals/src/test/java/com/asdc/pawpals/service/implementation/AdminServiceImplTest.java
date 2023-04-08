@@ -7,12 +7,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.VetDto;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.repository.AnimalRepository;
+import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import io.jsonwebtoken.lang.Arrays;
@@ -34,6 +36,9 @@ public class AdminServiceImplTest {
 
   @Mock
   private UserRepository userRepository;
+
+  @Mock
+  private PetOwnerRepository petOwnerRepository;
 
   @InjectMocks
   private AdminServiceImpl adminServiceImpl;
@@ -124,5 +129,46 @@ public void testGetAllVetRecords() {
         assertEquals(vets.get(i).getQualification(), vetsDto.get(i).getQualification());
     }
 }
+
+@Test
+public void testGetAllPetOwnerRecords() {
+    // Arrange
+    List<PetOwner> petOwners = new ArrayList<>();
+    PetOwner petOwner1 = new PetOwner();
+    petOwner1.setId(1L);
+    petOwner1.setFirstName("John");
+    petOwner1.setLastName("Doe");
+    petOwner1.setAddress("123 Main St");
+    petOwner1.setPhoneNo("555-1234");
+    petOwner1.setUser(new User());
+    
+    PetOwner petOwner2 = new PetOwner();
+    petOwner2.setId(2L);
+    petOwner2.setFirstName("Jane");
+    petOwner2.setLastName("Doe");
+    petOwner2.setAddress("456 Oak St");
+    petOwner2.setPhoneNo("555-5678");
+    petOwner2.setUser(new User());
+    
+    petOwners.add(petOwner1);
+    petOwners.add(petOwner2);
+    
+    when(petOwnerRepository.findAll()).thenReturn(petOwners);
+    
+    // Act
+    List<PetOwnerDto> petOwnerDtos = adminServiceImpl.getAllPetOwnerRecords();
+    
+    // Assert
+    assertNotNull(petOwnerDtos);
+    assertEquals(petOwners.size(), petOwnerDtos.size());
+    
+    for (int i = 0; i < petOwnerDtos.size(); i++) {
+        assertEquals(petOwners.get(i).getFirstName(), petOwnerDtos.get(i).getFirstName());
+        assertEquals(petOwners.get(i).getLastName(), petOwnerDtos.get(i).getLastName());
+        assertEquals(petOwners.get(i).getAddress(), petOwnerDtos.get(i).getAddress());
+        assertEquals(petOwners.get(i).getPhoneNo(), petOwnerDtos.get(i).getPhoneNo());
+    }
+}
+
 
 }
