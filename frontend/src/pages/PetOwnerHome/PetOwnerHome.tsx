@@ -3,9 +3,10 @@ import React, { useContext, useEffect } from 'react';
 import { Grid, Paper, Card, CardContent, Typography } from '@material-ui/core';
 import { HeaderContext } from '@src/context';
 import useStyles from './PetOwnerHome.styles';
-import { Pets, History, Book, Info, ContactSupport } from '@material-ui/icons';
+import { Pets, History, Book, Info, Event } from '@material-ui/icons';
 import { PET_OWNER_HOME_PAGE_CARDS } from '@src/constants';
 import { useNavigate } from '@src/hooks';
+import PET_OWNER_HOME from '@src/assets/images/pet-owner-home.jpeg';
 
 interface CardProps {
   uid: string;
@@ -28,8 +29,8 @@ function CustomCard({ title, color, uid, route, onCardClick }: CardProps) {
         return <Book className={classes.icon} />;
       case 'HEALTH_AND_DISEASE':
         return <Info className={classes.icon} />;
-      case 'SUPPORT':
-        return <ContactSupport className={classes.icon} />;
+      case 'APPOINTMENTS':
+        return <Event className={classes.icon} />;
       default:
         return null;
     }
@@ -75,7 +76,7 @@ const PetOwnerHome: React.FC = () => {
           <Paper className={`${classes.paper} ${classes.leftContainer}`}>
             <img
               className={classes.image}
-              src="https://via.placeholder.com/200x200.png?text=Paw+Pals+Logo"
+              src={PET_OWNER_HOME}
               alt="Company Logo"
             />
             <Typography variant="body1" gutterBottom>

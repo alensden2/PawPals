@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     maxWidth: '100%',
-    height: 'auto'
+    height: '200px'
   },
   card: {
     width: 500,
