@@ -35,7 +35,10 @@ public class AppointmentValidators {
         return Arrays.asList(Constants.STATUS).contains(statusStr.toUpperCase());
     }
 
-    public static boolean isValidStartTimeBeforeEndTime(String startTimeStr, String endTimeStr) {
+    public static boolean isValidStartTimeBeforeEndTime(
+            String startTimeStr,
+            String endTimeStr
+    ) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.TIME_FORMAT);
         sdf.setLenient(false);
         try {
@@ -47,10 +50,27 @@ public class AppointmentValidators {
         }
     }
 
-    public static boolean isValidAppointment(String dateStr,String startTimeStr, String endTimeStr,String statusStr)
-    {
-        return isValidDate(dateStr) && isValidTime(startTimeStr) && isValidTime(endTimeStr) && isValidStatus(statusStr) &&
-                isValidStartTimeBeforeEndTime(startTimeStr,endTimeStr);
-    }
+    public static boolean isValidAppointment(
+            String dateStr,
+            String startTimeStr,
+            String endTimeStr,
+            String statusStr
+    ) {
+        boolean validDate = isValidDate(dateStr);
+        boolean validTimeStart = isValidTime(startTimeStr);
+        boolean validTimeEnd = isValidTime(endTimeStr);
+        boolean validStaus = isValidStatus(statusStr);
+        boolean validStartBeforEnd = isValidStartTimeBeforeEndTime(
+                startTimeStr,
+                endTimeStr
+        );
 
+        return (
+                validDate &&
+                        validTimeStart &&
+                        validTimeEnd &&
+                        validStaus &&
+                        validStartBeforEnd
+        );
+    }
 }

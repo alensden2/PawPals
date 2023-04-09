@@ -1,6 +1,6 @@
 package com.asdc.pawpals.exception;
 
-public class UserAlreadyExist extends Exception{
+public class UserAlreadyExist extends Exception {
     public UserAlreadyExist() {
         // TODO Auto-generated constructor stub
     }

@@ -19,8 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * This class is a Rest Controller that handles requests related to Animal records in the system.
+ * <p>
+ * The base request mapping for this controller is "/auth/animal".
+ * <p>
+ * It is responsible for handling incoming requests and sending the appropriate response using the services provided by AnimalService.
+ */
 @RestController
-
 @RequestMapping("/auth/animal")
 public class AnimalController {
 
@@ -90,11 +96,11 @@ public class AnimalController {
      * Handles PUT requests to update an animal object by ID.
      *
      * @param requestBody The animal object to update in the request body.
-     * @param id The ID of the animal object to update in the path.
+     * @param id          The ID of the animal object to update in the path.
      * @return A ResponseEntity containing an ApiResponse with updated animal object information and a success message.
-     * @throws IOException If there is an error reading the request body.
+     * @throws IOException         If there is an error reading the request body.
      * @throws InvalidAnimalObject If the animal object is not valid.
-     * @throws InvalidAnimalId If the animal ID is not valid.
+     * @throws InvalidAnimalId     If the animal ID is not valid.
      */
     @PutMapping({"animal-obj/{id}"})
     public ResponseEntity<ApiResponse> updateAnimalObject(@RequestBody Object requestBody, @PathVariable("id") Long id) throws IOException, InvalidImage, InvalidAnimalObject, InvalidAnimalId {

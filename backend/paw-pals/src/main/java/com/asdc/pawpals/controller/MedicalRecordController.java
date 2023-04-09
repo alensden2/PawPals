@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import java.io.InvalidObjectException;
 import java.util.List;
 
+/**
+ * This class is a RestController that maps incoming HTTP requests to methods for handling medical record management related operations.
+ * <p>
+ * The requests are mapped to the "/auth/medical-history-management" endpoint.
+ * <p>
+ * The class uses the MedicalRecordService to perform the necessary operations.
+ */
 @RestController
 @RequestMapping("/auth/medical-history-management")
 public class MedicalRecordController {

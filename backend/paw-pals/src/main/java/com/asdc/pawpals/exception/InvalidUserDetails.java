@@ -1,6 +1,6 @@
 package com.asdc.pawpals.exception;
 
-public class InvalidUserDetails extends Exception{
+public class InvalidUserDetails extends Exception {
     public InvalidUserDetails() {
         // TODO Auto-generated constructor stub
     }

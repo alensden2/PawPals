@@ -76,7 +76,10 @@ const PetOwnerManagePets = () => {
       ...prevState,
       isOpen: true,
       modalMode: 'edit',
-      data: pet
+      data: {
+        ...pet,
+        photoUrl: null
+      }
     }));
   };
   const openAddPetModal = () => {
@@ -118,14 +121,14 @@ const PetOwnerManagePets = () => {
         photoUrl: petModalState.data.photoUrl
       };
 
-      await updatePet({
+      const updatePetResponse = await updatePet({
         input: updateInput,
         petId: petModalState.data.id
       });
 
       setPets((prevState) => {
         return prevState.map((pet) =>
-          pet.id === petModalState.data.id ? petModalState.data : pet
+          pet.id === petModalState.data.id ? updatePetResponse : pet
         );
       });
     }

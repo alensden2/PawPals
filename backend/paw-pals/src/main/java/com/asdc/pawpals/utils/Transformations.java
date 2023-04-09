@@ -9,6 +9,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+/**
+ * The Transformations class provides a MODEL_TO_DTO_CONVERTER nested class that is responsible for converting
+ * <p>
+ * a model object to a DTO (Data Transfer Object) object.
+ */
 public class Transformations {
 
     public class MODEL_TO_DTO_CONVERTER {

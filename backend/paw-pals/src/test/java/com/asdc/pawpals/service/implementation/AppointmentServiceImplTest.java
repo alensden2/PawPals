@@ -107,9 +107,6 @@ public class AppointmentServiceImplTest {
     }
 
 
-
-
-
     @Test
     public void testBookAppointmentForValidInput() throws InvalidVetID, InvalidObjectException, UserNameNotFound, InvalidAnimalId {
         // Arrange
@@ -130,7 +127,7 @@ public class AppointmentServiceImplTest {
         when(appointmentRepositoryMock.save(any(Appointment.class))).thenReturn(Transformations.DTO_TO_MODEL_CONVERTER.appointment(appointmentDto));
 
         //Act
-         appointmentDto = appointmentServiceImpl.bookAppointment(appointmentDto);
+        appointmentDto = appointmentServiceImpl.bookAppointment(appointmentDto);
 
         //Assert
         assertNotNull(appointmentDto);
@@ -139,7 +136,7 @@ public class AppointmentServiceImplTest {
         assertNotNull(appointmentDto.getEndTime());
         assertNotNull(appointmentDto.getAnimalId());
         assertNotNull(appointmentDto.getVetUserId());
-        assertEquals(Constants.STATUS[2],appointmentDto.getStatus());
+        assertEquals(Constants.STATUS[2], appointmentDto.getStatus());
 
     }
 

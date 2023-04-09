@@ -16,8 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+/**
+ * This class represents the RESTful controller for handling the PetOwner operations.
+ * <p>
+ * The PetOwnerController class is responsible for processing requests related to the PetOwner resource.
+ *
+ * @RestController annotation indicates that this class is a RESTful controller and the default response type of all its methods is JSON.
+ * @RequestMapping annotation maps HTTP requests to specific handler methods of this controller.
+ * <p>
+ * In this case, all requests for endpoints starting with "/auth/pet-owner" will be handled by this controller.
+ */
 @RestController
-
 @RequestMapping("/auth/pet-owner")
 public class PetOwnerController {
 

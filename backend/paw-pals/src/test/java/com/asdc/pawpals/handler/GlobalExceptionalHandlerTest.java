@@ -2,7 +2,6 @@ package com.asdc.pawpals.handler;
 
 import com.asdc.pawpals.exception.*;
 import com.asdc.pawpals.utils.ApiResponse;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

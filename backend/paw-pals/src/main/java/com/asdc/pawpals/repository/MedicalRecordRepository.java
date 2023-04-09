@@ -1,13 +1,12 @@
 package com.asdc.pawpals.repository;
 
-import java.util.List;
-
+import com.asdc.pawpals.model.MedicalHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.asdc.pawpals.model.MedicalHistory;
+import java.util.List;
 
 
 public interface MedicalRecordRepository extends JpaRepository<MedicalHistory, Long> {
- 
+
     public List<MedicalHistory> findByAnimalId(Long animalId);
 }

@@ -1,17 +1,20 @@
 /**
-
-Configuration class for CORS (Cross-Origin Resource Sharing).
-*/
+ * Configuration class for CORS (Cross-Origin Resource Sharing).
+ */
 package com.asdc.pawpals.config;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 /**
  * Adds CORS mappings to the provided registry.
  * @param registry the registry to which the CORS mappings will be added
  */
 @Configuration
 public class CorsConfiguration implements WebMvcConfigurer {
+
+    private static final long MAX_AGE_SECONDS = 3600;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -20,6 +23,6 @@ public class CorsConfiguration implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
-                .maxAge(3600);
+                .maxAge(MAX_AGE_SECONDS);
     }
 }
