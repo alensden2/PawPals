@@ -56,3 +56,16 @@ export const getAllPetsApiCall = async () => {
     console.error(e);
   }
 };
+
+export const getAllPetOwnerAppointmentsApiCall = async () => {
+  const user = localStorageUtil.getItem('user');
+  const petOwnerUserId = user.userName;
+
+  try {
+    return await axiosJSON.get(
+      `/auth/pet-owner/pets/appointments/${petOwnerUserId}`
+    );
+  } catch (e) {
+    console.error(e);
+  }
+};
