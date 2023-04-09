@@ -1,5 +1,17 @@
 package com.asdc.pawpals.service.implementation;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetAppointmentsDto;
 import com.asdc.pawpals.dto.PetMedicalHistoryDto;
@@ -19,16 +31,8 @@ import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.utils.CommonUtils;
+import com.asdc.pawpals.utils.MailTemplates;
 import com.asdc.pawpals.utils.Transformations;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Lazy
@@ -49,6 +53,12 @@ public class PetOwnerImpl implements PetOwnerService {
 
   @Autowired
   VetRepository vetRepository;
+
+  @Autowired
+  MailServiceImpl mailService;
+
+  @Value("${pawpals.serve.base.url}")
+  String serveUrl;
 
   /**
 
@@ -83,6 +93,12 @@ public class PetOwnerImpl implements PetOwnerService {
       );
       petOwner.setUser(user);
       petOwner = petOwnerRepository.save(petOwner);
+
+      String subject = "Profile created @ PawPals";
+      String body = MailTemplates.getPetOwnerRegistrationSuccessfulString(petOwnerDto.getFirstName()+" "+petOwnerDto.getLastName(), serveUrl);
+      String to = user.getEmail();
+      mailService.sendMail(to, subject, body);
+
       return Transformations.MODEL_TO_DTO_CONVERTER.petOwner(petOwner);
     } else {
       throw new InvalidUserDetails("incorrect pet owner data");
