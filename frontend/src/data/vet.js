@@ -1,7 +1,7 @@
 export const vetsData = {
   vets: [
     {
-      vetUserId: "Vet1",
+      vetUserId: 'Vet1',
       name: 'John Doe',
       phoneNo: '123-456-7890',
       email: 'johndoe@gmail.com',
@@ -13,7 +13,7 @@ export const vetsData = {
         'https://images.unsplash.com/photo-1586773860381-a8f2d11808ac?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2125&q=80'
     },
     {
-      vetUserId: "Vet2",
+      vetUserId: 'Vet2',
       name: 'Jane Smith',
       phoneNo: '987-654-3210',
       email: 'janesmith@gmail.com',
@@ -26,7 +26,7 @@ export const vetsData = {
         'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1753&q=80'
     },
     {
-      vetUserId: "Vet3",
+      vetUserId: 'Vet3',
       name: 'Bob Johnson',
       phoneNo: '555-555-5555',
       email: 'bobjohnson@gmail.com',
@@ -38,7 +38,7 @@ export const vetsData = {
         'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1773&q=80'
     },
     {
-      vetUserId: "Vet4",
+      vetUserId: 'Vet4',
       name: 'Samantha Lee',
       phoneNo: '222-333-4444',
       email: 'samlee@gmail.com',
@@ -50,7 +50,7 @@ export const vetsData = {
         'https://images.unsplash.com/photo-1596541223130-5d31a73fb6c6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80'
     },
     {
-      vetUserId: "Vet5",
+      vetUserId: 'Vet5',
       name: 'Peter Patel',
       phoneNo: '777-777-7777',
       email: 'peterpatel@gmail.com',
