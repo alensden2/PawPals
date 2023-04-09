@@ -36,7 +36,7 @@ build-frontend:
 # Job to detect code smells in the codebase
 code-smell-backend:
   stage: code-quality
-  image: openjdk:11
+  image: maven:3-jdk-17
   script:
     - echo "Detecting code smells..."  # Output a message indicating the job is running
     - mkdir $CI_PROJECT_DIR/backend/paw-pals/smells
@@ -64,6 +64,7 @@ code-format-frontend:
 # # Job to test the backend code
 test-backend:
   stage: test
+  image: maven:3-jdk-17
   script:
     - echo "Testing backend..."
     - cd backend/paw-pals
