@@ -83,7 +83,10 @@ const AppointmentDetailsModal = ({
         <div className={classes.medicalRecordContainer}>
           {medicalRecord.map((item, idx) => {
             const medicalRecordObj = {
-              vet: item.vet,
+              vet: {
+                ...item?.vet,
+                name: item.vet.firstName + ' ' + item.vet.lastName
+              },
               animal: appointmentDetailsModal?.appointment?.pet,
               medicalHistory: item
             };
