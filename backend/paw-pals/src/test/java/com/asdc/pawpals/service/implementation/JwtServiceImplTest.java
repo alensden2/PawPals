@@ -1,6 +1,4 @@
 package com.asdc.pawpals.service.implementation;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import com.asdc.pawpals.config.JwtConfig;
 import com.asdc.pawpals.dto.UserDto;
@@ -8,8 +6,6 @@ import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.utils.AuthenticationRequest;
 import com.asdc.pawpals.utils.AuthenticationResponse;
-
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +14,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.authentication.AuthenticationManager;
-import static org.junit.Assert.*;
+
 import java.util.Optional;
+
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class JwtServiceImplTest {
 
@@ -41,7 +42,7 @@ public class JwtServiceImplTest {
     }
 
     @Test
-   public void testAuthenticate() throws Exception {
+    public void testAuthenticate() throws Exception {
         // Given
         String username = "testUser";
         String password = "testPassword";
@@ -53,7 +54,7 @@ public class JwtServiceImplTest {
         // When
         when(authenticationManager.authenticate(any()))
                 .thenReturn(null); // Return null since we're just testing authenticationManager.authenticate
-        User user=new User();
+        User user = new User();
         user.setRole("admin,user,vet");
         user.setPassword(password);
         when(userRepository.findById(any())).thenReturn(Optional.ofNullable(user));

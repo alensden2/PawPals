@@ -1,12 +1,8 @@
 package com.asdc.pawpals.dto;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import com.asdc.pawpals.model.MedicalHistory;
-
 import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter

@@ -1,6 +1,5 @@
 package com.asdc.pawpals.service.implementation;
 
-import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.repository.UserRepository;
 import org.junit.Before;
@@ -15,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -44,7 +43,7 @@ public class UserDetailServiceImplTest {
         when(userRepository.findById(anyString())).thenReturn(optionalUser);
 
         // When
-        UserDetails userDetails= userDetailService.loadUserByUsername(username);
+        UserDetails userDetails = userDetailService.loadUserByUsername(username);
 
         // Then
         assertNotNull(userDetails);

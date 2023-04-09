@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
 
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
@@ -24,6 +23,7 @@ public class JwtConfigTest {
 
     @Mock
     private UserDetails userDetails;
+
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -31,14 +31,14 @@ public class JwtConfigTest {
 
 
     @Test
-   public void testExtractUsername() {
+    public void testExtractUsername() {
         String token = jwtConfig.generateToken("testUser");
         String username = jwtConfig.extractUsername(token);
         assertEquals("testUser", username);
     }
 
     @Test
-   public void testExtractExpiration() {
+    public void testExtractExpiration() {
         String token = jwtConfig.generateToken("testUser");
         Date expiration = jwtConfig.extractExpiration(token);
         assertNotNull(expiration);
@@ -52,16 +52,15 @@ public class JwtConfigTest {
     }
 
 
-
     @Test
-   public void testValidateToken() {
+    public void testValidateToken() {
         String token = jwtConfig.generateToken("testUser");
         when(userDetails.getUsername()).thenReturn("testUser");
         assertTrue(jwtConfig.validateToken(token, userDetails));
     }
 
     @Test
-  public  void testGenerateToken() {
+    public void testGenerateToken() {
         String token = jwtConfig.generateToken("testUser");
         assertNotNull(token);
         String username = jwtConfig.extractUsername(token);

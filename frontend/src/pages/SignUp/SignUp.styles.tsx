@@ -55,24 +55,22 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1)
   },
   slotContainer: {
-    display: "flex",
-    "& input:read-only":{
-      backgroundColor: "#eee",
-      cursor: "not-allowed"
+    display: 'flex',
+    '& input:read-only': {
+      backgroundColor: '#eee',
+      cursor: 'not-allowed'
     }
   },
-  rootSlotsContainer:{
-    marginTop:"0.5em",
+  rootSlotsContainer: {
+    marginTop: '0.5em'
   },
-  customLabel:{
-    color: "rgba(0, 0, 0, 0.54)"
+  customLabel: {
+    color: 'rgba(0, 0, 0, 0.54)'
   },
-  slotContainerStart:{
-    marginRight:"0.5em !important"
+  slotContainerStart: {
+    marginRight: '0.5em !important'
   },
-  slotContainerEnd:{
-
-  }
+  slotContainerEnd: {}
 }));
 
 export default useStyles;

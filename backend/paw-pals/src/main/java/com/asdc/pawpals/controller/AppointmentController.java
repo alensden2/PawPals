@@ -18,6 +18,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.InvalidObjectException;
 
+/**
+ * This class represents the AppointmentController which handles all HTTP requests related to appointments.
+ * <p>
+ * It is annotated with @RestController to indicate that it is a RESTful web service controller.
+ * <p>
+ * The base path for all HTTP requests is "/auth/appointment".
+ */
 @RestController()
 @RequestMapping("/auth/appointment")
 public class AppointmentController {

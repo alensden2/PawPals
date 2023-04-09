@@ -5,11 +5,11 @@ public enum ProfileStatus {
 
     private String label;
 
-    private ProfileStatus(String label){
+    private ProfileStatus(String label) {
         this.label = label;
     }
 
-    public String getLabel(){
+    public String getLabel() {
         return this.label;
     }
 }

@@ -1,13 +1,12 @@
 package com.asdc.pawpals.service;
 
-import java.io.InvalidObjectException;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.asdc.pawpals.dto.MedicalHistoryDto;
 import com.asdc.pawpals.exception.InvalidAnimalId;
 import com.asdc.pawpals.exception.UserNameNotFound;
+import org.springframework.stereotype.Service;
+
+import java.io.InvalidObjectException;
+import java.util.List;
 
 @Service
 public interface MedicalRecordService {

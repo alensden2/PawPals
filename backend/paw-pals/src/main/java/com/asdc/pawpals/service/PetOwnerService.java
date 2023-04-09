@@ -1,12 +1,14 @@
 package com.asdc.pawpals.service;
 
-import com.asdc.pawpals.dto.*;
+import com.asdc.pawpals.dto.AnimalDto;
+import com.asdc.pawpals.dto.PetAppointmentsDto;
+import com.asdc.pawpals.dto.PetMedicalHistoryDto;
+import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.exception.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.util.List;
 
 @Service

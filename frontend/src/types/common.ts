@@ -37,7 +37,7 @@ export type PetOwner = {
   lastName: string;
   phoneNo: string;
   email?: string;
-  address:string;
+  address: string;
   photoUrl?: File;
   pets?: Array<Pet>;
 };
