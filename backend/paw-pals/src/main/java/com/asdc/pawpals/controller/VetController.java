@@ -28,8 +28,14 @@ import java.io.InvalidObjectException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is a RestController responsible for handling requests related to Vet entity.
+ * <p>
+ * It maps the incoming HTTP requests to appropriate methods of VetService to perform the required operations.
+ * <p>
+ * The base path for the requests handled by this controller is "/auth/vet".
+ */
 @RestController()
-
 @RequestMapping("/auth/vet")
 public class VetController {
 

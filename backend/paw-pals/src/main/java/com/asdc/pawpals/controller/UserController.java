@@ -17,8 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * This controller class is responsible for handling requests related to user management operations that do not require authentication.
+ * <p>
+ * It is annotated with @RestController and @RequestMapping("/unauth/user") to map incoming requests to this controller.
+ * <p>
+ * The class contains methods to handle user authentication and registration.
+ */
 @RestController
-
 @RequestMapping("/unauth/user")
 public class UserController {
 

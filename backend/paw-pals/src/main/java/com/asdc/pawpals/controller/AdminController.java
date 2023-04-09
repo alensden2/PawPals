@@ -20,10 +20,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * This class represents a REST controller for handling administrative tasks in the system.
+ * <p>
+ * The class is annotated with the @RestController annotation to indicate that it is a controller component that handles REST requests.
+ * <p>
+ * The @RequestMapping annotation is used to specify the base URL mapping for all the endpoints in this controller.
+ */
 @RestController
 @RequestMapping("auth/admin")
 public class AdminController {
-    // private static final Logger logger = LogManager.getLogger(AdminController.class);
+
     private static final Logger logger = LogManager.getLogger(
             AdminController.class
     );
