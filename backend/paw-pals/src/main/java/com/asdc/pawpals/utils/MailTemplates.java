@@ -487,7 +487,7 @@ public class MailTemplates {
                 .append("")
                 .append("<body>")
                 .append("  <div class=\"container\">")
-                .append("    <h1>Vet Registration Approved</h1>")
+                .append("    <h1>Vet Registration Rejected</h1>")
                 .append("    <p>Dear ")
                 .append(vetName)
                 .append(",</p>")
