@@ -86,7 +86,7 @@ build-backend:
 deploy-backend:
   stage: deploy
   dependencies:
-    - build
+    - build-backend
   # only:#
   #   - dev
   before_script:
