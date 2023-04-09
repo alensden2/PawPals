@@ -87,7 +87,7 @@ deploy-backend:
   stage: deploy
   dependencies:
     - build
-  # only:
+  # only:#
   #   - dev
   before_script:
     - apt-get update && apt-get install -y openssh-client
