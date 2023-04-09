@@ -155,7 +155,14 @@ public class PetOwnerImpl implements PetOwnerService {
     MultipartFile image
   )
     throws UserNameNotFound, InvalidPetOwnerObject, InvalidImage, IOException {
-    if (null != id && !id.isEmpty() && petOwnerDto != null) {
+    boolean isIdNotNullOrEmpty = null != id && !id.isEmpty();
+    boolean isPetOwnerDtoNotNull = petOwnerDto != null;
+    boolean isConditionMet = isIdNotNullOrEmpty && isPetOwnerDtoNotNull;
+    /**
+     * Old Code -
+     * if (null != id && !id.isEmpty() && petOwnerDto != null)
+     */
+    if (isConditionMet) {
       PetOwner petOwner = petOwnerRepository
         .findByUser_UserId(id)
         .orElseThrow(UserNameNotFound::new);
