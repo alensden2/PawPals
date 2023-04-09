@@ -64,8 +64,6 @@ code-format-frontend:
 # # Job to test the backend code
 test-backend:
   stage: test
-  only:
-    - dev
   script:
     - echo "Testing backend..."
     - cd backend/paw-pals
