@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px'
   },
   medicalRecordContainer: {
-    height: '500px',
+    height: '450px',
     overflowY: 'auto',
     padding: '8px'
   },
