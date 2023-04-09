@@ -10,7 +10,7 @@ const Vet: React.FC = () => {
     const user = localStorageUtil.getItem('user');
 
     const roles = ['VET', 'ROLE_VET'];
-    if (roles.includes(user.role)) {
+    if (roles.includes(user?.role)) {
       navigate('home');
     } else {
       navigate('/', { replace: true });
