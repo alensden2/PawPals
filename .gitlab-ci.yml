@@ -5,37 +5,6 @@ stages:
   - test
   - deploy
 
-# Job to detect code smells in the codebase
-# code-smell-backend:
-#   stage: code-quality
-#   image: openjdk:11
-#   only:
-#     - dev  # Only run this job in the 'dev' branch
-#   script:
-#     - echo "Detecting code smells..."  # Output a message indicating the job is running
-#     - mkdir $CI_PROJECT_DIR/backend/paw-pals/smells
-#     - java -jar $CI_PROJECT_DIR/backend/paw-pals/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR/backend/paw-pals/src/main/java/com/asdc/pawpals -o $CI_PROJECT_DIR/backend/paw-pals/smells
-#     - cd backend/paw-pals/smells
-#     - ls -a
-#   artifacts:
-#     paths:
-#       - $CI_PROJECT_DIR/backend/paw-pals/smells
-#   when: manual  # Require manual intervention to run this job
-#   tags:
-#     - ugrad  # Run this job on a runner with the 'ugrad' tag
-
-# # Format to readability, consistency, debugging, and collaboration.
-# code-format-frontend: 
-#   stage: code-quality
-#   only:
-#     - dev
-#   script:
-#     - cd $CI_PROJECT_DIR/frontend
-#     - npm install prettier --save-dev
-#     - npm run format
-#   tags:
-#     - ugrad
-
 # Job to build the backend code
 build-backend:
   stage: build
@@ -64,17 +33,48 @@ build-frontend:
   tags:
     - ugrad
 
+# Job to detect code smells in the codebase
+code-smell-backend:
+  stage: code-quality
+  image: openjdk:11
+  script:
+    - echo "Detecting code smells..."  # Output a message indicating the job is running
+    - mkdir $CI_PROJECT_DIR/backend/paw-pals/smells
+    - java -jar $CI_PROJECT_DIR/backend/paw-pals/.gitlab/DesigniteJava.jar -i $CI_PROJECT_DIR/backend/paw-pals/src/main/java/com/asdc/pawpals -o $CI_PROJECT_DIR/backend/paw-pals/smells
+    - cd backend/paw-pals/smells
+    - ls -a
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/backend/paw-pals/smells
+  tags:
+    - ugrad  # Run this job on a runner with the 'ugrad' tag
+
+# Format to readability, consistency, debugging, and collaboration.
+code-format-frontend: 
+  stage: code-quality
+  script:
+    - cd $CI_PROJECT_DIR/frontend
+    - npm install prettier --save-dev
+    - npm run format
+  tags:
+    - ugrad
+
+
+
 # # Job to test the backend code
-# test-backend:
-#   stage: test
-#   only:
-#     - dev
-#   script:
-#     - echo "Testing backend..."
-#     - cd backend/paw-pals
-#     - mvn clean
-#   tags:
-#     - ugrad
+test-backend:
+  stage: test
+  only:
+    - dev
+  script:
+    - echo "Testing backend..."
+    - cd backend/paw-pals
+    - mvn clean test
+  artifacts:
+    paths:
+      - backend/paw-pals/target/site/*
+  tags:
+    - ugrad
 
 # Job to deploy the backend code
 deploy-backend:
