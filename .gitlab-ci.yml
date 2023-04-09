@@ -45,9 +45,6 @@ build-backend:
   script:
     - cd backend/paw-pals/
     - mvn clean compile
-  artifacts:
-    paths:
-      - $CI_PROJECT_DIR/backend/paw-pals/target/*.war
   tags:
     - group12
 
