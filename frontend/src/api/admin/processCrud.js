@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { getAllVetsApiCall, getAllPetOwnersApiCall } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';

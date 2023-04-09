@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import React, { useContext, useEffect, useState } from 'react';
 import { HeaderContext, ToastContext } from '@src/context';

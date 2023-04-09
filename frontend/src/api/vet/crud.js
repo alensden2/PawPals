@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { axiosJSON, axiosFORM } from '@src/lib';
 import { localStorageUtil } from '@src/utils';
