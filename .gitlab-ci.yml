@@ -84,8 +84,6 @@ build-backend:
 # Job to deploy the backend code
 deploy-backend:
   stage: deploy
-  dependencies:
-    - build-backend
   # only:#
   #   - dev
   before_script:
@@ -100,7 +98,6 @@ deploy-backend:
     - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} target/*.war ${SSH_USER}@${SSH_HOSTNAME}:/home/$SSH_USER/Pawpals/Pawpals.war
     - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "cd /home/$SSH_USER/Pawpals/ && sudo docker build -t pawpals:latest -f dockerfile ."
     - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "sudo docker run -d --name pawpals -p 8080:8080 pawpals"
-  when: manual
   tags:
     - group12
 
