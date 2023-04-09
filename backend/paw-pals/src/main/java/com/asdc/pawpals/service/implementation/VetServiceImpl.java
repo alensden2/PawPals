@@ -1,13 +1,34 @@
 package com.asdc.pawpals.service.implementation;
 
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.util.Pair;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.asdc.pawpals.Enums.AppointmentStatus;
 import com.asdc.pawpals.Enums.ProfileStatus;
-import com.asdc.pawpals.dto.*;
+import com.asdc.pawpals.dto.AppointmentDto;
+import com.asdc.pawpals.dto.VetAppointmentDto;
+import com.asdc.pawpals.dto.VetAvailabilityDto;
+import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.dto.VetScheduleDto;
 import com.asdc.pawpals.exception.InvalidAppointmentId;
 import com.asdc.pawpals.exception.InvalidImage;
 import com.asdc.pawpals.exception.NoAppointmentExist;
 import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.Appointment;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.model.VetAvailability;
@@ -17,21 +38,9 @@ import com.asdc.pawpals.repository.VetAvailabilityRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.VetService;
 import com.asdc.pawpals.utils.CommonUtils;
+import com.asdc.pawpals.utils.MailTemplates;
 import com.asdc.pawpals.utils.Transformations;
 import com.asdc.pawpals.validators.AppointmentValidators;
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.data.util.Pair;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Lazy
@@ -51,6 +60,9 @@ public class VetServiceImpl implements VetService {
   @Autowired
   MailServiceImpl mailService;
 
+  @Value("${pawpals.serve.base.url}")
+  String serveUrl;
+
   /**
 
    * Registers a new vet in the system.
@@ -61,24 +73,26 @@ public class VetServiceImpl implements VetService {
   @Override
   public Boolean registerVet(VetDto vetDto) throws UsernameNotFoundException {
     Boolean vetRegistered = false;
+    Optional<User> user = null;
     if (vetDto != null) {
       Vet vet = Transformations.DTO_TO_MODEL_CONVERTER.vet(vetDto);
       //check if user with given username exists, then only register that user as vet
-      Optional<User> user = userRepository.findById(vetDto.getUsername());
+      user = userRepository.findById(vetDto.getUsername());
       if (!user.isEmpty()) {
         Long oldCount = vetRepository.count();
         vet.setProfileStatus(AppointmentStatus.PENDING.getLabel());
         vetRepository.save(vet);
 
-        mailService.sendMail(
-          user.get().getEmail(),
-          "pending for Approval",
-          "your application is under process for admin approval"
-        );
         Long newCount = vetRepository.count();
         vetRegistered = ((oldCount + 1) == newCount);
       } else {
         throw new UsernameNotFoundException("Please provide a valid username");
+      }
+      if(vetRegistered){
+        String subject = "Profile created @ PawPals";
+        String body = MailTemplates.getVetRegistrationConfirmationString(vetDto.getFirstName()+" "+vetDto.getLastName());
+        String to = user.get().getEmail();
+        mailService.sendMail(to, subject, body);
       }
     }
     return vetRegistered;
@@ -314,6 +328,19 @@ Overrides the base method to change the status of an appointment given by its ID
      */
     if (isAppointmentValid(appointment)) {
       returnedAppointment = appointmentRepository.saveAndFlush(appointment);
+      PetOwner owner = appointment.getAnimal().getOwner();
+      if(appointment.getStatus().equals(AppointmentStatus.CONFIRMED.getLabel())){
+          String subject = "Appointment Confirmed @ PawPals";
+          String body = MailTemplates.getAppointmentConfirmationString(owner.getFirstName()+" "+owner.getLastName(), appointment.getDate(), appointment.getStartTime(), appointment.getVet().getClinicAddress(), serveUrl);
+          String to = owner.getUser().getEmail();
+          mailService.sendMail(to, subject, body);
+      }
+      else if(appointment.getStatus().equals(AppointmentStatus.REJECTED.getLabel())){
+        String subject = "Appointment Rejected @ PawPals";
+        String body = MailTemplates.getAppointmentCancelString(owner.getFirstName()+" "+owner.getLastName(), appointment.getDate(), appointment.getStartTime());
+        String to = owner.getUser().getEmail();
+        mailService.sendMail(to, subject, body);
+      }
     }
     return Transformations.MODEL_TO_DTO_CONVERTER.appointment(
       returnedAppointment
@@ -515,31 +542,30 @@ their profile has been rejected by an administrator.
         .orElseThrow(UserNameNotFound::new);
 
       if (vetDto.getProfileStatus() != null) {
+        vet.setProfileStatus(vetDto.getProfileStatus());
+        vet = vetRepository.saveAndFlush(vet);
+
         if (
           vetDto
             .getProfileStatus()
-            .equals(AppointmentStatus.CONFIRMED.getLabel())
+            .equals(ProfileStatus.APPROVED.getLabel())
         ) {
-          mailService.sendMail(
-            vet.getUser().getEmail(),
-            "Successfully Approved",
-            "your profile is successfully approved by Admin"
-          );
+          String subject = "Profile Approved @ PawPals";
+          String body = MailTemplates.getVetApprovedMessageString(vet.getFirstName()+" "+vet.getLastName(), serveUrl);
+          String to = vet.getUser().getEmail();
+          mailService.sendMail(to, subject, body);
+          
         } else if (
           vetDto
             .getProfileStatus()
-            .equals(AppointmentStatus.REJECTED.getLabel())
+            .equals(ProfileStatus.REJECTED.getLabel())
         ) {
-          mailService.sendMail(
-            vet.getUser().getEmail(),
-            "Profile Decline",
-            "Unfortunately your profile has been rejected by Admin"
-          );
+          String subject = "Profile Rejected @ PawPals";
+          String body = MailTemplates.getVetRejectedMessageString(vet.getFirstName()+" "+vet.getLastName());
+          String to = vet.getUser().getEmail();
+          mailService.sendMail(to, subject, body);
         }
-        vet.setProfileStatus(vetDto.getProfileStatus());
       }
-
-      vet = vetRepository.saveAndFlush(vet);
       return Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
     } else if (vetDto == null) {
       throw new InvalidObjectException("Invalid pet owner object body");

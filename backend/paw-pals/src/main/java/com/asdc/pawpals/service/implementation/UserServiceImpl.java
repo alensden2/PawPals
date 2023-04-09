@@ -13,6 +13,7 @@ import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.MailService;
 import com.asdc.pawpals.service.UserService;
+import com.asdc.pawpals.utils.MailTemplates;
 import com.asdc.pawpals.utils.Transformations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -132,8 +133,8 @@ public class UserServiceImpl implements UserService {
       throw new InvalidUserDetails("incorrect user data " + userDto);
     }
 
-    String subject = "Register Success";
-    String body = "Welcome to Pawpals";
+    String subject = "Registration Successful @ PawPals";
+    String body = MailTemplates.getRegistrationSuccessfulString();
     String to = userDto.getEmail();
     mailService.sendMail(to, subject, body);
 

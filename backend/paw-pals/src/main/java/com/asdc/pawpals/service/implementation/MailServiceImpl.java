@@ -34,7 +34,7 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendMail(String to, String subject, String body) {
         // Create a new MimeMessage object and set its properties
-        MimeMessage mimeMessage = this.mailSender.createMimeMessage();;
+        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MailServiceImpl.ENCODING_TYPE);
         try {
             helper.setTo(to);
