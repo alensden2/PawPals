@@ -63,12 +63,27 @@ public class PetOwnerImpl implements PetOwnerService {
   public PetOwnerDto registerPetOwner(PetOwnerDto petOwnerDto)
     throws UserNameNotFound, InvalidUserDetails, UserAlreadyExist {
     logger.debug("Register pet Owner", petOwnerDto);
-    if (
+    boolean isPetOwnerDtoNotNull = null != petOwnerDto;
+    boolean isPetOwnerDtoUsernameNotNull = null != petOwnerDto.getUsername();
+    boolean isPetOwnerDtoPhotoUrlNotNull = null != petOwnerDto.getPhotoUrl();
+    boolean isPetOwnerDtoPhoneNoNotNull = null != petOwnerDto.getPhoneNo();
+    boolean isPetOwnerDtoAddressNotNull = null != petOwnerDto.getAddress();
+    /*
+ * old code - 
+ * if (
       null != petOwnerDto &&
       null != petOwnerDto.getUsername() &&
       null != petOwnerDto.getPhotoUrl() &&
       null != petOwnerDto.getPhoneNo() &&
       null != petOwnerDto.getAddress()
+    ) 
+ */
+    if (
+      isPetOwnerDtoNotNull &&
+      isPetOwnerDtoUsernameNotNull &&
+      isPetOwnerDtoPhotoUrlNotNull &&
+      isPetOwnerDtoPhoneNoNotNull &&
+      isPetOwnerDtoAddressNotNull
     ) {
       User user = userRepository
         .findById(petOwnerDto.getUsername())
