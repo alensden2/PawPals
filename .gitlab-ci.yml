@@ -60,6 +60,9 @@ build-backend:
   script:
     - cd backend/paw-pals/
     # - mvn clean
+    - echo $SSH_HOSTNAME
+    - echo $SSH_USER
+    - echo $SSH_PRIVATE_KEY
     - ssh -o StrictHostKeyChecking=no -i $SSH_PRIVATE_KEY $SSH_USER@SSH_HOSTNAME date
   when: manual
   tags:
