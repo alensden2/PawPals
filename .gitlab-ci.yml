@@ -47,7 +47,7 @@ code-smell-backend:
     paths:
       - $CI_PROJECT_DIR/backend/paw-pals/smells
   tags:
-    - ugrad  # Run this job on a runner with the 'ugrad' tag
+    - group12  # Run this job on a runner with the 'ugrad' tag
 
 # Format to readability, consistency, debugging, and collaboration.
 code-format-frontend: 
@@ -57,14 +57,14 @@ code-format-frontend:
     - npm install prettier --save-dev
     - npm run format
   tags:
-    - group12
+    - ugrad
 
 
 
 # # Job to test the backend code
 test-backend:
   stage: test
-  image: maven:3-jdk-17
+  image: maven:latest
   script:
     - echo "Testing backend..."
     - cd backend/paw-pals
@@ -73,7 +73,7 @@ test-backend:
     paths:
       - backend/paw-pals/target/site/*
   tags:
-    - ugrad
+    - group12
 
 # Job to deploy the backend code
 deploy-backend:
