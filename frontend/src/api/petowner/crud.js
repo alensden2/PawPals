@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
-import axios from 'axios';
-import { axiosJSON } from '@src/lib';
+import { axiosJSON, axiosFORM } from '@src/lib';
 import { localStorageUtil } from '@src/utils';
 
 export const registerPetOwnerApiCall = async (petOwner) => {
@@ -18,10 +17,7 @@ export const registerPetOwnerApiCall = async (petOwner) => {
       formData.append('image', petOwner.photoUrl);
     }
 
-    const apiClient = axios.create({
-      baseURL: 'http://localhost:8080/'
-    });
-    const responseRaw = await apiClient.post(
+    const responseRaw = await axiosFORM.post(
       '/auth/pet-owner/register',
       formData
     );
