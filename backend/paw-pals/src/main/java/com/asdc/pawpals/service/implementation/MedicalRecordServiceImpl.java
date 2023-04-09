@@ -45,9 +45,17 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 */
   @Override
   public List<MedicalHistoryDto> retrieveMedicalRecord(Long animalId) {
-    List<MedicalHistory> medicalRecords = medicalRecordRepository != null
-      ? medicalRecordRepository.findByAnimalId(animalId)
-      : null;
+    // List<MedicalHistory> medicalRecords = medicalRecordRepository != null
+    //   ? medicalRecordRepository.findByAnimalId(animalId)
+    //   : null;
+    // Old code
+
+    List<MedicalHistory> medicalRecords;
+    if (medicalRecordRepository != null) {
+      medicalRecords = medicalRecordRepository.findByAnimalId(animalId);
+    } else {
+      medicalRecords = null;
+    }
     logger.debug(
       "MedicalRecordService :: retrieveMedicalRecord :: medicalRecords are : {}",
       medicalRecords
@@ -81,12 +89,32 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
       "Book pet owner appointment with vet",
       medicalHistoryDto.toString()
     );
-    if (
+    /**
+     * old Code - 
+     * if (
       medicalHistoryDto != null &&
       medicalHistoryDto.getAilmentName() != null &&
       medicalHistoryDto.getPrescription() != null &&
       medicalHistoryDto.getDateDiagnosed() != null &&
       medicalHistoryDto.getVaccines() != null
+    )
+     */
+    boolean isMedicalHistoryDtoNotNull = medicalHistoryDto != null;
+    boolean isAilmentNameNotNull =
+      medicalHistoryDto != null && medicalHistoryDto.getAilmentName() != null;
+    boolean isPrescriptionNotNull =
+      medicalHistoryDto != null && medicalHistoryDto.getPrescription() != null;
+    boolean isDateDiagnosedNotNull =
+      medicalHistoryDto != null && medicalHistoryDto.getDateDiagnosed() != null;
+    boolean isVaccinesNotNull =
+      medicalHistoryDto != null && medicalHistoryDto.getVaccines() != null;
+
+    if (
+      isMedicalHistoryDtoNotNull &&
+      isAilmentNameNotNull &&
+      isPrescriptionNotNull &&
+      isDateDiagnosedNotNull &&
+      isVaccinesNotNull
     ) {
       Optional<Vet> optionalVetRepository = vetRepository.findByUser_UserId(
         medicalHistoryDto.getVetUserId()
