@@ -48,13 +48,31 @@ Registers a new pet with the system.
   public AnimalDto registerPet(AnimalDto animalDto)
     throws UserNameNotFound, InvalidAnimalObject {
     logger.debug("Register Animal", animalDto);
-    if (
+    /**
+     * Old code
+     * 
+     * if (
       null != animalDto &&
       null != animalDto.getAge() &&
       null != animalDto.getGender() &&
       null != animalDto.getName() &&
       null != animalDto.getType() &&
       null != animalDto.getPhotoUrl()
+    ) 
+     */
+    boolean isAnimalDtoNotNull = null != animalDto;
+    boolean isAgeNotNull = null != animalDto.getAge();
+    boolean isGenderNotNull = null != animalDto.getGender();
+    boolean isNameNotNull = null != animalDto.getName();
+    boolean isTypeNotNull = null != animalDto.getType();
+    boolean isPhotoUrlNotNull = null != animalDto.getPhotoUrl();
+    if (
+      isAnimalDtoNotNull &&
+      isAgeNotNull &&
+      isGenderNotNull &&
+      isNameNotNull &&
+      isTypeNotNull &&
+      isPhotoUrlNotNull
     ) {
       Optional<PetOwner> petOwnerOptional = petOwnerRepository.findByUser_UserId(
         animalDto.getOwnerId()
