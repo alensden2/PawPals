@@ -4,7 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+
+@SpringBootTest
 public class VetAvailabilityTest {
 
     @Test

@@ -1,13 +1,16 @@
 package com.asdc.pawpals.dto;
 
-import org.junit.Test;
-import org.springframework.data.util.Pair;
-
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.Arrays;
+
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.util.Pair;
+
+
+@SpringBootTest
 public class VetAvailabilityDtoTest {
 
     @Test

@@ -1,9 +1,11 @@
 package com.asdc.pawpals.exception;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
 public class InvalidAnimalIdTest {
 
     @Test

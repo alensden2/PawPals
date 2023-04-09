@@ -3,12 +3,14 @@ package com.asdc.pawpals.utils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.util.Pair;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@SpringBootTest
 public class PairDeSerializerTest {
 
     @Test

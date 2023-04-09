@@ -1,19 +1,21 @@
 package com.asdc.pawpals.dto;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+
+@SpringBootTest
 public class VetAppointmentDtoTest {
 
     private VetAppointmentDto vetAppointmentDto;
     private AppointmentDto appointmentDto;
     private AnimalDto animalDto;
     private PetOwnerDto petOwnerDto;
-    private MedicalHistoryDtoInline medicalHistoryDto;
     private List<MedicalHistoryDtoInline> medicalHistoryDtos;
 
     @Before
@@ -21,7 +23,6 @@ public class VetAppointmentDtoTest {
         appointmentDto = new AppointmentDto();
         animalDto = new AnimalDto();
         petOwnerDto = new PetOwnerDto();
-        medicalHistoryDto = new MedicalHistoryDtoInline();
         medicalHistoryDtos = new ArrayList<>();
 
         vetAppointmentDto = new VetAppointmentDto();

@@ -1,9 +1,13 @@
 package com.asdc.pawpals.exception;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.springframework.boot.test.context.SpringBootTest;
 
 
+@SpringBootTest
 public class InvalidAppointmentIdTest {
 
     @Test

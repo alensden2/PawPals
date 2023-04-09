@@ -2,11 +2,14 @@ package com.asdc.pawpals.utils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.util.Pair;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
+@SpringBootTest
 public class ObjectMapperWrapperTest {
 
     @Test

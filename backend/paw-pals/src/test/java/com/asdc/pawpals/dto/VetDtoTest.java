@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class VetDtoTest {
 
     private VetDto vetDto;

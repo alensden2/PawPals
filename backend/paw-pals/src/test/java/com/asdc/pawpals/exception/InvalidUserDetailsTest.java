@@ -1,8 +1,12 @@
 package com.asdc.pawpals.exception;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+@SpringBootTest
 public class InvalidUserDetailsTest {
 
     @Test

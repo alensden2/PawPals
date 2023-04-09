@@ -2,7 +2,9 @@ package com.asdc.pawpals.Enums;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class StatusTest {
 
     @Test
