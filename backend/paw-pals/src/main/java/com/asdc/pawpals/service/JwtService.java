@@ -1,9 +1,8 @@
 package com.asdc.pawpals.service;
 
-import org.springframework.stereotype.Service;
-
 import com.asdc.pawpals.utils.AuthenticationRequest;
 import com.asdc.pawpals.utils.AuthenticationResponse;
+import org.springframework.stereotype.Service;
 
 @Service
 public interface JwtService {

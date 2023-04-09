@@ -1,5 +1,6 @@
 package com.asdc.pawpals.service.implementation;
 
+import com.asdc.pawpals.Enums.AppointmentStatus;
 import com.asdc.pawpals.dto.AppointmentDto;
 import com.asdc.pawpals.exception.InvalidAnimalId;
 import com.asdc.pawpals.exception.InvalidAppointmentId;
@@ -15,29 +16,29 @@ import com.asdc.pawpals.service.AppointmentService;
 import com.asdc.pawpals.utils.Constants;
 import com.asdc.pawpals.utils.Transformations;
 import com.asdc.pawpals.validators.AppointmentValidators;
-import java.io.InvalidObjectException;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import java.io.InvalidObjectException;
+import java.util.Optional;
+
 @Component
 @Lazy
 public class AppointmentServiceImpl implements AppointmentService {
-  Logger logger = LogManager.getLogger(AppointmentServiceImpl.class);
+    Logger logger = LogManager.getLogger(AppointmentServiceImpl.class);
 
-  @Autowired
-  AnimalRepository animalRepository;
+    @Autowired
+    AnimalRepository animalRepository;
 
-  @Autowired
-  AppointmentRepository appointmentRepository;
+    @Autowired
+    AppointmentRepository appointmentRepository;
 
-  @Autowired
-  VetRepository vetRepository;
+    @Autowired
+    VetRepository vetRepository;
 
-  private final int SET_STATUS = 2;
 
   /**
 
@@ -83,68 +84,67 @@ public class AppointmentServiceImpl implements AppointmentService {
     return statusUpdated;
   }
 
-  /**
-
-* Books a new appointment with the specified appointment details
-* @param appointmentDto appointment details to be booked
-* @return appointment details of the booked appointment
-* @throws InvalidVetID if the vet id provided in the appointment details is invalid
-* @throws InvalidAnimalId if the animal id provided in the appointment details is invalid
-* @throws InvalidObjectException if the appointment details provided is invalid
-* @throws UserNameNotFound if the username of the vet is not found
-*/
-  @Override
-  public AppointmentDto bookAppointment(AppointmentDto appointmentDto)
-    throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound {
-    logger.debug("Book pet owner appointment with vet %s", appointmentDto);
-    if (appointmentDto == null) {
-      throw new InvalidObjectException("Invalid Appointment Object");
-    }
-    appointmentDto.setStatus(Constants.STATUS[SET_STATUS]); //set status to pending manually
-    boolean isAppointmentDateNotNull = appointmentDto.getDate() != null;
-    boolean isStartTimeNotNull = appointmentDto.getStartTime() != null;
-    boolean isEndTimeNotNull = appointmentDto.getEndTime() != null;
-    boolean isAppointmentValid = AppointmentValidators.isValidAppointment(
-      appointmentDto.getDate(),
-      appointmentDto.getStartTime(),
-      appointmentDto.getEndTime(),
-      appointmentDto.getStatus()
-    );
-
-    /**oldCode 
-     * if (
-      appointmentDto.getDate() != null &&
-      appointmentDto.getStartTime() != null &&
-      appointmentDto.getEndTime() != null &&
-      AppointmentValidators.isValidAppointment(
-        appointmentDto.getDate(),
-        appointmentDto.getStartTime(),
-        appointmentDto.getEndTime(),
-        appointmentDto.getStatus()
-      )
-    )
+    /**
+     * Books a new appointment with the specified appointment details
+     *
+     * @param appointmentDto appointment details to be booked
+     * @return appointment details of the booked appointment
+     * @throws InvalidVetID           if the vet id provided in the appointment details is invalid
+     * @throws InvalidAnimalId        if the animal id provided in the appointment details is invalid
+     * @throws InvalidObjectException if the appointment details provided is invalid
+     * @throws UserNameNotFound       if the username of the vet is not found
      */
-    if (
-      isAppointmentDateNotNull &&
-      isStartTimeNotNull &&
-      isEndTimeNotNull &&
-      isAppointmentValid
-    ) {
-      Appointment appointment = Transformations.DTO_TO_MODEL_CONVERTER.appointment(
-        appointmentDto
-      );
-      Vet vet = vetRepository
-        .findByUser_UserId(appointmentDto.getVetUserId())
-        .orElseThrow(UserNameNotFound::new);
-      Animal animal = animalRepository
-        .findById(appointmentDto.getAnimalId())
-        .orElseThrow(InvalidAnimalId::new);
-      appointment.setVet(vet);
-      appointment.setAnimal(animal);
-      appointment = appointmentRepository.save(appointment);
-      return Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment);
-    } else {
-      throw new InvalidObjectException("Invalid Appointment Object");
+    @Override
+    public AppointmentDto bookAppointment(AppointmentDto appointmentDto)
+            throws InvalidVetID, InvalidAnimalId, InvalidObjectException, UserNameNotFound {
+        logger.debug("Book pet owner appointment with vet %s", appointmentDto);
+        if (appointmentDto == null) {
+            throw new InvalidObjectException("Invalid Appointment Object");
+        }
+        /**oldCode 
+         * if (
+          appointmentDto.getDate() != null &&
+          appointmentDto.getStartTime() != null &&
+          appointmentDto.getEndTime() != null &&
+          AppointmentValidators.isValidAppointment(
+            appointmentDto.getDate(),
+            appointmentDto.getStartTime(),
+            appointmentDto.getEndTime(),
+            appointmentDto.getStatus()
+          )
+        )
+        */
+        appointmentDto.setStatus(AppointmentStatus.PENDING.getLabel()); //set status to pending manually
+        boolean isAppointmentDateNotNull = appointmentDto.getDate() != null;
+        boolean isStartTimeNotNull = appointmentDto.getStartTime() != null;
+        boolean isEndTimeNotNull = appointmentDto.getEndTime() != null;
+        boolean isAppointmentValid = AppointmentValidators.isValidAppointment(
+          appointmentDto.getDate(),
+          appointmentDto.getStartTime(),
+          appointmentDto.getEndTime(),
+          appointmentDto.getStatus()
+        );
+        if (
+          isAppointmentDateNotNull &&
+          isStartTimeNotNull &&
+          isEndTimeNotNull &&
+          isAppointmentValid
+        ) {
+            Appointment appointment = Transformations.DTO_TO_MODEL_CONVERTER.appointment(
+                    appointmentDto
+            );
+            Vet vet = vetRepository
+                    .findByUser_UserId(appointmentDto.getVetUserId())
+                    .orElseThrow(UserNameNotFound::new);
+            Animal animal = animalRepository
+                    .findById(appointmentDto.getAnimalId())
+                    .orElseThrow(InvalidAnimalId::new);
+            appointment.setVet(vet);
+            appointment.setAnimal(animal);
+            appointment = appointmentRepository.save(appointment);
+            return Transformations.MODEL_TO_DTO_CONVERTER.appointment(appointment);
+        } else {
+            throw new InvalidObjectException("Invalid Appointment Object");
+        }
     }
-  }
 }

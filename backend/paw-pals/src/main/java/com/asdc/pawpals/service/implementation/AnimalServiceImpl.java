@@ -13,14 +13,15 @@ import com.asdc.pawpals.service.AnimalService;
 import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.Transformations;
-import java.io.IOException;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @Lazy
@@ -37,35 +38,24 @@ public class AnimalServiceImpl implements AnimalService {
   PetOwnerService petOwnerService;
 
   /**
-
-Registers a new pet with the system.
-* @param animalDto the data transfer object containing the pet's information
-* @return the data transfer object for the newly registered pet
-* @throws UserNameNotFound if the owner associated with the given ID does not exist
-* @throws InvalidAnimalObject if the animalDto parameter is null or contains invalid information
-*/
-  @Override
-  public AnimalDto registerPet(AnimalDto animalDto)
-    throws UserNameNotFound, InvalidAnimalObject {
-    logger.debug("Register Animal", animalDto);
-    /**
-     * Old code
-     * 
-     * if (
-      null != animalDto &&
-      null != animalDto.getAge() &&
-      null != animalDto.getGender() &&
-      null != animalDto.getName() &&
-      null != animalDto.getType() &&
-      null != animalDto.getPhotoUrl()
-    ) 
+     * Registers a new pet with the system.
+     *
+     * @param animalDto the data transfer object containing the pet's information
+     * @return the data transfer object for the newly registered pet
+     * @throws UserNameNotFound    if the owner associated with the given ID does not exist
+     * @throws InvalidAnimalObject if the animalDto parameter is null or contains invalid information
      */
+    @Override
+    public AnimalDto registerPet(AnimalDto animalDto)
+            throws UserNameNotFound, InvalidAnimalObject {
+        logger.debug("Register Animal %s", animalDto);
+       
     boolean isAnimalDtoNotNull = null != animalDto;
-    boolean isAgeNotNull = null != animalDto.getAge();
-    boolean isGenderNotNull = null != animalDto.getGender();
-    boolean isNameNotNull = null != animalDto.getName();
-    boolean isTypeNotNull = null != animalDto.getType();
-    boolean isPhotoUrlNotNull = null != animalDto.getPhotoUrl();
+    boolean isAgeNotNull = isAnimalDtoNotNull && null != animalDto.getAge();
+    boolean isGenderNotNull = isAnimalDtoNotNull && null != animalDto.getGender();
+    boolean isNameNotNull = isAnimalDtoNotNull && null != animalDto.getName();
+    boolean isTypeNotNull = isAnimalDtoNotNull && null != animalDto.getType();
+    boolean isPhotoUrlNotNull = isAnimalDtoNotNull && null != animalDto.getPhotoUrl();
     if (
       isAnimalDtoNotNull &&
       isAgeNotNull &&
@@ -90,30 +80,30 @@ Registers a new pet with the system.
       throw new InvalidAnimalObject("animal object is invalid");
     }
   }
-
   /**
-
-   * Updates an existing animal with the given ID and information from the provided DTO and image file.
+   * Updates an existing animal with the given ID and information from the
+   * provided DTO and image file.
+   *
    * @param animalDto the DTO containing the updated animal information
-   * @param id the ID of the animal to update
-   * @param image the image file to use as the animal's new photo, or null to leave the photo unchanged
+   * @param id        the ID of the animal to update
+   * @param image     the image file to use as the animal's new photo, or null to
+   *                  leave the photo unchanged
    * @return the DTO representation of the updated animal
-   * @throws InvalidImage if the provided image is invalid
-   * @throws IOException if there is an error reading the image file
-   * @throws InvalidAnimalId if the provided animal ID is invalid
+   * @throws InvalidImage        if the provided image is invalid
+   * @throws IOException         if there is an error reading the image file
+   * @throws InvalidAnimalId     if the provided animal ID is invalid
    * @throws InvalidAnimalObject if the provided animal DTO is invalid or null
-*/
+   */
   @Override
   public AnimalDto updateAnimal(
-    AnimalDto animalDto,
-    Long id,
-    MultipartFile image
-  )
-    throws InvalidImage, IOException, InvalidAnimalId, InvalidAnimalObject {
+      AnimalDto animalDto,
+      Long id,
+      MultipartFile image)
+      throws InvalidImage, IOException, InvalidAnimalId, InvalidAnimalObject {
     if (null != id && null != animalDto) {
       Animal animal = animalRepository
-        .findById(id)
-        .orElseThrow(InvalidAnimalId::new);
+          .findById(id)
+          .orElseThrow(InvalidAnimalId::new);
       if (image != null) {
         animal.setPhotoUrl(CommonUtils.getBytes(image));
       }
@@ -122,24 +112,24 @@ Registers a new pet with the system.
       return Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
     } else {
       throw new InvalidAnimalObject(
-        "Null parameter passed in the Animal Object"
-      );
+          "Null parameter passed in the Animal Object");
     }
   }
 
   /**
-
-Deletes an animal with the given ID from the database.
+   * Deletes an animal with the given ID from the database.
+   *
    * @param id the ID of the animal to be deleted
    * @return the DTO representation of the deleted animal
-   * @throws InvalidAnimalId if the given ID is null or does not match any animal in the database
-*/
+   * @throws InvalidAnimalId if the given ID is null or does not match any animal
+   *                         in the database
+   */
   @Override
   public AnimalDto deleteAnimal(Long id) throws InvalidAnimalId {
     if (null != id) {
       Animal animal = animalRepository
-        .findById(id)
-        .orElseThrow(InvalidAnimalId::new);
+          .findById(id)
+          .orElseThrow(InvalidAnimalId::new);
       animalRepository.delete(animal);
       animalRepository.flush();
       return Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
@@ -149,37 +139,37 @@ Deletes an animal with the given ID from the database.
   }
 
   /**
-
-  * Updates the data of an existing animal object.
+   * Updates the data of an existing animal object.
+   *
    * @param animalDto The updated AnimalDto object to be saved.
-   * @param id The id of the animal object to be updated.
-    * @return The updated AnimalDto object.
-    * @throws InvalidAnimalObject If the animalDto parameter is null.
-    * @throws InvalidAnimalId If the id parameter is null or does not correspond to any existing animal object.
-*/
+   * @param id        The id of the animal object to be updated.
+   * @return The updated AnimalDto object.
+   * @throws InvalidAnimalObject If the animalDto parameter is null.
+   * @throws InvalidAnimalId     If the id parameter is null or does not
+   *                             correspond to any existing animal object.
+   */
   @Override
   public AnimalDto updateAnimalObject(AnimalDto animalDto, Long id)
-    throws InvalidAnimalObject, InvalidAnimalId {
+      throws InvalidAnimalObject, InvalidAnimalId {
     if (null != id && null != animalDto) {
       Animal animal = animalRepository
-        .findById(id)
-        .orElseThrow(InvalidAnimalId::new);
+          .findById(id)
+          .orElseThrow(InvalidAnimalId::new);
       updateAnimalData(animalDto, animal);
       animal = animalRepository.saveAndFlush(animal);
       return Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
     } else {
       throw new InvalidAnimalObject(
-        "Null parameter passed in the Animal Object"
-      );
+          "Null parameter passed in the Animal Object");
     }
   }
 
   /**
-
-  *  Updates the data of an Animal entity with values from an AnimalDto
+   * Updates the data of an Animal entity with values from an AnimalDto
+   *
    * @param animalDto the AnimalDto containing the updated data
-   * @param animal the Animal entity to update
-*/
+   * @param animal    the Animal entity to update
+   */
   private static void updateAnimalData(AnimalDto animalDto, Animal animal) {
     if (animalDto.getName() != null) {
       animal.setName(animalDto.getName());
@@ -194,4 +184,5 @@ Deletes an animal with the given ID from the database.
       animal.setType(animalDto.getType());
     }
   }
+
 }

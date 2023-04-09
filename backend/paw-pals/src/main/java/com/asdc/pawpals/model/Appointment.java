@@ -1,15 +1,9 @@
 /**
-
-This class represents an appointment for an animal with a veterinarian.
-*/
+ * This class represents an appointment for an animal with a veterinarian.
+ */
 package com.asdc.pawpals.model;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,43 +14,43 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Appointment {
 
-/**
- * The unique identifier for the appointment.
- */
-@Id
-@GeneratedValue(strategy = GenerationType.SEQUENCE)
-private Integer id;
+    /**
+     * The unique identifier for the appointment.
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
 
-/**
- * The date of the appointment.
- */
-private String date;
+    /**
+     * The date of the appointment.
+     */
+    private String date;
 
-/**
- * The start time of the appointment.
- */
-private String startTime;
+    /**
+     * The start time of the appointment.
+     */
+    private String startTime;
 
-/**
- * The end time of the appointment.
- */
-private String endTime;
+    /**
+     * The end time of the appointment.
+     */
+    private String endTime;
 
-/**
- * The status of the appointment. Can be "PENDING", "CONFIRMED", or "REJECTED".
- */
-@Column
-private String status="PENDING";
+    /**
+     * The status of the appointment. Can be "PENDING", "CONFIRMED", or "REJECTED".
+     */
+    @Column
+    private String status = "PENDING";
 
-/**
- * The animal associated with the appointment.
- */
-@ManyToOne(cascade = CascadeType.PERSIST)
-Animal animal;
+    /**
+     * The animal associated with the appointment.
+     */
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    Animal animal;
 
-/**
- * The veterinarian associated with the appointment.
- */
-@ManyToOne(cascade = CascadeType.PERSIST)
-Vet vet;
+    /**
+     * The veterinarian associated with the appointment.
+     */
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    Vet vet;
 }

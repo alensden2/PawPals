@@ -1,5 +1,18 @@
 package com.asdc.pawpals.service.implementation;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetAppointmentsDto;
 import com.asdc.pawpals.dto.PetMedicalHistoryDto;
@@ -19,92 +32,96 @@ import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.PetOwnerService;
 import com.asdc.pawpals.utils.CommonUtils;
+import com.asdc.pawpals.utils.MailTemplates;
 import com.asdc.pawpals.utils.Transformations;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Lazy
 public class PetOwnerImpl implements PetOwnerService {
-  Logger logger = LogManager.getLogger(PetOwnerImpl.class);
+    Logger logger = LogManager.getLogger(PetOwnerImpl.class);
 
-  @Autowired
-  PetOwnerRepository petOwnerRepository;
+    @Autowired
+    PetOwnerRepository petOwnerRepository;
 
-  @Autowired
-  UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
 
-  @Autowired
-  AnimalRepository animalRepository;
+    @Autowired
+    AnimalRepository animalRepository;
 
-  @Autowired
-  AppointmentRepository appointmentRepository;
+    @Autowired
+    AppointmentRepository appointmentRepository;
 
-  @Autowired
-  VetRepository vetRepository;
+    @Autowired
+    VetRepository vetRepository;
 
-  /**
+    @Autowired
+    MailServiceImpl mailService;
 
-     *   Registers a new pet owner with the given details.
-     *   @param petOwnerDto the PetOwnerDto object containing the details of the pet owner to be registered
-     *   @return a PetOwnerDto object representing the registered pet owner
-     *   @throws UserNameNotFound if the username provided in the PetOwnerDto does not exist in the user repository
-     *   @throws InvalidUserDetails if the details provided in the PetOwnerDto are invalid
-     *   @throws UserAlreadyExist if a pet owner with the provided username already exists in the pet owner repository
-*/
-  @Override
-  public PetOwnerDto registerPetOwner(PetOwnerDto petOwnerDto)
-    throws UserNameNotFound, InvalidUserDetails, UserAlreadyExist {
-    logger.debug("Register pet Owner", petOwnerDto);
-    boolean isPetOwnerDtoNotNull = null != petOwnerDto;
-    boolean isPetOwnerDtoUsernameNotNull = null != petOwnerDto.getUsername();
-    boolean isPetOwnerDtoPhotoUrlNotNull = null != petOwnerDto.getPhotoUrl();
-    boolean isPetOwnerDtoPhoneNoNotNull = null != petOwnerDto.getPhoneNo();
-    boolean isPetOwnerDtoAddressNotNull = null != petOwnerDto.getAddress();
-    /*
- * old code - 
- * if (
-      null != petOwnerDto &&
-      null != petOwnerDto.getUsername() &&
-      null != petOwnerDto.getPhotoUrl() &&
-      null != petOwnerDto.getPhoneNo() &&
-      null != petOwnerDto.getAddress()
-    ) 
- */
-    if (
-      isPetOwnerDtoNotNull &&
-      isPetOwnerDtoUsernameNotNull &&
-      isPetOwnerDtoPhotoUrlNotNull &&
-      isPetOwnerDtoPhoneNoNotNull &&
-      isPetOwnerDtoAddressNotNull
-    ) {
-      User user = userRepository
-        .findById(petOwnerDto.getUsername())
-        .orElseThrow(UserNameNotFound::new);
+    @Value("${pawpals.serve.base.url}")
+    String serveUrl;
 
-      if (petOwnerRepository.existsByUser_UserId(petOwnerDto.getUsername())) {
-        throw new UserAlreadyExist("Pet Owner Already Exist");
-      }
+    /**
+     * Registers a new pet owner with the given details.
+     *
+     * @param petOwnerDto the PetOwnerDto object containing the details of the pet owner to be registered
+     * @return a PetOwnerDto object representing the registered pet owner
+     * @throws UserNameNotFound   if the username provided in the PetOwnerDto does not exist in the user repository
+     * @throws InvalidUserDetails if the details provided in the PetOwnerDto are invalid
+     * @throws UserAlreadyExist   if a pet owner with the provided username already exists in the pet owner repository
+     */
+    @Override
+    public PetOwnerDto registerPetOwner(PetOwnerDto petOwnerDto)
+      throws UserNameNotFound, InvalidUserDetails, UserAlreadyExist {
+        logger.debug("Register pet Owner", petOwnerDto);
+        boolean isPetOwnerDtoNotNull = null != petOwnerDto;
+        boolean isPetOwnerDtoUsernameNotNull = null != petOwnerDto.getUsername();
+        boolean isPetOwnerDtoPhotoUrlNotNull = null != petOwnerDto.getPhotoUrl();
+        boolean isPetOwnerDtoPhoneNoNotNull = null != petOwnerDto.getPhoneNo();
+        boolean isPetOwnerDtoAddressNotNull = null != petOwnerDto.getAddress();
+        /*
+                * old code - 
+                * if (
+                        null != petOwnerDto &&
+                        null != petOwnerDto.getUsername() &&
+                        null != petOwnerDto.getPhotoUrl() &&
+                        null != petOwnerDto.getPhoneNo() &&
+                        null != petOwnerDto.getAddress()
+                ) 
+                */
+                if (
+                        isPetOwnerDtoNotNull &&
+                        isPetOwnerDtoUsernameNotNull &&
+                        isPetOwnerDtoPhotoUrlNotNull &&
+                        isPetOwnerDtoPhoneNoNotNull &&
+                        isPetOwnerDtoAddressNotNull
+                ) {
+                        Optional<User> oUser = userRepository
+                        .findById(petOwnerDto.getUsername());
 
-      PetOwner petOwner = Transformations.DTO_TO_MODEL_CONVERTER.petOwner(
-        petOwnerDto
-      );
-      petOwner.setUser(user);
-      petOwner = petOwnerRepository.save(petOwner);
-      return Transformations.MODEL_TO_DTO_CONVERTER.petOwner(petOwner);
-    } else {
-      throw new InvalidUserDetails("incorrect pet owner data");
-    }
-  }
+                        User user = oUser.isPresent() ? oUser.get() : null;
+                                
+                        if (petOwnerRepository.existsByUser_UserId(petOwnerDto.getUsername())) {
+                                throw new UserAlreadyExist("Pet Owner Already Exist");
+                        }
 
-  /**
+                        PetOwner petOwner = Transformations.DTO_TO_MODEL_CONVERTER.petOwner(
+                                petOwnerDto
+                        );
+                        petOwner.setUser(user);
+                        petOwner = petOwnerRepository.save(petOwner);
+
+                        String subject = "Profile created @ PawPals";
+                        String body = MailTemplates.getPetOwnerRegistrationSuccessfulString(petOwnerDto.getFirstName() + " " + petOwnerDto.getLastName(), serveUrl);
+                        String to = user.getEmail();
+                        mailService.sendMail(to, subject, body);
+                        return Transformations.MODEL_TO_DTO_CONVERTER.petOwner(petOwner);
+                } else {
+                  throw new InvalidUserDetails("incorrect pet owner data");
+                }
+        }
+
+          /**
 
       *  Retrieves all the pets of the given pet owner ID
       *  @param ownerId the ID of the pet owner whose pets need to be retrieved
@@ -234,103 +251,103 @@ public class PetOwnerImpl implements PetOwnerService {
       .orElseThrow(UserNameNotFound::new);
 
     if (petOwner.getAnimals().isEmpty()) {
-      throw new NoPetRegisterUnderPetOwner(
-        "No Pet Registered for Owner " +
-        petOwner.getFirstName() +
-        " " +
-        petOwner.getLastName()
-      );
+            throw new NoPetRegisterUnderPetOwner(
+                    "No Pet Registered for Owner " +
+                            petOwner.getFirstName() +
+                            " " +
+                            petOwner.getLastName()
+            );
+        }
+
+        List<PetAppointmentsDto> petAppointmentsDtos = petOwner
+                .getAnimals()
+                .stream()
+                .flatMap(
+                        animal ->
+                                animal
+                                        .getAppointment()
+                                        .stream()
+                                        .map(
+                                                appointment -> {
+                                                    PetAppointmentsDto petAppointmentsDto = new PetAppointmentsDto();
+                                                    petAppointmentsDto.setAppointmentDto(
+                                                            Transformations.MODEL_TO_DTO_CONVERTER.appointment(
+                                                                    appointment
+                                                            )
+                                                    );
+                                                    petAppointmentsDto.setVetDto(
+                                                            Transformations.MODEL_TO_DTO_CONVERTER.vet(
+                                                                    appointment.getVet()
+                                                            )
+                                                    );
+                                                    petAppointmentsDto.setAnimalDto(
+                                                            Transformations.MODEL_TO_DTO_CONVERTER.animal(animal)
+                                                    );
+                                                    return petAppointmentsDto;
+                                                }
+                                        )
+                )
+                .collect(Collectors.toList());
+
+        return petAppointmentsDtos;
     }
 
-    List<PetAppointmentsDto> petAppointmentsDtos = petOwner
-      .getAnimals()
-      .stream()
-      .flatMap(
-        animal ->
-          animal
-            .getAppointment()
-            .stream()
-            .map(
-              appointment -> {
-                PetAppointmentsDto petAppointmentsDto = new PetAppointmentsDto();
-                petAppointmentsDto.setAppointmentDto(
-                  Transformations.MODEL_TO_DTO_CONVERTER.appointment(
-                    appointment
-                  )
-                );
-                petAppointmentsDto.setVetDto(
-                  Transformations.MODEL_TO_DTO_CONVERTER.vet(
-                    appointment.getVet()
-                  )
-                );
-                petAppointmentsDto.setAnimalDto(
-                  Transformations.MODEL_TO_DTO_CONVERTER.animal(animal)
-                );
-                return petAppointmentsDto;
-              }
-            )
-      )
-      .collect(Collectors.toList());
+    /**
+     * Retrieve all pets medical history for a given pet owner.
+     *
+     * @param ownerId The ID of the pet owner.
+     * @return List of PetMedicalHistoryDto representing the pets' medical history.
+     * @throws UserNameNotFound           If no user found with the given ID.
+     * @throws NoPetRegisterUnderPetOwner If the pet owner has no registered pets.
+     */
+    @Override
+    public List<PetMedicalHistoryDto> retrievePetsMedicalHistory(String ownerId)
+            throws UserNameNotFound, NoPetRegisterUnderPetOwner {
+        logger.debug("Get All Pets Medical Records By owner Id", ownerId);
 
-    return petAppointmentsDtos;
-  }
+        PetOwner petOwner = petOwnerRepository
+                .findByUser_UserId(ownerId)
+                .orElseThrow(UserNameNotFound::new);
 
-  /**
+        if (petOwner.getAnimals().isEmpty()) {
+            throw new NoPetRegisterUnderPetOwner(
+                    "No Pet Registered for Owner " +
+                            petOwner.getFirstName() +
+                            " " +
+                            petOwner.getLastName()
+            );
+        }
 
-   * Retrieve all pets medical history for a given pet owner.
-   * @param ownerId The ID of the pet owner.
-   * @return List of PetMedicalHistoryDto representing the pets' medical history.
-   * @throws UserNameNotFound If no user found with the given ID.
-   * @throws NoPetRegisterUnderPetOwner If the pet owner has no registered pets.
-*/
-  @Override
-  public List<PetMedicalHistoryDto> retrievePetsMedicalHistory(String ownerId)
-    throws UserNameNotFound, NoPetRegisterUnderPetOwner {
-    logger.debug("Get All Pets Medical Records By owner Id", ownerId);
+        List<PetMedicalHistoryDto> petMedicalHistoryDtos = petOwner
+                .getAnimals()
+                .stream()
+                .flatMap(
+                        animal ->
+                                animal
+                                        .getMedicalHistories()
+                                        .stream()
+                                        .map(
+                                                medicalHistory -> {
+                                                    PetMedicalHistoryDto petMedicalHistoryDto = new PetMedicalHistoryDto();
+                                                    petMedicalHistoryDto.setMedicalHistoryDto(
+                                                            Transformations.MODEL_TO_DTO_CONVERTER.medicalHistory(
+                                                                    medicalHistory
+                                                            )
+                                                    );
+                                                    petMedicalHistoryDto.setVetDto(
+                                                            Transformations.MODEL_TO_DTO_CONVERTER.vet(
+                                                                    medicalHistory.getVet()
+                                                            )
+                                                    );
+                                                    petMedicalHistoryDto.setAnimalDto(
+                                                            Transformations.MODEL_TO_DTO_CONVERTER.animal(animal)
+                                                    );
+                                                    return petMedicalHistoryDto;
+                                                }
+                                        )
+                )
+                .collect(Collectors.toList());
 
-    PetOwner petOwner = petOwnerRepository
-      .findByUser_UserId(ownerId)
-      .orElseThrow(UserNameNotFound::new);
-
-    if (petOwner.getAnimals().isEmpty()) {
-      throw new NoPetRegisterUnderPetOwner(
-        "No Pet Registered for Owner " +
-        petOwner.getFirstName() +
-        " " +
-        petOwner.getLastName()
-      );
+        return petMedicalHistoryDtos;
     }
-
-    List<PetMedicalHistoryDto> petMedicalHistoryDtos = petOwner
-      .getAnimals()
-      .stream()
-      .flatMap(
-        animal ->
-          animal
-            .getMedicalHistories()
-            .stream()
-            .map(
-              medicalHistory -> {
-                PetMedicalHistoryDto petMedicalHistoryDto = new PetMedicalHistoryDto();
-                petMedicalHistoryDto.setMedicalHistoryDto(
-                  Transformations.MODEL_TO_DTO_CONVERTER.medicalHistory(
-                    medicalHistory
-                  )
-                );
-                petMedicalHistoryDto.setVetDto(
-                  Transformations.MODEL_TO_DTO_CONVERTER.vet(
-                    medicalHistory.getVet()
-                  )
-                );
-                petMedicalHistoryDto.setAnimalDto(
-                  Transformations.MODEL_TO_DTO_CONVERTER.animal(animal)
-                );
-                return petMedicalHistoryDto;
-              }
-            )
-      )
-      .collect(Collectors.toList());
-
-    return petMedicalHistoryDtos;
-  }
 }

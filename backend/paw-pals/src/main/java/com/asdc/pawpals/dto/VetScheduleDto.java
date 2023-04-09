@@ -1,12 +1,11 @@
 package com.asdc.pawpals.dto;
 
-import java.util.List;
-
-import org.springframework.data.util.Pair;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.util.Pair;
+
+import java.util.List;
 
 @Getter
 @Setter

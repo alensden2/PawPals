@@ -19,7 +19,8 @@ import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -49,7 +50,7 @@ public class MedicalRecordControllerTest {
     }
 
     @Test
-    public void testGetMedicalHistory() throws  UserNameNotFound, InvalidAnimalId {
+    public void testGetMedicalHistory() throws UserNameNotFound, InvalidAnimalId {
         // Arrange
         Long animalId = 1l;
         List<MedicalHistoryDto> medicalRecords = new ArrayList<>();

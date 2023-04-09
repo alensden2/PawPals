@@ -1,5 +1,8 @@
 package com.asdc.pawpals.utils;
 
+/**
+ * This class serves as a utility class to hold constants used throughout the application.
+ */
 public class Constants {
 
     private Constants() {

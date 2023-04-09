@@ -5,11 +5,11 @@ public enum AppointmentStatus {
 
     private String label;
 
-    private AppointmentStatus(String label){
+    private AppointmentStatus(String label) {
         this.label = label;
     }
 
-    public String getLabel(){
+    public String getLabel() {
         return this.label;
     }
 }

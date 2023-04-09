@@ -13,10 +13,6 @@ import com.asdc.pawpals.utils.ApiResponse;
 import com.asdc.pawpals.utils.CommonUtils;
 import com.asdc.pawpals.utils.ObjectMapperWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import java.io.IOException;
-import java.io.InvalidObjectException;
-import java.util.List;
-import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +23,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@RestController
+import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * This class is a RestController responsible for handling requests related to Vet entity.
+ * <p>
+ * It maps the incoming HTTP requests to appropriate methods of VetService to perform the required operations.
+ * <p>
+ * The base path for the requests handled by this controller is "/auth/vet".
+ */
+@RestController()
 @RequestMapping("/auth/vet")
 public class VetController {
   private static final Logger logger = LogManager.getLogger(

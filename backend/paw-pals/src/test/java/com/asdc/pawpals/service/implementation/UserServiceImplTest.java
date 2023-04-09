@@ -80,7 +80,7 @@ public class UserServiceImplTest {
         User user = Transformations.DTO_TO_MODEL_CONVERTER.user(userDto);
         when(userRepositoryMock.existsById(anyString())).thenReturn(false);
         when(userRepositoryMock.save(any(User.class))).thenReturn(user);
-        doNothing().when(mailServiceMock).sendMail(anyString(),anyString(),anyString());
+        doNothing().when(mailServiceMock).sendMail(anyString(), anyString(), anyString());
 
 
         // Act
@@ -108,7 +108,7 @@ public class UserServiceImplTest {
         InvalidUserDetails exception = assertThrows(InvalidUserDetails.class, () -> userServiceImpl.registerUser(userDto));
 
         //Assert
-        Assertions.assertEquals("incorrect user data "+ userDto, exception.getMessage());
+        Assertions.assertEquals("incorrect user data " + userDto, exception.getMessage());
 
     }
 }

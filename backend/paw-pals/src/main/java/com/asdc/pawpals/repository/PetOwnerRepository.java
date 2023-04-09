@@ -2,7 +2,6 @@ package com.asdc.pawpals.repository;
 
 import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.PetOwner;
-
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

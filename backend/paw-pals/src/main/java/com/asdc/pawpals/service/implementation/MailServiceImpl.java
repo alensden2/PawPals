@@ -1,17 +1,15 @@
 package com.asdc.pawpals.service.implementation;
 
-import java.util.Arrays;
-
+import com.asdc.pawpals.service.MailService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import com.asdc.pawpals.service.MailService;
-
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
+import java.util.Arrays;
 
 @Service
 public class MailServiceImpl implements MailService {
@@ -27,14 +25,15 @@ public class MailServiceImpl implements MailService {
 
     /**
      * Send an email to the specified recipient with the given subject and body
-     * @param to the recipient's email address
+     *
+     * @param to      the recipient's email address
      * @param subject the subject of the email
-     * @param body the body of the email
+     * @param body    the body of the email
      */
     @Override
     public void sendMail(String to, String subject, String body) {
         // Create a new MimeMessage object and set its properties
-        MimeMessage mimeMessage = this.mailSender.createMimeMessage();;
+        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MailServiceImpl.ENCODING_TYPE);
         try {
             helper.setTo(to);
