@@ -91,10 +91,6 @@ public class SecurityConfig {
 
     @Autowired
     UserDetailsService userDetailsService;
-// @Bean
-// //authentication
-// public UserDetailsService userDetailsService() {
-// return new UserDetailServiceImpl();
-// }
+
 
 }

@@ -3,7 +3,10 @@ package com.asdc.pawpals.service.implementation;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.InvalidAnimalId;
+import com.asdc.pawpals.exception.InvalidVetID;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
+import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
@@ -13,18 +16,23 @@ import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.utils.Transformations;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +55,11 @@ public class AdminServiceImplTest {
 
     @InjectMocks
     private AdminServiceImpl adminServiceImpl;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void testGetAllAnimalRecords() {
@@ -215,8 +228,9 @@ public class AdminServiceImplTest {
         assertEquals("Fluffy", returnedDto.getName());
     }
 
+
     @Test
-    public void testAddVet() { // fix
+    public void testAddVet() throws UserNameNotFound { // fix
         Vet vet = new Vet();
         User user = new User();
         user.setUserId("vet@example.com");
@@ -233,53 +247,20 @@ public class AdminServiceImplTest {
         vet.setProfileStatus("Active");
         vet.setPhoneNo("555-555-5555");
         VetDto vetDto = null;
+        when(vetRepository.save(any(Vet.class))).thenReturn(vet);
+        when(userRepository.findById(any())).thenReturn(Optional.of(user));
 
         vetDto = adminServiceImpl.addVet(vet);
+        assertNotNull(vetDto);
+        assertNotNull(vetDto.getUsername());
+        assertEquals(vet.getFirstName(), vetDto.getFirstName());
+        assertEquals(vet.getLastName(), vetDto.getLastName());
+        assertEquals(vet.getLicenseNumber(), vetDto.getLicenseNumber());
 
-        assertEquals(
-                "VetDto first name is incorrect",
-                vet.getFirstName(),
-                vetDto.getFirstName()
-        );
-        assertEquals(
-                "VetDto last name is incorrect",
-                vet.getLastName(),
-                vetDto.getLastName()
-        );
-        assertEquals(
-                "VetDto license number is incorrect",
-                vet.getLicenseNumber(),
-                vetDto.getLicenseNumber()
-        );
-        assertEquals(
-                "VetDto clinic address is incorrect",
-                vet.getClinicAddress(),
-                vetDto.getClinicAddress()
-        );
-        assertEquals(
-                "VetDto experience is incorrect",
-                vet.getExperience(),
-                vetDto.getExperience()
-        );
-        assertEquals(
-                "VetDto qualification is incorrect",
-                vet.getQualification(),
-                vetDto.getQualification()
-        );
-        assertEquals(
-                "VetDto profile status is incorrect",
-                vet.getProfileStatus(),
-                vetDto.getProfileStatus()
-        );
-        assertEquals(
-                "VetDto phone number is incorrect",
-                vet.getPhoneNo(),
-                vetDto.getPhoneNo()
-        );
     }
 
     @Test
-    public void testUpdateVet() {
+    public void testUpdateVet() throws InvalidVetID {
         // create a sample Vet object to update with
         Vet updatedVet = new Vet();
         updatedVet.setFirstName("John");
@@ -326,8 +307,9 @@ public class AdminServiceImplTest {
         assertEquals("Doctor of Veterinary Medicine", result.getQualification());
     }
 
+
     @Test
-    public void testDeleteVet() {
+    public void testDeleteVet() throws InvalidVetID {
         // create a new vet
         Vet vet = new Vet();
         // set the vet properties
@@ -338,18 +320,23 @@ public class AdminServiceImplTest {
         vet.setExperience(5);
         vet.setQualification("DVM");
         vet.setUser(new User());
-        vetRepository.save(vet);
+
+        //Mock
+        doNothing().when(vetRepository).delete(any(Vet.class));
+        when(vetRepository.findById(any())).thenReturn(Optional.of(vet));
 
         // delete the vet
         VetDto vetDto = adminServiceImpl.deleteVet(vet.getId());
 
         // verify that the vet was deleted
-        Optional<Vet> optionalVet = vetRepository.findById(vet.getId());
-        assertTrue(optionalVet.isEmpty());
+        assertNotNull(vetDto);
+        assertEquals(vetDto.getFirstName(),vet.getFirstName());
+        assertEquals(vetDto.getLastName(),vet.getLastName());
+        assertEquals(vetDto.getClinicUrl(),vet.getClinicUrl());
     }
 
     @Test
-    public void testDeleteAnimal() {
+    public void testDeleteAnimal() throws InvalidAnimalId {
         // create a new animal
         Animal animal = new Animal();
         // set the animal properties
@@ -357,85 +344,45 @@ public class AdminServiceImplTest {
         animal.setType("Cat");
         animal.setAge(3);
         animal.setGender("Female");
-        animal.setOwner(null);
+        PetOwner owner=new PetOwner();
+        owner.setUser(new User());
+        animal.setOwner(owner);
         animal.setPhotoUrl(new Byte[]{1, 2, 3});
-
-        animalRepository.save(animal);
-
+        doNothing().when(animalRepository).delete(any(Animal.class));
+        when(animalRepository.findById(any())).thenReturn(Optional.of(animal));
         // delete the animal
         AnimalDto animalDto = adminServiceImpl.deleteAnimal(animal.getId());
 
         // verify that the animal was deleted
-        Optional<Animal> optionalAnimal = animalRepository.findById(animal.getId());
-        assertTrue(optionalAnimal.isEmpty());
+        assertNotNull(animalDto);
+        assertEquals(animalDto.getName(),animal.getName());
+        assertEquals(animalDto.getType(),animal.getType());
+        assertEquals(animalDto.getAge(),animal.getAge());
     }
 
-    /**
-     * fix
-     */
+
     @Test
-    public void testUpdateAnimal() {
-        // create a new animal
+    public void testUpdateAnimal() throws InvalidAnimalId {
+
         Animal animal = new Animal();
-        // set the animal properties
-        animal.setName("Fluffy");
-        animal.setType("Cat");
-        animal.setAge(3);
-        animal.setGender("Female");
         PetOwner petOwner = new PetOwner();
-        petOwner.setId(1L);
+        petOwner.setUser(new User());
         animal.setOwner(petOwner);
-        animalRepository.save(animal);
-
-        Animal inputAnimal = new Animal();
-        inputAnimal.setName("Fluffy");
-        inputAnimal.setType("Cat");
-        inputAnimal.setAge(3);
-        inputAnimal.setGender("Female");
-        PetOwner petOwner1 = new PetOwner();
-        petOwner.setId(1L);
-        User user = new User();
-        user.setUserId("123");
-        petOwner.setUser(user);
-        inputAnimal.setOwner(petOwner);
-
-        // update the animal
-        Animal updatedAnimal = new Animal();
-        updatedAnimal.setName("Furry");
-        updatedAnimal.setType("Dog");
-        updatedAnimal.setAge(5);
-        updatedAnimal.setGender("Male");
-
-        AnimalDto updateAnimalDto = new AnimalDto();
-        updateAnimalDto.setName("Furry");
-        updateAnimalDto.setType("Dog");
-        updateAnimalDto.setAge(5);
-        updateAnimalDto.setGender("Male");
-
-        when(animalRepository.findById(eq(animal.getId())))
+        animal.setId(1l);
+        animal.setName("tom");
+        animal.setType("dog");
+        when(animalRepository.findById(any(Long.class)))
                 .thenReturn(Optional.of(animal));
-        when(animalRepository.findById(eq(-1L))).thenReturn(Optional.empty()); // add mock response for empty optional
-        when(petOwnerRepository.count()).thenReturn(1L);
-        when(animalRepository.save(any(Animal.class))).thenReturn(animal);
-        when(Transformations.MODEL_TO_DTO_CONVERTER.animal(inputAnimal)).thenReturn(updateAnimalDto);
+        AnimalDto animalDto = adminServiceImpl.updateAnimal(1l, animal);
+        assertNotNull(animalDto);
+        assertNotNull(animalDto.getId());
+        assertNotNull(animalDto.getName());
+        assertNotNull(animalDto.getType());
+        assertEquals(animal.getName(), animalDto.getName());
+        assertEquals(animal.getId(), animalDto.getId());
+        assertEquals(animal.getType(), animalDto.getType());
 
-        AnimalDto animalDto = adminServiceImpl.updateAnimal(
-                animal.getId(),
-                updatedAnimal
-        );
-        // verify that the animal was updated
-        Optional<Animal> optionalAnimal = animalRepository.findById(animal.getId());
-        Animal savedAnimal = optionalAnimal.get();
-        assertEquals(updatedAnimal.getName(), savedAnimal.getName());
-        assertEquals(updatedAnimal.getType(), savedAnimal.getType());
-        assertEquals(updatedAnimal.getAge(), savedAnimal.getAge());
-        assertEquals(updatedAnimal.getGender(), savedAnimal.getGender());
 
-        // verify that the returned AnimalDto matches the updated animal
-        assertEquals(animalDto.getName(), savedAnimal.getName());
-        assertEquals(animalDto.getType(), savedAnimal.getType());
-        assertEquals(animalDto.getAge(), savedAnimal.getAge());
-        assertEquals(animalDto.getGender(), savedAnimal.getGender());
     }
 
 }

@@ -32,6 +32,7 @@ public class AppointmentValidators {
     }
 
     public static boolean isValidStatus(String statusStr) {
+
         return Arrays.asList(Constants.STATUS).contains(statusStr.toUpperCase());
     }
 
