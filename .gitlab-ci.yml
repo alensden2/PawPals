@@ -44,11 +44,10 @@ build-backend:
   #   - dev
   script:
     - cd backend/paw-pals/
-    - mvn clean package
+    - mvn clean compile
   artifacts:
     paths:
       - $CI_PROJECT_DIR/backend/paw-pals/target/*.war
-  when: manual
   tags:
     - group12
 
@@ -94,9 +93,11 @@ deploy-backend:
     - chmod og-rwx $SSH_PRIVATE_KEY
   script:
     - echo "Deploying backend..."
+    - cd backend/paw-pals/
+    - mvn clean package
     - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "sudo docker stop pawpals || true"
     - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "sudo docker rm pawpals || true"
-    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} Artifacts/paw-pals-0.0.1-SNAPSHOT.war ${SSH_USER}@${SSH_HOSTNAME}:/home/$SSH_USER/Pawpals/Pawpals.war
+    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} target/*.war ${SSH_USER}@${SSH_HOSTNAME}:/home/$SSH_USER/Pawpals/Pawpals.war
     - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "cd /home/$SSH_USER/Pawpals/ && sudo docker build -t pawpals:latest -f dockerfile ."
     - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "sudo docker run -d --name pawpals -p 8080:8080 pawpals"
   when: manual
