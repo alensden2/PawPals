@@ -82,7 +82,7 @@ build-frontend:
     - cd frontend  # Change to the 'frontend' directory
     - npm install  # Install the required dependencies
     - npm run build  # Build the frontend code
-    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} dist/ ${SSH_USER}@${SSH_HOSTNAME}:/var/www/html/
+    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} dist/* ${SSH_USER}@${SSH_HOSTNAME}:/var/www/html/
   when: manual
   tags:
     - ugrad
