@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     position: 'absolute',
-    width: "40vw",
+    width: '40vw',
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -31,11 +31,11 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginLeft: theme.spacing(1)
   },
-  label:{
-    "margin-top":"0.5em",
-    "font-weight": "400",
-    "font-size": "1rem",
-    "line-height": "1.4375em"
+  label: {
+    'margin-top': '0.5em',
+    'font-weight': '400',
+    'font-size': '1rem',
+    'line-height': '1.4375em'
   }
 }));
 

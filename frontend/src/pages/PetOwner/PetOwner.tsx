@@ -10,7 +10,7 @@ const PetOwner: React.FC = () => {
     const user = localStorageUtil.getItem('user');
 
     const roles = ['PET_OWNER', 'ROLE_PET_OWNER'];
-    if (roles.includes(user.role)) {
+    if (roles.includes(user?.role)) {
       navigate('home');
     } else {
       navigate('/', { replace: true });

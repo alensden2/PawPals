@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 
 import React from 'react';
@@ -16,18 +15,19 @@ const VetCardList = ({
   return (
     <Grid container spacing={2} className={classes.main}>
       {vets.map((vetData, idx) => {
-      vetData = {...vetData, handleBookClick};
-      return (
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          key={vetData.userName} // set a unique key to each grid item
-          className={classes.petCardContainer}
-        >
-          <VetCard key={idx} {...vetData} />
-        </Grid>
-      )})}
+        vetData = { ...vetData, handleBookClick };
+        return (
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            key={vetData.userName} // set a unique key to each grid item
+            className={classes.petCardContainer}
+          >
+            <VetCard key={idx} {...vetData} />
+          </Grid>
+        );
+      })}
     </Grid>
   );
 };

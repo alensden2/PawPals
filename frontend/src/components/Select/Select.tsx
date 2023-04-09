@@ -45,7 +45,9 @@ const CustomSelect: React.FC<CustomSelectProps> = (props) => {
         id={props.id || 'select-' + Math.random() * 1000}
         value={props.value}
         onChange={(e, c) => {
-          setSelectedOptions(e.target.value instanceof Array ? e.target.value : [e.target.value]);
+          setSelectedOptions(
+            e.target.value instanceof Array ? e.target.value : [e.target.value]
+          );
           if (props.onChange) {
             return props.onChange(e, c);
           }
