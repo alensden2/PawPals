@@ -1,5 +1,8 @@
 import axios, { AxiosResponse, AxiosInstance } from 'axios';
 import { localStorageUtil } from '@src/utils';
+
+declare const SERVICE_BASE_URL: string;
+
 class API {
   private apiClient: AxiosInstance;
 
