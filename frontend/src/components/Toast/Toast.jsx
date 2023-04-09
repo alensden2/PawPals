@@ -2,13 +2,9 @@ import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 
 import React, { useState, useEffect } from 'react';
-import { ToastInput } from '@src/interfaces';
 
-interface Props {
-  toast: ToastInput;
-}
-
-function ToastComponent(props: Props) {
+// @ts-ignore
+function ToastComponent(props) {
   const { type, message } = props.toast;
   const [open, setOpen] = useState(false);
 

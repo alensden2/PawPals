@@ -4,10 +4,8 @@ import SignIn from './SignIn';
 import Root from './Root';
 import PetOwner from './PetOwner';
 import PetOwnerHome from './PetOwnerHome';
-import PetOwnerRegistration from './PetOwnerRegistration';
 import Vet from './Vet';
 import VetHome from './VetHome';
-import VetRegistration from './VetRegistration';
 import Admin from './Admin';
 import AdminHome from './AdminHome';
 import PetHealthAndDiseaseInfo from './PetHealthAndDiseaseInfo';
@@ -28,10 +26,8 @@ export {
   Root,
   PetOwner,
   PetOwnerHome,
-  PetOwnerRegistration,
   Vet,
   VetHome,
-  VetRegistration,
   Admin,
   AdminHome,
   PetHealthAndDiseaseInfo,
