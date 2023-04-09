@@ -49,9 +49,19 @@ export const getAllAppointmentsOfVet = async () => {
           ? getImageUrlFromBytes({ bytes: item.petOwner.photoUrl })
           : ''
       },
-      medicalRecord: {
-        ...item.medicalHistoryDtos
-      }
+      medicalRecord: [
+        ...(item?.medicalHistoryDtos || []).map((item) => {
+          return {
+            ...item,
+            vet: {
+              ...item.vet,
+              clinicUrl: item?.vet?.clinicUrl
+                ? getImageUrlFromBytes({ bytes: item?.vet?.clinicUrl })
+                : null
+            }
+          };
+        })
+      ]
     };
   });
 };

@@ -22,6 +22,7 @@ import {
   AdminManageVets,
   AdminAllPetOwners,
   AdminAllVets,
+  PetOwnerAppointments,
   PetOwnerManagePets
 } from '@src/pages';
 
@@ -37,8 +38,8 @@ const RoutesComp = () => {
           <Route path="contact-us" element={<ContactUs />} />
           <Route path="pet-owner" element={<PetOwner />}>
             <Route path="home" element={<PetOwnerHome />} />
-            <Route path="registration" element={<PetOwnerRegistration />} />
             <Route path="manage-pets" element={<PetOwnerManagePets />} />
+            <Route path="my-appointments" element={<PetOwnerAppointments />} />
             <Route path="medical-record" element={<PetMedicalRecord />} />
             <Route path="all-vets" element={<PetOwnerAllVets />} />
             <Route
@@ -52,7 +53,6 @@ const RoutesComp = () => {
           </Route>
           <Route path="vet" element={<Vet />}>
             <Route path="home" element={<VetHome />} />
-            <Route path="registration" element={<VetRegistration />} />
           </Route>
           <Route path="admin" element={<Admin />}>
             <Route path="home" element={<AdminHome />} />

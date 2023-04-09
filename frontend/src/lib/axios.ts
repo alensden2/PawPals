@@ -5,7 +5,7 @@ class API {
 
   constructor(contentType: string) {
     this.apiClient = axios.create({
-      baseURL: 'http://localhost:8080/',
+      baseURL: SERVICE_BASE_URL,
       headers: {
         Accept: 'application/json, text/plain', // Set the Accept header to accept JSON and plain text
         // Setting the Accept header to accept application/json and text/plain indicates to the server the types of responses that the client can accept in return.
@@ -30,6 +30,11 @@ class API {
     this.apiClient.interceptors.response.use(
       (response) => response,
       (error) => {
+        if (error?.code === 'ERR_NETWORK') {
+          localStorageUtil.clear();
+          window.location.href = '/';
+        }
+
         if ([400, 403, 406].includes(error.response?.status)) {
           // added response to errorReponse, otherwise axios was not giving response property for rejected promise
           // Issue reference: https://github.com/axios/axios/issues/960

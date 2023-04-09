@@ -1,14 +1,24 @@
 package com.asdc.pawpals.service.implementation;
 
-import com.asdc.pawpals.service.MailService;
-import org.springframework.mail.SimpleMailMessage;
+import java.util.Arrays;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import com.asdc.pawpals.service.MailService;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender mailSender;
+    private final static String ENCODING_TYPE = "utf-8";
+    Logger logger = LogManager.getLogger(MailServiceImpl.class);
 
     // Inject the JavaMailSender via constructor injection
     public MailServiceImpl(JavaMailSender mailSender) {
@@ -23,13 +33,18 @@ public class MailServiceImpl implements MailService {
      */
     @Override
     public void sendMail(String to, String subject, String body) {
-        // Create a new SimpleMailMessage object and set its properties
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(body);
+        // Create a new MimeMessage object and set its properties
+        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MailServiceImpl.ENCODING_TYPE);
+        try {
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(body, true);
+        } catch (MessagingException e) {
+            logger.info(Arrays.toString(e.getStackTrace()));
+        }
 
         // Use the mailSender object to send the message
-        mailSender.send(message);
+        mailSender.send(mimeMessage);
     }
 }

@@ -4,7 +4,8 @@
 import {
   registerPetOwnerApiCall,
   getAllMedicalHistoryOfPetApiCall,
-  getAllPetsApiCall
+  getAllPetsApiCall,
+  getAllPetOwnerAppointmentsApiCall
 } from './crud';
 import { getImageUrlFromBytes } from '@src/utils';
 
@@ -53,4 +54,23 @@ export const getAllPetsForUser = async (userName) => {
       ? getImageUrlFromBytes({ bytes: item.photoUrl })
       : ''
   }));
+};
+
+export const getAllPetOwnerAppointments = async () => {
+  const response = await getAllPetOwnerAppointmentsApiCall();
+
+  const body = response?.data?.body || [];
+
+  return body.map((item) => {
+    return {
+      vet: item.vetDto,
+      appointment: item.appointmentDto,
+      animal: {
+        ...item.animalDto,
+        photoUrl: item?.animalDto?.photoUrl
+          ? getImageUrlFromBytes({ bytes: item?.animalDto?.photoUrl })
+          : ''
+      }
+    };
+  });
 };

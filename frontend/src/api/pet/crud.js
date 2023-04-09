@@ -35,7 +35,6 @@ export const createPetApiCall = async ({ input = {} } = {}) => {
 
 export const updatePetApiCall = async ({ petId, input }) => {
   try {
-    const formData = new FormData();
     const user = localStorageUtil.getItem('user');
     const petOwnerId = user.userName;
 
@@ -47,16 +46,22 @@ export const updatePetApiCall = async ({ petId, input }) => {
       ownerId: petOwnerId
     };
 
-    formData.append(
-      'animal',
-      new Blob([JSON.stringify(animal)], { type: 'application/json' })
-    );
-
     if (input.photoUrl) {
-      formData.append('image', input.photoUrl);
-    }
+      const formData = new FormData();
 
-    return await axiosFORM.put(`/auth/animal/${petId}`, formData);
+      formData.append(
+        'animal',
+        new Blob([JSON.stringify(animal)], { type: 'application/json' })
+      );
+
+      if (input.photoUrl) {
+        formData.append('image', input.photoUrl);
+      }
+
+      return await axiosFORM.put(`/auth/animal/${petId}`, formData);
+    } else {
+      return await axiosJSON.put(`/auth/animal/animal-obj/${petId}`, animal);
+    }
   } catch (e) {
     console.error(e);
   }

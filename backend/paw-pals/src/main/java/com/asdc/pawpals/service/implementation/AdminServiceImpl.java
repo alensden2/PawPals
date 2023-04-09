@@ -40,7 +40,8 @@ public class AdminServiceImpl implements AdminService {
   PetOwnerRepository petOwnerRepository;
 
   /**
-   * fetches all the animal records
+   * Returns a list of AnimalDto objects that represent all animal records from the animal repository.
+   * @return A list of AnimalDto objects representing all animal records.
    */
   @Override
   public List<AnimalDto> getAllAnimalRecords() {
@@ -61,7 +62,9 @@ public class AdminServiceImpl implements AdminService {
   }
 
   /**
-   * fetches all the vet records
+   * Returns a list of all the VetDto objects from the database.
+   *
+   * @return A list of VetDto objects
    */
   public List<VetDto> getAllVetRecords() {
     List<Vet> vets = vetRepository.findAll();
@@ -81,7 +84,9 @@ public class AdminServiceImpl implements AdminService {
   }
 
   /**
-   * fetches all the vet records
+   * Returns a list of PetOwnerDto objects that represent all pet owner records from the pet owner repository.
+   *
+   * @return A list of PetOwnerDto objects representing all pet owner records.
    */
   @Override
   public List<PetOwnerDto> getAllPetOwnerRecords() {
@@ -102,8 +107,9 @@ public class AdminServiceImpl implements AdminService {
   }
 
   /**
-   * fetches all the user records
+   * Returns a list of UserDto objects that represent all user records from the user repository.
    *
+   * @return A list of UserDto objects representing all user records.
    */
   public List<UserDto> getAllUserRecords() {
     List<User> userRecords = userRepository.findAll();
@@ -122,6 +128,13 @@ public class AdminServiceImpl implements AdminService {
     return userRecordsDto;
   }
 
+  /**
+   * Adds a new animal record to the animal repository.
+   *
+   * @param animal The Animal object representing the new animal record to add.
+   * @return An AnimalDto object representing the newly added animal record.
+   * @throws PetOwnerAlreadyDoesNotExists If the pet owner associated with the new animal record does not exist in the user repository.
+   */
   @Override
   public AnimalDto addAnimal(Animal animal)
     throws PetOwnerAlreadyDoesNotExists {
@@ -151,6 +164,15 @@ public class AdminServiceImpl implements AdminService {
     return returnedDto;
   }
 
+  /**
+
+* Adds a new Vet to the database and returns the created VetDto object.
+* @param vet The Vet object to be added to the database
+* @return The created VetDto object
+* @throws PetOwnerAlreadyExistsException If the Vet's user already exists in the database
+* @throws UserNotFoundException If the Vet's user is not found in the database
+*/
+
   @Override
   public VetDto addVet(Vet vet) {
     VetDto vetDto = null;
@@ -173,6 +195,13 @@ public class AdminServiceImpl implements AdminService {
     return vetDto;
   }
 
+  /**
+   * Updates an existing Vet with the given id with the information from the updatedVet object.
+   *
+   * @param id The id of the Vet to update.
+   * @param updatedVet The updated Vet object containing the new information.
+   * @return The updated VetDto object.
+   */
   @Override
   public VetDto updateVet(Long id, Vet updatedVet) {
     VetDto vetDto = null;
@@ -195,6 +224,11 @@ public class AdminServiceImpl implements AdminService {
     return vetDto;
   }
 
+  /**
+   * Returns a list of all user records as UserDto objects.
+   *
+   * @return a list of all user records as UserDto objects
+   */
   @Override
   public VetDto deleteVet(Long id) {
     VetDto vetDto = null;
@@ -209,6 +243,13 @@ public class AdminServiceImpl implements AdminService {
     return vetDto;
   }
 
+  /**
+   * Deletes the animal with the specified ID.
+   *
+   * @param id the ID of the animal to delete
+   * @return the DTO representation of the deleted animal
+   * @throws EntityNotFoundException if the animal with the specified ID is not found
+   */
   @Override
   public AnimalDto deleteAnimal(Long id) {
     AnimalDto animalDto = null;
@@ -223,6 +264,14 @@ public class AdminServiceImpl implements AdminService {
     return animalDto;
   }
 
+  /**
+   * Updates the animal with the specified id with the provided information.
+   *
+   * @param id the id of the animal to update
+   * @param updatedAnimal the updated information for the animal
+   * @return the updated animal information as a DTO
+   * @throws EntityNotFoundException if the animal with the specified id is not found
+   */
   @Override
   public AnimalDto updateAnimal(Long id, Animal updatedAnimal) {
     AnimalDto animalDto = null;
