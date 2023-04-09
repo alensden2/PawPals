@@ -72,8 +72,8 @@ build-backend:
 # Job to build the frontend code
 build-frontend:
   stage: build
-  only:
-    - dev
+  # only:
+  #   - dev
   script:
     - echo "Building frontend..."
     - cd frontend  # Change to the 'frontend' directory
