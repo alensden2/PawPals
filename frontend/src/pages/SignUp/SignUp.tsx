@@ -42,10 +42,13 @@ import {
 import { ToastContext, HeaderContext } from '@src/context';
 
 // api
-import { registerUser } from '@src/api/auth';
 import { RegisterUserType } from '@src/api/type';
-import { registerVet, postAvailability } from '@src/api/vet';
-import { registerPetOwner } from '@src/api/petowner';
+import {
+  registerPetOwner,
+  registerUser,
+  registerVet,
+  postAvailability
+} from '@src/api';
 import { authenticateUser } from '@src/api';
 import { localStorageUtil } from '@src/utils';
 
