@@ -78,8 +78,8 @@ test-backend:
 # Job to deploy the backend code
 deploy-backend:
   stage: deploy
-  # only:#
-  #   - dev
+  only:
+    - prod
   before_script:
     - apt-get update && apt-get install -y openssh-client
     - chmod og-rwx $SSH_PRIVATE_KEY
@@ -98,6 +98,8 @@ deploy-backend:
 # # Job to deploy the frontend code
 deploy-frontend:
   stage: deploy
+  only:
+    - prod
   before_script:
     - apt-get update && apt-get install -y openssh-client
     - chmod og-rwx $SSH_PRIVATE_KEY
