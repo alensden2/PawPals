@@ -47,9 +47,23 @@ import { registerUser } from '@src/api/auth';
 import { RegisterUserType } from '@src/api/type';
 import { registerVet, postAvailability } from '@src/api/vet';
 import { registerPetOwner } from '@src/api/petowner';
+import { authenticateUser } from '@src/api';
+import { localStorageUtil } from '@src/utils';
 
 // hooks
 import { useNavigate } from '@src/hooks';
+
+const setUserInLocalStorage = ({
+  userName,
+  jwtToken,
+  role
+}: LocalStorageSetInput): void => {
+  localStorageUtil.setItem('user', {
+    userName,
+    jwtToken,
+    role
+  });
+};
 
 const SignUp: React.FC = () => {
   // styles
@@ -121,6 +135,20 @@ const SignUp: React.FC = () => {
       setToast({ type: 'error', message: response.errorMessage });
       setLoader(false);
     } else {
+      const response: AuthenticateUserType = await authenticateUser({
+        username: userName,
+        password
+      });
+      const uName = response.userName;
+      const jwtToken = response.jwtToken;
+      const role = response.role;
+
+      setUserInLocalStorage({
+        userName: uName,
+        jwtToken,
+        role
+      });
+
       let success = false;
       if (selectedOption === 'VET') {
         const response = await registerVet({
@@ -178,6 +206,9 @@ const SignUp: React.FC = () => {
           ? TOAST_MESSAGE_SIGNUP_SUCCESS
           : TOAST_MESSAGE_SIGNUP_ERROR
       });
+
+      localStorageUtil.clear();
+
       if (success) {
         navigate('/signin');
       }
