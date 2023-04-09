@@ -14,7 +14,6 @@ import { Loader, EmptyState, Select } from '@src/components';
 import useStyles from './PetOwnerAllVets.styles';
 import { getAllVets, getAllPetsForUser, bookAppointment } from '@src/api';
 import { getVetAvailabilityOnSpecificDay } from '@src/api/vet';
-import { vetsData as vetsMockData } from '@src/data/vet';
 import { localStorageUtil } from '@src/utils';
 
 const PetOwnerAllVets = () => {
