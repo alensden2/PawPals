@@ -36,7 +36,7 @@ build-frontend:
 # Job to detect code smells in the codebase
 code-smell-backend:
   stage: code-quality
-  image: maven:3-jdk-17
+  image: maven:latest
   script:
     - echo "Detecting code smells..."  # Output a message indicating the job is running
     - mkdir $CI_PROJECT_DIR/backend/paw-pals/smells
@@ -57,7 +57,7 @@ code-format-frontend:
     - npm install prettier --save-dev
     - npm run format
   tags:
-    - ugrad
+    - group12
 
 
 
