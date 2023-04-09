@@ -1,8 +1,9 @@
 /**
-
-Configuration class for Spring Security.
-*/
+ * Configuration class for Spring Security.
+ */
 package com.asdc.pawpals.config;
+
+import com.asdc.pawpals.filter.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,77 +22,75 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.asdc.pawpals.filter.JwtAuthFilter;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
     @Autowired
-private JwtAuthFilter authFilter;
+    private JwtAuthFilter authFilter;
 
-/**
- * Creates the security filter chain for the HTTP requests.
- * 
- * @param http HttpSecurity object used to configure the security filter chain
- * @return a SecurityFilterChain object representing the security filter chain
- * @throws Exception if an error occurs while configuring the security filter chain
- */
-@Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.csrf().disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/unauth/**").permitAll()
-            .and()
-            .authorizeHttpRequests()
-            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .requestMatchers("/auth/**")
-            .authenticated().and()
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
-}
+    /**
+     * Creates the security filter chain for the HTTP requests.
+     *
+     * @param http HttpSecurity object used to configure the security filter chain
+     * @return a SecurityFilterChain object representing the security filter chain
+     * @throws Exception if an error occurs while configuring the security filter chain
+     */
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/unauth/**").permitAll()
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/auth/**")
+                .authenticated().and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
 
-/**
- * Configures the authentication provider for the application.
- * 
- * @return an AuthenticationProvider object used for authentication
- */
-@Bean
-public AuthenticationProvider authenticationProvider(){
-    DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
-    authenticationProvider.setUserDetailsService(userDetailsService);
-    authenticationProvider.setPasswordEncoder(passwordEncoder());
-    return authenticationProvider;
-}
+    /**
+     * Configures the authentication provider for the application.
+     *
+     * @return an AuthenticationProvider object used for authentication
+     */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 
-/**
- * Configures the authentication manager for the application.
- * 
- * @param config an AuthenticationConfiguration object used for configuration
- * @return an AuthenticationManager object used for authentication
- * @throws Exception if an error occurs while configuring the authentication manager
- */
-@Bean
-public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-    return config.getAuthenticationManager();
-}
+    /**
+     * Configures the authentication manager for the application.
+     *
+     * @param config an AuthenticationConfiguration object used for configuration
+     * @return an AuthenticationManager object used for authentication
+     * @throws Exception if an error occurs while configuring the authentication manager
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
-/**
- * Configures the password encoder for the application.
- * 
- * @return a PasswordEncoder object used for encoding passwords
- */
-@Bean
-public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-}
+    /**
+     * Configures the password encoder for the application.
+     *
+     * @return a PasswordEncoder object used for encoding passwords
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-@Autowired
-UserDetailsService userDetailsService;
+    @Autowired
+    UserDetailsService userDetailsService;
 // @Bean
 // //authentication
 // public UserDetailsService userDetailsService() {

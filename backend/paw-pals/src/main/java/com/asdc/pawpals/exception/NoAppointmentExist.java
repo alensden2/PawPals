@@ -2,7 +2,7 @@ package com.asdc.pawpals.exception;
 
 import java.security.PrivilegedActionException;
 
-public class NoAppointmentExist extends Exception{
+public class NoAppointmentExist extends Exception {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

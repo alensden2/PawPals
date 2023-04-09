@@ -172,7 +172,7 @@ public class AnimalServiceImplTest {
         // Set the invalid image to the animal DTO
         animalDto.setPhotoUrl(new Byte[0]);
     }
-    
+
     @Test
     public void testUpdateAnimalForValidInput() throws InvalidAnimalId, IOException, InvalidImage, InvalidAnimalObject {
         // Arrange
@@ -243,6 +243,7 @@ public class AnimalServiceImplTest {
         // Assert
         // Exception is expected to be thrown
     }
+
     @Test(expected = InvalidAnimalObject.class)
     public void testUpdateAnimalForInvalidInput() throws InvalidAnimalId, IOException, InvalidImage, InvalidAnimalObject {
         // Arrange

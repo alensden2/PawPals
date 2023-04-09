@@ -2,7 +2,7 @@ package com.asdc.pawpals.exception;
 
 import java.security.PrivilegedActionException;
 
-public class InvalidAnimalId extends Exception{
+public class InvalidAnimalId extends Exception {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

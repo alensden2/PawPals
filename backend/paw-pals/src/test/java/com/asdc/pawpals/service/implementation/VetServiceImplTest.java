@@ -1,38 +1,28 @@
 package com.asdc.pawpals.service.implementation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
+import com.asdc.pawpals.Enums.AppointmentStatus;
+import com.asdc.pawpals.dto.VetAvailabilityDto;
+import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.dto.VetScheduleDto;
+import com.asdc.pawpals.model.*;
+import com.asdc.pawpals.repository.AppointmentRepository;
+import com.asdc.pawpals.repository.UserRepository;
+import com.asdc.pawpals.repository.VetAvailabilityRepository;
+import com.asdc.pawpals.repository.VetRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.asdc.pawpals.Enums.AppointmentStatus;
-import com.asdc.pawpals.dto.VetAvailabilityDto;
-import com.asdc.pawpals.dto.VetDto;
-import com.asdc.pawpals.dto.VetScheduleDto;
-import com.asdc.pawpals.model.Animal;
-import com.asdc.pawpals.model.Appointment;
-import com.asdc.pawpals.model.User;
-import com.asdc.pawpals.model.Vet;
-import com.asdc.pawpals.model.VetAvailability;
-import com.asdc.pawpals.repository.AppointmentRepository;
-import com.asdc.pawpals.repository.UserRepository;
-import com.asdc.pawpals.repository.VetAvailabilityRepository;
-import com.asdc.pawpals.repository.VetRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class VetServiceImplTest {
@@ -47,7 +37,7 @@ public class VetServiceImplTest {
     MailServiceImpl mailServiceMock;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         vetRepoMock = mock(VetRepository.class);
         vetService.vetRepository = vetRepoMock;
 
@@ -60,18 +50,18 @@ public class VetServiceImplTest {
         aptRepoMock = mock(AppointmentRepository.class);
         vetService.appointmentRepository = aptRepoMock;
 
-        mailServiceMock=mock(MailServiceImpl.class);
-        vetService.mailService=mailServiceMock;
+        mailServiceMock = mock(MailServiceImpl.class);
+        vetService.mailService = mailServiceMock;
 
     }
 
     @Test
-    public void objectCreated(){
+    public void objectCreated() {
         assertNotNull(vetRepoMock);
     }
 
     @Test
-    public void registerVet_shouldReturnTrueWhenVetIsRegistered(){
+    public void registerVet_shouldReturnTrueWhenVetIsRegistered() {
         //Arrange
         VetDto vetToRegister = new VetDto();
         Vet vet = new Vet();
@@ -84,12 +74,12 @@ public class VetServiceImplTest {
 
         //Act
         Boolean saved = vetService.registerVet(vetToRegister);
-         //Assert
+        //Assert
         assertTrue(saved);
     }
 
     @Test
-    public void registerVet_shouldReturnFalseWhenVetIsNotRegistered(){
+    public void registerVet_shouldReturnFalseWhenVetIsNotRegistered() {
         //Arrange
         VetDto vetToRegister = new VetDto();
         Vet vet = new Vet();
@@ -106,7 +96,7 @@ public class VetServiceImplTest {
     }
 
     @Test
-    public void registerVet_shouldThrowUserNotFoundException(){
+    public void registerVet_shouldThrowUserNotFoundException() {
         //Arrange
         VetDto vetToRegister = new VetDto();
         Vet vet = new Vet();
@@ -116,14 +106,14 @@ public class VetServiceImplTest {
         vetToRegister.setUserName("jDoe");
 
         //Act + Assert
-        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class , ()->vetService.registerVet(vetToRegister));
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> vetService.registerVet(vetToRegister));
 
         //Assert 2
         assertEquals("Please provide a valid username", exception.getMessage());
     }
 
     @Test
-    public void getVetAvailability_shouldReturnVetAvailability(){
+    public void getVetAvailability_shouldReturnVetAvailability() {
         //Arrange
         String userId = "jDoe";
         List<VetAvailability> vetAvailability = new ArrayList<>();
@@ -144,7 +134,7 @@ public class VetServiceImplTest {
     }
 
     @Test
-    public void getVetAvailability_shouldReturnVetAvailabilityForVetId(){
+    public void getVetAvailability_shouldReturnVetAvailabilityForVetId() {
         //Arrange
         Long vetId = 1L;
         List<VetAvailability> vetAvailability = new ArrayList<>();
@@ -165,7 +155,7 @@ public class VetServiceImplTest {
     }
 
     @Test
-    public void getVetAvailabilityOnSpecificDay_shouldReturnVetAvailabilityForUserId(){
+    public void getVetAvailabilityOnSpecificDay_shouldReturnVetAvailabilityForUserId() {
         //Arrange
         String userId = "jDoe";
         List<VetAvailability> vetAvailability = new ArrayList<>();
@@ -199,7 +189,7 @@ public class VetServiceImplTest {
     }
 
     @Test
-    public void getVetAvailabilityOnSpecificDay_shouldReturnVetAvailabilityForVetId(){
+    public void getVetAvailabilityOnSpecificDay_shouldReturnVetAvailabilityForVetId() {
         //Arrange
         Long vetId = 1L;
         List<VetAvailability> vetAvailability = new ArrayList<>();
@@ -233,7 +223,7 @@ public class VetServiceImplTest {
     }
 
     @Test
-    public void getVetScheduleOnSpecificDay_shouldReturnScheduleForUserId(){
+    public void getVetScheduleOnSpecificDay_shouldReturnScheduleForUserId() {
         //Arrange
         String userId = "jDoe";
 
