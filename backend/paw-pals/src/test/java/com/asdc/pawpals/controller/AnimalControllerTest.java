@@ -18,9 +18,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -126,8 +125,8 @@ public class AnimalControllerTest {
         animalDto.setMedicalHistory(null);
 
         //Act
-        when(animalServiceMock.updateAnimal(any(AnimalDto.class), anyLong(), any(MultipartFile.class)))
-                .thenReturn(animalDto);
+//        when(animalServiceMock.updateAnimal(any(AnimalDto.class), anyLong(), any(MultipartFile.class)))
+//                .thenReturn(animalDto);
         when(apiResponseMock.getBody()).thenReturn(animalDto);
         when(apiResponseMock.isSuccess()).thenReturn(true);
         when(apiResponseMock.isError()).thenReturn(false);
@@ -161,8 +160,8 @@ public class AnimalControllerTest {
         animalDto.setMedicalHistory(null);
 
         //Act
-        when(animalServiceMock.updateAnimal(any(AnimalDto.class), anyLong(), any(MultipartFile.class)))
-                .thenReturn(animalDto);
+//        when(animalServiceMock.updateAnimal(any(AnimalDto.class), anyLong(), any()))
+//                .thenReturn(animalDto);
         when(apiResponseMock.getBody()).thenReturn(animalDto);
         when(apiResponseMock.isSuccess()).thenReturn(true);
         when(apiResponseMock.isError()).thenReturn(false);

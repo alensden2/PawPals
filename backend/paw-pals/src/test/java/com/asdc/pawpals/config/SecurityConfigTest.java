@@ -21,8 +21,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(MockitoJUnitRunner.class)
 public class SecurityConfigTest {
 
-    @Mock
-    private JwtAuthFilter authFilter;
 
     @Mock
     UserDetailsService userDetailsService;
@@ -30,11 +28,7 @@ public class SecurityConfigTest {
     @InjectMocks
     private SecurityConfig securityConfig;
 
-    @Mock
-    private HttpSecurity http;
 
-    @InjectMocks
-    private AuthenticationConfiguration authenticationConfiguration;
 
     @Before
     public void setUp() {
@@ -54,6 +48,7 @@ public class SecurityConfigTest {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        securityConfig.authenticationProvider();
         assertNotNull(authenticationProvider);
 
     }

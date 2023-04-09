@@ -8,10 +8,8 @@ import {
   Root,
   PetOwner,
   PetOwnerHome,
-  PetOwnerRegistration,
   Vet,
   VetHome,
-  VetRegistration,
   Admin,
   AdminHome,
   PetHealthAndDiseaseInfo,
@@ -42,10 +40,6 @@ const RoutesComp = () => {
             <Route path="my-appointments" element={<PetOwnerAppointments />} />
             <Route path="medical-record" element={<PetMedicalRecord />} />
             <Route path="all-vets" element={<PetOwnerAllVets />} />
-            <Route
-              path="all-vets/book-appointment/:vet_id"
-              element={<PetOwnerRegistration />}
-            />
             <Route
               path="pet-health-and-diseases"
               element={<PetHealthAndDiseaseInfo />}

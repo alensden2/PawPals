@@ -12,7 +12,7 @@ import VetCardList from './VetCardList';
 import { Loader, EmptyState, Select } from '@src/components';
 import useStyles from './PetOwnerAllVets.styles';
 import { getAllVets, getAllPetsForUser, bookAppointment } from '@src/api';
-import { getVetAvailabilityOnSpecificDay } from '@src/api/vet';
+import { getVetAvailabilityOnSpecificDay } from '@src/api';
 import { localStorageUtil } from '@src/utils';
 
 const PetOwnerAllVets = () => {
