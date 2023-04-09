@@ -3,14 +3,16 @@ package com.asdc.pawpals.controller;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.InvalidAnimalId;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
-import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.service.implementation.AdminServiceImpl;
 import com.asdc.pawpals.utils.ApiResponse;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +35,18 @@ public class AdminControllerTest {
     @InjectMocks
     AdminController adminController;
 
-    @Mock
-    private AdminService adminService;
 
     @Mock
     ApiResponse apiResponse;
 
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     public void testUpdateAnimalWrongRequestBodyType()
-            throws PetOwnerAlreadyDoesNotExists {
+            throws PetOwnerAlreadyDoesNotExists, InvalidAnimalId {
         Long animalId = 1L;
 
         Object requestBody = new Object();
@@ -52,7 +56,7 @@ public class AdminControllerTest {
                 requestBody
         );
 
-        verify(adminService, never()).updateAnimal(any(), any());
+        verify(adminServiceImpl, never()).updateAnimal(any(), any());
 
         assertNotNull(apiResponse);
     }

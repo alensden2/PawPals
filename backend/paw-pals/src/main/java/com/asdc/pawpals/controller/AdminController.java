@@ -4,7 +4,10 @@ import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.InvalidAnimalId;
+import com.asdc.pawpals.exception.InvalidVetID;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
+import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.Vet;
 import com.asdc.pawpals.service.AdminService;
@@ -132,7 +135,7 @@ public class AdminController {
      * @return a ResponseEntity containing an ApiResponse object with details about the operation performed
      */
     @DeleteMapping("/delete-animal/{id}")
-    public ResponseEntity<ApiResponse> deleteAnimal(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> deleteAnimal(@PathVariable Long id) throws InvalidAnimalId {
         logger.info(
                 "Received delete request for Animal with id: {}",
                 id.toString()
@@ -155,7 +158,7 @@ public class AdminController {
      * @return a ResponseEntity with an ApiResponse containing the added Vet information on the body, and a success message
      */
     @PostMapping("/post-vet")
-    public ResponseEntity<ApiResponse> addVet(@RequestBody Object requestBody) {
+    public ResponseEntity<ApiResponse> addVet(@RequestBody Object requestBody) throws UserNameNotFound {
         logger.info("Recieved message as :", requestBody.toString());
         Vet vet = null;
         if (CommonUtils.isStrictTypeOf(requestBody, Vet.class)) {
@@ -182,7 +185,7 @@ public class AdminController {
             @PathVariable("id") Long id,
             @RequestBody Object requestBody
     )
-            throws PetOwnerAlreadyDoesNotExists {
+            throws PetOwnerAlreadyDoesNotExists, InvalidAnimalId {
         logger.info("Received request as: {}", requestBody.toString());
         Animal animal = null;
         if (CommonUtils.isStrictTypeOf(requestBody, Animal.class)) {
@@ -210,7 +213,7 @@ public class AdminController {
     public ResponseEntity<ApiResponse> updateVet(
             @PathVariable Long id,
             @RequestBody Object requestBody
-    ) {
+    ) throws InvalidVetID {
         logger.info("Received message as:", requestBody.toString());
         Vet vet = null;
         if (CommonUtils.isStrictTypeOf(requestBody, Vet.class)) {
@@ -232,7 +235,7 @@ public class AdminController {
      * @return A ResponseEntity with an ApiResponse indicating the result of the operation.
      */
     @DeleteMapping("/delete-vet/{id}")
-    public ResponseEntity<ApiResponse> deleteVet(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> deleteVet(@PathVariable Long id) throws InvalidVetID {
         logger.info("Received delete request for Vet with id: {}", id.toString());
         if (CommonUtils.isStrictTypeOf(id, Long.class)) {
             id = ObjectMapperWrapper.getInstance().convertValue(id, Long.class);

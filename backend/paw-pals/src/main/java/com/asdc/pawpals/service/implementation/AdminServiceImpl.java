@@ -4,7 +4,10 @@ import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.dto.VetDto;
+import com.asdc.pawpals.exception.InvalidAnimalId;
+import com.asdc.pawpals.exception.InvalidVetID;
 import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
+import com.asdc.pawpals.exception.UserNameNotFound;
 import com.asdc.pawpals.model.Animal;
 import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
@@ -176,7 +179,7 @@ public class AdminServiceImpl implements AdminService {
      */
 
     @Override
-    public VetDto addVet(Vet vet) {
+    public VetDto addVet(Vet vet) throws UserNameNotFound {
         VetDto vetDto = null;
         // adding user to user table
         // add to check if user is already existing throw an exception
@@ -191,7 +194,7 @@ public class AdminServiceImpl implements AdminService {
                 vet = vetRepository.save(vet);
                 vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
             } else {
-                //custom user does not exit create}
+                throw new UserNameNotFound("required user not found");
             }
         }
         return vetDto;
@@ -205,7 +208,7 @@ public class AdminServiceImpl implements AdminService {
      * @return The updated VetDto object.
      */
     @Override
-    public VetDto updateVet(Long id, Vet updatedVet) {
+    public VetDto updateVet(Long id, Vet updatedVet) throws InvalidVetID {
         VetDto vetDto = null;
         Optional<Vet> optionalVet = vetRepository.findById(id);
         if (optionalVet.isPresent()) {
@@ -221,7 +224,7 @@ public class AdminServiceImpl implements AdminService {
             vetRepository.save(vet);
             vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
         } else {
-            //throw new EntityNotFoundException("Vet with id " + id + " not found");
+            throw new InvalidVetID("required user not found" + id);
         }
         return vetDto;
     }
@@ -232,7 +235,7 @@ public class AdminServiceImpl implements AdminService {
      * @return a list of all user records as UserDto objects
      */
     @Override
-    public VetDto deleteVet(Long id) {
+    public VetDto deleteVet(Long id) throws InvalidVetID {
         VetDto vetDto = null;
         Optional<Vet> optionalVet = vetRepository.findById(id);
         if (optionalVet.isPresent()) {
@@ -240,7 +243,7 @@ public class AdminServiceImpl implements AdminService {
             vetRepository.delete(vet);
             vetDto = Transformations.MODEL_TO_DTO_CONVERTER.vet(vet);
         } else {
-            // throw exception user not found
+            throw new InvalidVetID("required user not found" + id);
         }
         return vetDto;
     }
@@ -253,7 +256,7 @@ public class AdminServiceImpl implements AdminService {
      * @throws EntityNotFoundException if the animal with the specified ID is not found
      */
     @Override
-    public AnimalDto deleteAnimal(Long id) {
+    public AnimalDto deleteAnimal(Long id) throws InvalidAnimalId {
         AnimalDto animalDto = null;
         Optional<Animal> optionalAnimal = animalRepository.findById(id);
         if (optionalAnimal.isPresent()) {
@@ -261,7 +264,7 @@ public class AdminServiceImpl implements AdminService {
             animalRepository.delete(animal);
             animalDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
         } else {
-            //throw new EntityNotFoundException("Animal with id " + id + " not found");
+            throw new InvalidAnimalId("required user not found" + id);
         }
         return animalDto;
     }
@@ -275,7 +278,7 @@ public class AdminServiceImpl implements AdminService {
      * @throws EntityNotFoundException if the animal with the specified id is not found
      */
     @Override
-    public AnimalDto updateAnimal(Long id, Animal updatedAnimal) {
+    public AnimalDto updateAnimal(Long id, Animal updatedAnimal) throws InvalidAnimalId {
         AnimalDto animalDto = null;
         Optional<Animal> optionalAnimal = animalRepository.findById(id);
         if (optionalAnimal.isPresent()) {
@@ -287,7 +290,7 @@ public class AdminServiceImpl implements AdminService {
             animalRepository.save(animal);
             animalDto = Transformations.MODEL_TO_DTO_CONVERTER.animal(animal);
         } else {
-            // throw new exception
+            throw new InvalidAnimalId("Invalid Animal Id:" + id);
         }
         return animalDto;
     }

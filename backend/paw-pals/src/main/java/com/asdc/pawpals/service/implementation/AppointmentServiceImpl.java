@@ -13,7 +13,6 @@ import com.asdc.pawpals.repository.AnimalRepository;
 import com.asdc.pawpals.repository.AppointmentRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.AppointmentService;
-import com.asdc.pawpals.utils.Constants;
 import com.asdc.pawpals.utils.Transformations;
 import com.asdc.pawpals.validators.AppointmentValidators;
 import org.apache.logging.log4j.LogManager;
@@ -40,49 +39,47 @@ public class AppointmentServiceImpl implements AppointmentService {
     VetRepository vetRepository;
 
 
-  /**
-
-    *    Updates the status of a given appointment.
-    *    @param appointmentId the ID of the appointment to update
-    *    @param action the new status of the appointment
-    *    @return a boolean indicating if the status was updated successfully
-    *    @throws InvalidObjectException if either parameter is null or empty
-    *    @throws InvalidAppointmentId if the appointment ID is invalid
-*/
-  public Boolean updateAppointmentStatus(Integer appointmentId, String action)
-    throws InvalidObjectException, InvalidAppointmentId {
-    logger.debug(
-      "Update Appointment status for pet owner from vet side %s",
-      appointmentId + action
-    );
-    Boolean statusUpdated = false;
-    boolean isAppointmentIdNotNull = appointmentId != null;
-    boolean isActionNotNullOrEmpty = action != null && !action.isEmpty();
-    boolean isActionValidStatus = AppointmentValidators.isValidStatus(action);
-    /**old code 
-     * if (
-      appointmentId != null &&
-      action != null &&
-      !action.isEmpty() &&
-      AppointmentValidators.isValidStatus(action)
-    )
+    /**
+     * Updates the status of a given appointment.
+     *
+     * @param appointmentId the ID of the appointment to update
+     * @param action        the new status of the appointment
+     * @return a boolean indicating if the status was updated successfully
+     * @throws InvalidObjectException if either parameter is null or empty
+     * @throws InvalidAppointmentId   if the appointment ID is invalid
      */
-    if (
-      isAppointmentIdNotNull && isActionNotNullOrEmpty && isActionValidStatus
-    ) {
-      Optional<Appointment> apt = appointmentRepository.findById(appointmentId);
-      if (apt.isPresent()) {
-        Appointment appointment = apt.get();
-        appointment.setStatus(action);
-        statusUpdated = appointmentRepository.save(appointment) != null;
-      } else {
-        throw new InvalidAppointmentId("Appointment id is wrong");
-      }
-    } else {
-      throw new InvalidObjectException("Invalid input provided");
+    public Boolean updateAppointmentStatus(Integer appointmentId, String action)
+            throws InvalidObjectException, InvalidAppointmentId {
+        logger.debug(
+                "Update Appointment status for pet owner from vet side %s",
+                appointmentId + action
+        );
+        Boolean statusUpdated = false;
+//    boolean isAppointmentIdNotNull = appointmentId != null;
+//    boolean isActionNotNullOrEmpty = action != null && !action.isEmpty();
+//    boolean isActionValidStatus = AppointmentValidators.isValidStatus(action);
+
+        if (isValidAppointment(appointmentId, action)) {
+            Optional<Appointment> apt = appointmentRepository.findById(appointmentId);
+            if (apt.isPresent()) {
+                Appointment appointment = apt.get();
+                appointment.setStatus(action);
+                statusUpdated = appointmentRepository.save(appointment) != null;
+            } else {
+                throw new InvalidAppointmentId("Appointment id is wrong");
+            }
+        } else {
+            throw new InvalidObjectException("Invalid input provided");
+        }
+        return statusUpdated;
     }
-    return statusUpdated;
-  }
+
+    private static boolean isValidAppointment(Integer appointmentId, String action) {
+        return appointmentId != null &&
+                action != null &&
+                !action.isEmpty() &&
+                AppointmentValidators.isValidStatus(action);
+    }
 
     /**
      * Books a new appointment with the specified appointment details
@@ -103,32 +100,32 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         /**oldCode 
          * if (
-          appointmentDto.getDate() != null &&
-          appointmentDto.getStartTime() != null &&
-          appointmentDto.getEndTime() != null &&
-          AppointmentValidators.isValidAppointment(
-            appointmentDto.getDate(),
-            appointmentDto.getStartTime(),
-            appointmentDto.getEndTime(),
-            appointmentDto.getStatus()
-          )
-        )
-        */
+         appointmentDto.getDate() != null &&
+         appointmentDto.getStartTime() != null &&
+         appointmentDto.getEndTime() != null &&
+         AppointmentValidators.isValidAppointment(
+         appointmentDto.getDate(),
+         appointmentDto.getStartTime(),
+         appointmentDto.getEndTime(),
+         appointmentDto.getStatus()
+         )
+         )
+         */
         appointmentDto.setStatus(AppointmentStatus.PENDING.getLabel()); //set status to pending manually
         boolean isAppointmentDateNotNull = appointmentDto.getDate() != null;
         boolean isStartTimeNotNull = appointmentDto.getStartTime() != null;
         boolean isEndTimeNotNull = appointmentDto.getEndTime() != null;
         boolean isAppointmentValid = AppointmentValidators.isValidAppointment(
-          appointmentDto.getDate(),
-          appointmentDto.getStartTime(),
-          appointmentDto.getEndTime(),
-          appointmentDto.getStatus()
+                appointmentDto.getDate(),
+                appointmentDto.getStartTime(),
+                appointmentDto.getEndTime(),
+                appointmentDto.getStatus()
         );
         if (
-          isAppointmentDateNotNull &&
-          isStartTimeNotNull &&
-          isEndTimeNotNull &&
-          isAppointmentValid
+                isAppointmentDateNotNull &&
+                        isStartTimeNotNull &&
+                        isEndTimeNotNull &&
+                        isAppointmentValid
         ) {
             Appointment appointment = Transformations.DTO_TO_MODEL_CONVERTER.appointment(
                     appointmentDto
