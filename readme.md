@@ -227,14 +227,13 @@ The Continuous Integration (CI) Pipeline of the application includes a stage for
 # ☑️ Test <a name = "test"></a>
 
 ## ▪️Coverage <a name = "coverage"></a>
-
+Jacoco is used to show code coverage of the test cases. The project's service layer has 75% Line Coverage.
 ## ▪️Integration tests <a name = "integration_test"></a>
-
+We have written persistence layer integration tests.
 ## ▪️Test best practices <a name = "test_best"></a>
-
+We have followed best practices for mocking the dependent classes. System under test is beign tested in isolation.
 ## ▪️TDD adherence <a name = "tdd_adherance"></a> 
-
-# ☑️ Quality <a name = "quality"></a>
+For some of our APIs we have followed Test driven developement approach.
 
 # ☑️ Quality <a name = "quality"></a>
 
