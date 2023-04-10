@@ -3,7 +3,10 @@ package com.asdc.pawpals.service.implementation;
 import com.asdc.pawpals.dto.UserDto;
 import com.asdc.pawpals.exception.InvalidUserDetails;
 import com.asdc.pawpals.exception.UserAlreadyExist;
+import com.asdc.pawpals.exception.UserNameNotFound;
+import com.asdc.pawpals.model.PetOwner;
 import com.asdc.pawpals.model.User;
+import com.asdc.pawpals.repository.PetOwnerRepository;
 import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.service.MailService;
 import com.asdc.pawpals.utils.Transformations;
@@ -15,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -28,6 +33,9 @@ public class UserServiceImplTest {
     @Mock
     UserRepository userRepositoryMock;
 
+
+    @Mock
+    PetOwnerRepository petOwnerRepositoryMock;
 
     @Mock
     MailService mailServiceMock;
@@ -109,6 +117,30 @@ public class UserServiceImplTest {
 
         //Assert
         Assertions.assertEquals("incorrect user data " + userDto, exception.getMessage());
+
+    }
+
+    @Test
+    public void testInitRolesAndUsers_PetOwnerUserSaved() throws UserNameNotFound, UserNameNotFound {
+        User user2 = new User();
+        user2.setUserId("pet_owner1");
+        user2.setPassword("pet123");
+        user2.setEmail("abcPet@gmail.com");
+        user2.setRole("PET_OWNER");
+
+        PetOwner petOwner = new PetOwner();
+        petOwner.setUser(user2);
+        petOwner.setAddress("16 Chris Hampton Rd");
+        petOwner.setFirstName("James");
+        petOwner.setLastName("Collin");
+        petOwner.setPhoneNo("+1-723-453-2343");
+
+
+        when(userRepositoryMock.save(any(User.class))).thenReturn(user2);
+        when(petOwnerRepositoryMock.findByUser_UserId("pet_owner1")).thenReturn(Optional.empty());
+        when(petOwnerRepositoryMock.save(any(PetOwner.class))).thenReturn(petOwner);
+
+        userServiceImpl.initRolesAndUsers();
 
     }
 }
