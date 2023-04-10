@@ -5,12 +5,38 @@ stages:
   - test
   - deploy
 
+# Job to build the backend code
+build-backend:
+  stage: build
+  image: maven:latest  # Use the maven:3-jdk-17 Docker image for this job
+  # only:
+  #   - dev
+  script:
+    - cd backend/paw-pals/
+    - mvn clean compile
+  tags:
+    - group12
+
+# Job to build the frontend code
+build-frontend:
+  stage: build
+  # only:
+  #   - dev
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - chmod og-rwx $SSH_PRIVATE_KEY
+  script:
+    - echo "Building frontend..."
+    - cd frontend  # Change to the 'frontend' directory
+    - npm install  # Install the required dependencies
+    - npm run build  # Build the frontend code
+  tags:
+    - ugrad
+
 # Job to detect code smells in the codebase
 code-smell-backend:
   stage: code-quality
-  image: openjdk:11
-  only:
-    - dev  # Only run this job in the 'dev' branch
+  image: maven:latest
   script:
     - echo "Detecting code smells..."  # Output a message indicating the job is running
     - mkdir $CI_PROJECT_DIR/backend/paw-pals/smells
@@ -20,79 +46,68 @@ code-smell-backend:
   artifacts:
     paths:
       - $CI_PROJECT_DIR/backend/paw-pals/smells
-  when: manual  # Require manual intervention to run this job
   tags:
-    - ugrad  # Run this job on a runner with the 'ugrad' tag
+    - group12  # Run this job on a runner with the 'ugrad' tag
 
-# # Format to readability, consistency, debugging, and collaboration.
-# code-format-frontend: 
-#   stage: code-quality
-#   only:
-#     - dev
-#   script:
-#     - cd $CI_PROJECT_DIR/frontend
-#     - npm install prettier --save-dev
-#     - npm run format
-#   tags:
-#     - ugrad
-
-# Job to build the backend code
-build-backend:
-  stage: build
-  image: maven:3-jdk-17  # Use the maven:3-jdk-17 Docker image for this job
-  only:
-    - dev
+# Format to readability, consistency, debugging, and collaboration.
+code-format-frontend: 
+  stage: code-quality
   script:
-    - cd backend/paw-pals/
-    - mvn clean
-  when: manual
+    - cd $CI_PROJECT_DIR/frontend
+    - npm install prettier --save-dev
+    - npm run format
   tags:
     - ugrad
 
-# Job to build the frontend code
-build-frontend:
-  stage: build
-  only:
-    - dev
-  script:
-    - echo "Building frontend..."
-    - cd frontend  # Change to the 'frontend' directory
-    - npm install  # Install the required dependencies
-    - npm run build  # Build the frontend code
-  when: manual
-  tags:
-    - ugrad
 
-# Job to test the backend code
+
+# # Job to test the backend code
 test-backend:
   stage: test
-  only:
-    - dev
+  image: maven:latest
   script:
     - echo "Testing backend..."
     - cd backend/paw-pals
-    - mvn clean
+    - mvn clean test
+  artifacts:
+    paths:
+      - backend/paw-pals/target/site/*
   tags:
-    - ugrad
+    - group12
 
 # Job to deploy the backend code
 deploy-backend:
   stage: deploy
   only:
-    - dev
+    - prod
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - chmod og-rwx $SSH_PRIVATE_KEY
   script:
     - echo "Deploying backend..."
-  when: manual
+    - cd backend/paw-pals/
+    - mvn clean package
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "sudo docker stop pawpals || true"
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "sudo docker rm pawpals || true"
+    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} target/*.war ${SSH_USER}@${SSH_HOSTNAME}:/home/$SSH_USER/Pawpals/Pawpals.war
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "cd /home/$SSH_USER/Pawpals/ && sudo docker build -t pawpals:latest -f dockerfile ."
+    - ssh -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} ${SSH_USER}@${SSH_HOSTNAME} "sudo docker run -d --name pawpals -p 8080:8080 pawpals"
   tags:
-    - ugrad
+    - group12
 
-# Job to deploy the frontend code
+# # Job to deploy the frontend code
 deploy-frontend:
   stage: deploy
   only:
-    - dev
+    - prod
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - chmod og-rwx $SSH_PRIVATE_KEY
   script:
     - echo "Deploying frontend..."
-  when: manual
+    - cd frontend  # Change to the 'frontend' directory
+    - npm install  # Install the required dependencies
+    - npm run build  # Build the frontend code
+    - scp -r -o StrictHostKeyChecking=no -i ${SSH_PRIVATE_KEY} dist/* ${SSH_USER}@${SSH_HOSTNAME}:/var/www/html/
   tags:
     - ugrad

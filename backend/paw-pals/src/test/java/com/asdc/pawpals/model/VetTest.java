@@ -1,15 +1,18 @@
 package com.asdc.pawpals.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+
+@SpringBootTest
 public class VetTest {
 
     private Vet vet;

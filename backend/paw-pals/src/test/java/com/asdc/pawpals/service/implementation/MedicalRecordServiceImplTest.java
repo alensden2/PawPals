@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class MedicalRecordServiceImplTest {
 
     @Mock

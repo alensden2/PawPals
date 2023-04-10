@@ -1,9 +1,12 @@
 package com.asdc.pawpals.validators;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.Assert.*;
-
+@SpringBootTest
 public class AppointmentValidatorsTest {
 
     @Test

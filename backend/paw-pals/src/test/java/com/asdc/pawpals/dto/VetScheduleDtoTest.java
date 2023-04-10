@@ -1,13 +1,16 @@
 package com.asdc.pawpals.dto;
 
-import org.junit.Test;
-import org.springframework.data.util.Pair;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.util.Pair;
 
+
+@SpringBootTest
 public class VetScheduleDtoTest {
 
     @Test

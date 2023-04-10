@@ -1,5 +1,16 @@
 package com.asdc.pawpals.service.implementation;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.asdc.pawpals.Enums.ProfileStatus;
 import com.asdc.pawpals.dto.AnimalDto;
 import com.asdc.pawpals.dto.PetOwnerDto;
 import com.asdc.pawpals.dto.UserDto;
@@ -18,14 +29,8 @@ import com.asdc.pawpals.repository.UserRepository;
 import com.asdc.pawpals.repository.VetRepository;
 import com.asdc.pawpals.service.AdminService;
 import com.asdc.pawpals.utils.Transformations;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -82,6 +87,8 @@ public class AdminServiceImpl implements AdminService {
             vetsDto =
                     vets
                             .stream()
+                            .filter(Objects::nonNull)
+                            .filter(vet->vet.getProfileStatus() != null && vet.getProfileStatus().equals(ProfileStatus.APPROVED.getLabel()))
                             .map(Transformations.MODEL_TO_DTO_CONVERTER::vet)
                             .collect(Collectors.toList());
         }

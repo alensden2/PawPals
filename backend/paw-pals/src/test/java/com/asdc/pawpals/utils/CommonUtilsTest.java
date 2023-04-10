@@ -1,14 +1,18 @@
 package com.asdc.pawpals.utils;
 
-import com.asdc.pawpals.exception.InvalidImage;
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.IOException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import com.asdc.pawpals.exception.InvalidImage;
+import com.fasterxml.jackson.core.type.TypeReference;
 
+
+@SpringBootTest
 public class CommonUtilsTest {
 
     @Test

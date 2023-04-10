@@ -1,20 +1,29 @@
 package com.asdc.pawpals.handler;
 
-import com.asdc.pawpals.exception.*;
-import com.asdc.pawpals.utils.ApiResponse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
+import com.asdc.pawpals.exception.InvalidImage;
+import com.asdc.pawpals.exception.InvalidOwnerID;
+import com.asdc.pawpals.exception.InvalidUserDetails;
+import com.asdc.pawpals.exception.NoPetRegisterUnderPetOwner;
+import com.asdc.pawpals.exception.PetOwnerAlreadyDoesNotExists;
+import com.asdc.pawpals.exception.UserAlreadyExist;
+import com.asdc.pawpals.exception.UserNameNotFound;
+import com.asdc.pawpals.utils.ApiResponse;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
+@SpringBootTest
 public class GlobalExceptionalHandlerTest {
 
     @Mock

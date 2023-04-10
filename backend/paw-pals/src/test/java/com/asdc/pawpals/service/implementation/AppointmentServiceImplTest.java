@@ -20,6 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.InvalidObjectException;
 import java.time.format.DateTimeFormatter;
@@ -31,6 +32,7 @@ import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class AppointmentServiceImplTest {
 
     @Mock

@@ -1,23 +1,26 @@
 package com.asdc.pawpals.dto;
 
-import com.asdc.pawpals.model.User;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.asdc.pawpals.model.User;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class UserDtoTest {
 
     @Mock

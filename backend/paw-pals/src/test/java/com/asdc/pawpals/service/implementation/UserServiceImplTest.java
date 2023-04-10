@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class UserServiceImplTest {
 
     @Mock

@@ -24,8 +24,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class MedicalRecordControllerTest {
 
     @Mock

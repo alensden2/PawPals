@@ -1,11 +1,14 @@
 package com.asdc.pawpals.model;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+
+@SpringBootTest
 public class MedicalHistoryTest {
 
     private MedicalHistory medicalHistory;

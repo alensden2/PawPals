@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class JwtConfigTest {
 
     @InjectMocks

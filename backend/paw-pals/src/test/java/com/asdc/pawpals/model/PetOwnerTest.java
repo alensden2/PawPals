@@ -1,11 +1,14 @@
 package com.asdc.pawpals.model;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+
+@SpringBootTest
 public class PetOwnerTest {
 
     @Test

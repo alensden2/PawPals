@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.InvalidObjectException;
 
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class AppointmentControllerTest {
 
     @Mock
