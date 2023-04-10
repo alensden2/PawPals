@@ -23,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
@@ -46,6 +47,9 @@ public class UserServiceImplTest {
 
     @Mock
     PetOwnerRepository petOwnerRepositoryMock;
+
+    @Mock
+    PasswordEncoder passwordEncoder;
 
     @Mock
     MailService mailServiceMock;
@@ -133,40 +137,14 @@ public class UserServiceImplTest {
 
     }
 
-//    @Test
-//    public void testInitRolesAndUsers_PetOwnerUserSaved() throws UserNameNotFound, UserNameNotFound {
-//
-//        User user2 = new User();
-//        user2.setUserId("pet_owner1");
-//        user2.setPassword("pet123");
-//        user2.setEmail("abcPet@gmail.com");
-//        user2.setRole("PET_OWNER");
-//
-//        PetOwner petOwner = new PetOwner();
-//        petOwner.setUser(user2);
-//        petOwner.setAddress("16 Chris Hampton Rd");
-//        petOwner.setFirstName("James");
-//        petOwner.setLastName("Collin");
-//        petOwner.setPhoneNo("+1-723-453-2343");
-//
-//
-//        Vet vet = new Vet();
-//        vet.setUser(user2);
-//        vet.setFirstName("John");
-//        vet.setLastName("Doe");
-//        vet.setClinicAddress("19 Inglis St");
-//        vet.setExperience(3);
-//        vet.setPhoneNo("+1-723-443-2343");
-//        vet.setProfileStatus(ProfileStatus.APPROVED.getLabel());
-//        vet.setQualification("MBBS, MD, DO");
-//
-//        when(userRepositoryMock.save(any(User.class))).thenReturn(user2);
-//        when(petOwnerRepositoryMock.findByUser_UserId(anyString())).thenReturn(Optional.empty());
-//        when(vetRepositoryMock.findByUser_UserId(anyString())).thenReturn(Optional.empty());
-//        when(petOwnerRepositoryMock.save(any(PetOwner.class))).thenReturn(petOwner);
-//
-//        userServiceImpl.initRolesAndUsers();
-//
-//    }
+   @Test
+   public void testInitRolesAndUsers_PetOwnerUserSaved() throws UserNameNotFound, UserNameNotFound {
+
+       userServiceImpl.activeProfile = "dev";
+       userServiceImpl.initRolesAndUsers();
+       verify(vetRepositoryMock, times(1)).save(any(Vet.class));
+       verify(petOwnerRepositoryMock, times(1)).save(any(PetOwner.class));
+       verify(userRepositoryMock, times(3)).save(any(User.class));
+   }
 }
 
