@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -83,6 +84,13 @@ public class UserControllerTest {
         ResponseEntity<AuthenticationResponse> response = userController.createJwtToken(authenticationRequest);
         assertEquals("", response.getBody().getToken());
         assertNull(response.getBody().getUser());
+
+    }
+
+    @Test
+    public void testInitRolesAndUsers() {
+        doNothing().when(userServiceImplMock).initRolesAndUsers();
+        userController.initRolesAndUsers();
 
     }
 }
