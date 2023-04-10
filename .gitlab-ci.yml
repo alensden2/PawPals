@@ -68,7 +68,7 @@ test-backend:
   script:
     - echo "Testing backend..."
     - cd backend/paw-pals
-    - mvn clean test
+    - mvn clean install
   artifacts:
     paths:
       - backend/paw-pals/target/site/*
